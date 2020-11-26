@@ -32,7 +32,6 @@ ExportedObj/
 *.csproj
 *.unityproj
 *.sln
-*.suo
 *.tmp
 *.user
 *.userprefs
@@ -59,3 +58,4 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+/Server/Outputs/UnityCppServerConsole_d
