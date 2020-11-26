@@ -17,23 +17,24 @@ namespace PACKET_TYPE
 #pragma pack( push, 1 )
 struct UPACKET
 {
-	u_short length;
-	u_short type;
-	u_char data[PROTOCOL::MsgMaxSize];
-
 	UPACKET() : length( 0 ), type( 0 ), data{} // 배열 유니폼 초기화
 	{
 		
 	}
+
+	u_short length;
+	u_short type;
+	u_char data[PROTOCOL::MsgMaxSize];
 };
 #pragma pack( pop )
 
 struct PACKET
 {
-	UPACKET packet;
-	SOCKET socket;
 	PACKET() : packet{}, socket{}
 	{
 
 	}
+
+	UPACKET packet;
+	SOCKET socket;
 };

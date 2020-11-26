@@ -81,6 +81,7 @@
   <ItemGroup>
     <ClCompile Include="Packet\PacketMananger.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
+    <ClCompile Include="Session\Session.cpp" />
     <ClCompile Include="Synchronize\Synchronize.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
     <ClCompile Include="main.cpp" />
@@ -88,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Packet\PacketMananger.h" />
+    <ClInclude Include="Session\Session.h" />
     <ClInclude Include="Standard\Protocol.h" />
     <ClInclude Include="Standard\Singleton.hpp" />
     <ClInclude Include="Packet\StreamPacket.h" />
