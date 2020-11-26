@@ -82,11 +82,14 @@
     <ClCompile Include="Synchronize\Synchronize.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Thread\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Standard\Singleton.hpp" />
     <ClInclude Include="Synchronize\Synchronize.h" />
     <ClInclude Include="Synchronize\CriticalSection.h" />
     <ClInclude Include="Standard\Header.h" />
+    <ClInclude Include="Thread\Thread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
