@@ -85,6 +85,7 @@
     <ClCompile Include="Thread\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Standard\Protocol.h" />
     <ClInclude Include="Standard\Singleton.hpp" />
     <ClInclude Include="Synchronize\Synchronize.h" />
     <ClInclude Include="Synchronize\CriticalSection.h" />

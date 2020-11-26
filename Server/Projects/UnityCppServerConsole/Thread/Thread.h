@@ -17,4 +17,3 @@ private:
 	unsigned int threadID;
 	bool isStart;
 };
-
