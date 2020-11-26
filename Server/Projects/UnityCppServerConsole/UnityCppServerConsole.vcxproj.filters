@@ -30,7 +30,10 @@
     <ClCompile Include="Thread\Thread.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="StreamPacket.cpp">
+    <ClCompile Include="Packet\StreamPacket.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet\PacketMananger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +56,10 @@
     <ClInclude Include="Standard\Protocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="StreamPacket.h">
+    <ClInclude Include="Packet\StreamPacket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\PacketMananger.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

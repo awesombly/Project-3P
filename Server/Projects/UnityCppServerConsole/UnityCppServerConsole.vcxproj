@@ -79,16 +79,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="StreamPacket.cpp" />
+    <ClCompile Include="Packet\PacketMananger.cpp" />
+    <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Synchronize\Synchronize.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Thread\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Packet\PacketMananger.h" />
     <ClInclude Include="Standard\Protocol.h" />
     <ClInclude Include="Standard\Singleton.hpp" />
-    <ClInclude Include="StreamPacket.h" />
+    <ClInclude Include="Packet\StreamPacket.h" />
     <ClInclude Include="Synchronize\Synchronize.h" />
     <ClInclude Include="Synchronize\CriticalSection.h" />
     <ClInclude Include="Standard\Header.h" />

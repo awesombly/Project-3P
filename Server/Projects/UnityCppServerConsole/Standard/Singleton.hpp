@@ -9,13 +9,13 @@ public:
 	virtual ~Singleton() = default;
 
 public:
-	Type& Instance()
+	static Type& Instance()
 	{
 		if ( instance == nullptr )
 		{
 			instance = new Type();
 		}
-		return instance;
+		return *instance;
 	}
 
 private:
