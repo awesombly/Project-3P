@@ -13,7 +13,7 @@ Thread::~Thread()
 
 void Thread::CreateThread()
 {
-	if ( isStart == false )
+	if ( !isStart )
 	{
 		threadHandle = ::_beginthreadex( nullptr, 0, Handler, ( LPVOID )this, 0, &threadID );
 		isStart = true;

@@ -1,5 +1,6 @@
 #include "StreamPacket.h"
 #include "PacketManager.h"
+
 StreamPacket::StreamPacket() : packet( new UPACKET() ), recvBuffer{}, 
 							   startPos( 0 ), writePos( 0 ), readPos( 0 )
 {
@@ -24,6 +25,10 @@ void StreamPacket::Truncate( const WSABUF& _buf )
 	// 큰 버퍼에 저장
 	::memcpy( &recvBuffer[writePos], _buf.buf, OneLineOfText );
 	packet = ( UPACKET* )&recvBuffer[startPos];
+	if ( packet->length == 0 )
+	{
+		return;
+	}
 	writePos += packet->length;
 	readPos += packet->length;
 

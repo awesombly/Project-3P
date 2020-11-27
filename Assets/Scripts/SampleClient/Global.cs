@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 public class Global
 {
@@ -10,7 +8,7 @@ public class Global
 
     // 마샬링 : 오브젝트를 직렬화하는 과정
 
-    // [Serializable](직렬화 가능한 구조체), 
+    // [Serializable](직렬화 가능한 구조체)가 붙은 구조체 또는
     // 원시타입( int, long, float ... )만 직렬화 할 수 있습니다.
 
     // 직렬화
@@ -34,6 +32,7 @@ public class Global
         Marshal.Copy( _value, 0, buffer, size );
         Type obj = ( Type )Marshal.PtrToStructure( buffer, typeof( Type ) );
         Marshal.FreeHGlobal( buffer );
+
         return obj;
     }
 }

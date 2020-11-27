@@ -9,7 +9,7 @@ Acceptor::Acceptor( const int _port, const char* _address )
 	::WSAStartup( MAKEWORD( 2, 2 ), &wsa );
 	listenSocket = ::socket( AF_INET, SOCK_STREAM, 0 );
 
-	if ( SetSocketOption() == false )
+	if ( !SetSocketOption() )
 	{
 		Log::Instance().Push( "Socket Setting Fail.." );
 		return;
@@ -26,7 +26,7 @@ Acceptor::Acceptor( const int _port, const char* _address )
 	}
 	else
 	{
-		// 10진수 표현방식( 192.168.0.1 같은.. )을 32비트 빅엔디안으로 바꿔준다.
+		// 10진수 표현방식( 192.168.0.1 같은.. )을 32비트 빅엔디안으로 바꿔줍니다.
 		sa.sin_addr.S_un.S_addr = ::inet_addr( _address );
 	}
 	sa.sin_port = ::htons( _port );
@@ -53,7 +53,7 @@ void Acceptor::ExecuteThread()
 	SOCKET clientsock;
 	SOCKADDR_IN client{};
 	int length( sizeof( client ) );
-	while ( IsStart() == true )
+	while ( IsStart() )
 	{
 		// accept : 아직 처리되지않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 소켓을 가져온다.
 		clientsock = ::accept( listenSocket, ( sockaddr* )&client, &length );

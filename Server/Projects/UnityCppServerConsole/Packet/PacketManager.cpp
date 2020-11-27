@@ -11,7 +11,7 @@ void PacketManager::ExecuteThread()
 {
 	while ( true )
 	{
-		if ( packets.empty() == false )
+		if ( !packets.empty() )
 		{
 			PACKET* packet( &packets.front() );
 
@@ -19,6 +19,8 @@ void PacketManager::ExecuteThread()
 			{
 				case PACKET_TYPE::ChatMessage:
 				{
+					// 유니티 클라이언트에서 UTF-8 형식으로 인코딩한 후 전송되었기 때문에
+					// Ansi 형식으로 디코딩 하여 올바른 문자열을 만듭니다.
 					Log::Instance().Push( ToAnsi( ( char* )packet->packet.data ) );
 					SessionManager::Instance().BroadCast( packet->packet );
 				} break;
@@ -36,6 +38,5 @@ void PacketManager::ExecuteThread()
 
 void PacketManager::Push( const PACKET& _packet )
 {
-	// 검증 필요?
 	packets.push( _packet );
 }
