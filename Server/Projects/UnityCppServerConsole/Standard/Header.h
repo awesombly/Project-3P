@@ -3,6 +3,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #pragma warning( disable : 4244 )
+#pragma warning( disable : 4267 )
+#pragma warning( disable : 4505 )
 
 // Windows Sockets
 #include <winsock2.h>
@@ -22,11 +24,9 @@
 // Standard
 #include <iostream>
 
+// Global
+#include "..\Global\GlobalFunc.h"
+#include "..\Global\GlobalConst.h"
+
 // External Libraries
 #pragma comment(lib,"ws2_32.lib")
-
-const static u_short HeaderSize = 4;
-const static u_short WorkerThreadCount = 3;
-const static u_short OneLineOfText = 256;
-const static u_short MsgMaxSize = 2048;
-const static u_short RecvBufferMaxSize = 10000;

@@ -1,6 +1,5 @@
 #include "PacketManager.h"
 #include "..\Standard\Log.h"
-#include "..\Standard\GlobalFunc.h"
 #include "..\Session\SessionManager.h"
 
 PacketManager::PacketManager()

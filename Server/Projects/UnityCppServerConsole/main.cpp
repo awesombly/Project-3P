@@ -6,6 +6,8 @@
 
 int main()
 {
+	// 전역 동기화 문제.. 워커스레드 서른마흔다섯개 생성됨.
+	// 임시 해결방안으로 미리 인스턴스를 생성해놓음.
 	IOCPManager::Instance();
 	SessionManager::Instance();
 	PacketManager::Instance();

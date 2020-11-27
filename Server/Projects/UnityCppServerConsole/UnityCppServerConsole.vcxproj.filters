@@ -104,7 +104,10 @@
     <ClInclude Include="Packet\PacketManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Standard\GlobalFunc.h">
+    <ClInclude Include="Global\GlobalFunc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Global\GlobalConst.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
