@@ -31,8 +31,8 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
+*.sln
 *.suo
-*.sin
 *.tmp
 *.user
 *.userprefs
