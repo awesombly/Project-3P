@@ -55,7 +55,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <ConformanceMode>false</ConformanceMode>
+      <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -69,7 +69,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <ConformanceMode>false</ConformanceMode>
+      <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -79,16 +79,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Packet\PacketMananger.cpp" />
+    <ClCompile Include="Acceptor\Acceptor.cpp" />
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Standard\Log.cpp" />
+    <ClCompile Include="Session\SessionManager.cpp" />
+    <ClCompile Include="Thread\IOCPManager.cpp" />
+    <ClCompile Include="Packet\PacketManager.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Session\Session.cpp" />
     <ClCompile Include="Synchronize\Synchronize.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Thread\Thread.cpp" />
+    <ClCompile Include="Thread\WorkerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Packet\PacketMananger.h" />
+    <ClInclude Include="Acceptor\Acceptor.h" />
+    <ClInclude Include="Server.h" />
+    <ClInclude Include="Standard\Log.h" />
+    <ClInclude Include="Session\SessionManager.h" />
+    <ClInclude Include="Thread\IOCPManager.h" />
+    <ClInclude Include="Packet\PacketManager.h" />
     <ClInclude Include="Session\Session.h" />
     <ClInclude Include="Standard\Protocol.h" />
     <ClInclude Include="Standard\Singleton.hpp" />
@@ -97,6 +108,7 @@
     <ClInclude Include="Synchronize\CriticalSection.h" />
     <ClInclude Include="Standard\Header.h" />
     <ClInclude Include="Thread\Thread.h" />
+    <ClInclude Include="Thread\WorkerThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

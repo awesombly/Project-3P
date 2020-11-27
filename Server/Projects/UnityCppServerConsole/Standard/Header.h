@@ -24,3 +24,9 @@
 
 // External Libraries
 #pragma comment(lib,"ws2_32.lib")
+
+const static u_short HeaderSize = 4;
+const static u_short WorkerThreadCount = 3;
+const static u_short OneLineOfText = 256;
+const static u_short MsgMaxSize = 2048;
+const static u_short RecvBufferMaxSize = 10000;

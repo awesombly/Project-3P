@@ -4,14 +4,14 @@
 #include "..\Standard\Protocol.h"
 #include "..\Standard\Singleton.hpp"
 
-class PacketMananger : public Singleton<PacketMananger>, public Thread
+class PacketManager : public Thread, public Singleton<PacketManager>
 {
 public:
-	PacketMananger();
-	virtual ~PacketMananger() = default;
+	PacketManager();
+	virtual ~PacketManager() = default;
 
 public:
-	void Run() override;
+	void ExecuteThread() override;
 	void Push( const PACKET& _packet );
 
 private:

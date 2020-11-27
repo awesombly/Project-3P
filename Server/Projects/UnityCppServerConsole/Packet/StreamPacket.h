@@ -14,7 +14,7 @@ public:
 private:
 	std::queue<UPACKET> packets;
 	UPACKET* packet;
-	char recvBuffer[PROTOCOL::RecvMaxSize];
+	char recvBuffer[RecvBufferMaxSize];
 	u_int startPos;
 	u_int writePos;
 	u_int readPos;

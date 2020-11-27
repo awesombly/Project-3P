@@ -2,12 +2,11 @@
 
 Synchronize::Synchronize( CriticalSection* _cs ) : csObject( _cs )
 {
-	if ( csObject != nullptr )
+	if ( _cs != nullptr )
 	{
-		::EnterCriticalSection( &csObject->cs );
+		::EnterCriticalSection( &_cs->cs );
 	}
 }
-
 
 Synchronize::~Synchronize()
 {

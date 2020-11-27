@@ -2,18 +2,6 @@
 #include "..\Synchronize\Synchronize.h"
 #include "..\Packet\StreamPacket.h"
 
-struct OVERLAPPEDEX
-{
-	OVERLAPPEDEX() : flag( MODE_RECV ) { }
-	enum : char 
-	{ 
-		MODE_RECV = 0, 
-		MODE_SEND = 1, 
-	};
-
-	u_int flag;
-};
-
 class Session
 {
 public:
@@ -23,8 +11,23 @@ public:
 public:
 	void WaitForPacketRecv();
 	void Dispatch( const LPOVERLAPPED& _ov );
+	const SOCKET& GetSocket();
 
 private:
+	struct OVERLAPPEDEX : OVERLAPPED
+	{
+		OVERLAPPEDEX() : flag( MODE_RECV ) { }
+		enum : char
+		{
+			MODE_RECV = 0,
+			MODE_SEND = 1,
+		};
+
+		u_int flag;
+	};
+
+private:
+	friend class SessionManager;
 	SOCKET socket;
 	SOCKADDR_IN address;
 	OVERLAPPEDEX ov;
