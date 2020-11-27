@@ -1,114 +1,117 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Acceptor">
+      <UniqueIdentifier>{585f0004-5229-46c2-a700-9505d282eeed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Global">
+      <UniqueIdentifier>{f1c3ffa0-d0e5-4662-8f19-b0d8efbbae1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="리소스 파일">
+    <Filter Include="Packet">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Session">
+      <UniqueIdentifier>{91a1a00c-7716-4cf0-9674-d4ff28270018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Standard">
+      <UniqueIdentifier>{f6c7f376-bae4-4da5-a436-0a2af34269d5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Synchronize">
-      <UniqueIdentifier>{585f0004-5229-46c2-a700-9505d282eeed}</UniqueIdentifier>
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Thread">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Synchronize\CriticalSection.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Synchronize</Filter>
     </ClCompile>
     <ClCompile Include="Synchronize\Synchronize.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Thread\Thread.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet\StreamPacket.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Session\Session.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Thread\WorkerThread.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Thread\IOCPManager.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Synchronize</Filter>
     </ClCompile>
     <ClCompile Include="Acceptor\Acceptor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Session\SessionManager.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Acceptor</Filter>
     </ClCompile>
     <ClCompile Include="Standard\Log.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Standard</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Session\Session.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+    <ClCompile Include="Session\SessionManager.cpp">
+      <Filter>Session</Filter>
     </ClCompile>
     <ClCompile Include="Packet\PacketManager.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Packet</Filter>
     </ClCompile>
+    <ClCompile Include="Packet\StreamPacket.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\Thread.cpp">
+      <Filter>Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\WorkerThread.cpp">
+      <Filter>Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\IOCPManager.cpp">
+      <Filter>Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Standard\Header.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Synchronize\CriticalSection.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Synchronize\Synchronize.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Thread\Thread.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Standard\Singleton.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Standard\Protocol.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet\StreamPacket.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Session\Session.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Thread</Filter>
     </ClInclude>
     <ClInclude Include="Thread\WorkerThread.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Thread</Filter>
     </ClInclude>
     <ClInclude Include="Thread\IOCPManager.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Thread</Filter>
     </ClInclude>
     <ClInclude Include="Acceptor\Acceptor.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Session\SessionManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Standard\Log.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Server.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet\PacketManager.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Acceptor</Filter>
     </ClInclude>
     <ClInclude Include="Global\GlobalFunc.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Global</Filter>
     </ClInclude>
     <ClInclude Include="Global\GlobalConst.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="Standard\Log.h">
+      <Filter>Standard</Filter>
+    </ClInclude>
+    <ClInclude Include="Standard\Header.h">
+      <Filter>Standard</Filter>
+    </ClInclude>
+    <ClInclude Include="Standard\Protocol.h">
+      <Filter>Standard</Filter>
+    </ClInclude>
+    <ClInclude Include="Standard\Singleton.hpp">
+      <Filter>Standard</Filter>
+    </ClInclude>
+    <ClInclude Include="Session\Session.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="Session\SessionManager.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\PacketManager.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\StreamPacket.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Synchronize\CriticalSection.h">
+      <Filter>Synchronize</Filter>
+    </ClInclude>
+    <ClInclude Include="Synchronize\Synchronize.h">
+      <Filter>Synchronize</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h" />
   </ItemGroup>
 </Project>
