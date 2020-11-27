@@ -19,7 +19,7 @@ void Session::WaitForPacketRecv()
 	DWORD flags( 0 );
 	ov.flag = OVERLAPPEDEX::MODE_RECV;
 	wsaBuffer.buf = buffer;
-	wsaBuffer.len = 2048;
+	wsaBuffer.len = DataMaxSize;
 	if ( ::WSARecv( socket, &wsaBuffer, 1, &transferred, &flags, ( LPOVERLAPPED )&ov, NULL ) == SOCKET_ERROR )
 	{
 		int iError = WSAGetLastError();

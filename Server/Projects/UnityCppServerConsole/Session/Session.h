@@ -32,7 +32,7 @@ private:
 	SOCKADDR_IN address;
 	OVERLAPPEDEX ov;
 	WSABUF wsaBuffer;
-	char buffer[2048];
+	char buffer[DataMaxSize];
 	StreamPacket streamPacket;
 };
 

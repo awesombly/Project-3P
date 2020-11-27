@@ -16,7 +16,7 @@ struct UPACKET
 
 	u_short length;
 	u_short type;
-	byte data[MsgMaxSize];
+	byte data[DataMaxSize];
 };
 #pragma pack( pop )
 
