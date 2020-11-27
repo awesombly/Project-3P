@@ -1,5 +1,7 @@
 #include "PacketManager.h"
 #include "..\Standard\Log.h"
+#include "..\Standard\GlobalFunc.h"
+#include "..\Session\SessionManager.h"
 
 PacketManager::PacketManager()
 {
@@ -18,7 +20,8 @@ void PacketManager::ExecuteThread()
 			{
 				case PACKET_TYPE::ChatMessage:
 				{
-					Log::Instance().Push( "¸Ş¼¼Áö µµÂø" );
+					Log::Instance().Push( ToAnsi( ( char* )packet->packet.data ) );
+					SessionManager::Instance().BroadCast( packet->packet );
 				} break;
 
 				default:

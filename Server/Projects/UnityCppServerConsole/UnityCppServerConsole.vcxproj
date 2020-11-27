@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Acceptor\Acceptor.h" />
+    <ClInclude Include="Standard\GlobalFunc.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />
