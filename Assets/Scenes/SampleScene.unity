@@ -1122,7 +1122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputMessage: {fileID: 1563568117}
-  textContents: {fileID: 1602699948}
+  textContent: {fileID: 1602699948}
   textObject: {fileID: 895400065406932687, guid: a276f3baa3d6937428fd2a4434dfb1b3, type: 3}
 --- !u!4 &1841815132
 Transform:
