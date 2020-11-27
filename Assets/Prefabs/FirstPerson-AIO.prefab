@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4204582120663750}
+  - component: {fileID: 271517162}
   m_Layer: 0
   m_Name: HeadJoint
   m_TagString: Untagged
@@ -31,6 +32,67 @@ Transform:
   m_Father: {fileID: 4448068258976056}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &271517162
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129895495175522}
+  m_Enabled: 0
+  serializedVersion: 10
+  m_Type: 0
+  m_Shape: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 20
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 1
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &1264833946912854
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,6 +105,7 @@ GameObject:
   - component: {fileID: 20724644957976244}
   - component: {fileID: 81419976148993170}
   - component: {fileID: 124044488792268592}
+  - component: {fileID: 972074139}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -123,6 +186,67 @@ Behaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1264833946912854}
   m_Enabled: 1
+--- !u!108 &972074139
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264833946912854}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 0
+  m_Shape: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 30
+  m_SpotAngle: 50
+  m_InnerSpotAngle: 5
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &1743903104223250
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,8 +420,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf1a5ad4f9ffb154ca7813fdad11017a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controllerPauseState: 0
   enableCameraMovement: 1
   mouseInputInversion: 0
+  cameraInputMethod: 0
   verticalRotationRange: 170
   mouseSensitivity: 10
   fOVToMouseSensitivity: 1
@@ -307,7 +433,7 @@ MonoBehaviour:
   enableCameraShake: 1
   autoCrosshair: 1
   drawStaminaMeter: 1
-  Crosshair: {fileID: 21300000, guid: 7fa7752f7f2a3fc4fbc2bcaea5671e2d, type: 3}
+  Crosshair: {fileID: 21300000, guid: 629c5d78a76235c42bd9f92203a4d134, type: 3}
   targetAngles: {x: 0, y: 0, z: 0}
   playerCanMove: 1
   walkByDefault: 1
@@ -365,11 +491,14 @@ MonoBehaviour:
     materialMode: 0
     woodPhysMat: []
     metalAndGlassPhysMat: []
-    grassPhysMat: []
+    grassPhysMat:
+    - {fileID: 13400000, guid: ef5688da6163a454394699b8feb23d75, type: 2}
     dirtAndGravelPhysMat: []
-    rockAndConcretePhysMat: []
+    rockAndConcretePhysMat:
+    - {fileID: 13400000, guid: f1e72d6fcc7ae9342b782abdf443c946, type: 2}
     mudPhysMat: []
-    customPhysMat: []
+    customPhysMat:
+    - {fileID: 13400000, guid: 0a947b9a4eeeeb34dbe274c5ee38fc62, type: 2}
     woodMat: []
     metalAndGlassMat: []
     grassMat: []
@@ -381,40 +510,40 @@ MonoBehaviour:
     woodClipSet: []
     metalAndGlassClipSet: []
     grassClipSet:
-    - {fileID: 8300000, guid: e70c5fa5ed6b97f41aa555d63ca56d42, type: 3}
-    - {fileID: 8300000, guid: d3947cf2c6783a447bd0dae10cd8bb21, type: 3}
-    - {fileID: 8300000, guid: 41b975e693999f942b5755a8f054c4ce, type: 3}
-    - {fileID: 8300000, guid: 818617f6fe74a6345a5babff80a756e2, type: 3}
-    - {fileID: 8300000, guid: 2667de89ddda8dc409eaf8f8261d1d8c, type: 3}
-    - {fileID: 8300000, guid: 76909016e12b7b4469602526ddc6a164, type: 3}
-    - {fileID: 8300000, guid: 0533ad72641beb64c84742701ea7fcd4, type: 3}
-    - {fileID: 8300000, guid: 37aa905a30faf0d45a213f924449a6fb, type: 3}
-    - {fileID: 8300000, guid: 5991900ee6498594ab6d0c668e329eb1, type: 3}
-    - {fileID: 8300000, guid: e899671e45e608e4db37f6d6701c35ba, type: 3}
-    - {fileID: 8300000, guid: 01c377cd295d33a4db93c9467d59a6dd, type: 3}
+    - {fileID: 8300000, guid: de4bddb8c812d8043a5bf2c254a2e70f, type: 3}
+    - {fileID: 8300000, guid: 54adb75bd2e87fb499db4e26198388aa, type: 3}
+    - {fileID: 8300000, guid: 6fe217db6e623544e8bf0c4f320cacb8, type: 3}
+    - {fileID: 8300000, guid: 0578712fce7d5d94cadafb2d03560df6, type: 3}
+    - {fileID: 8300000, guid: a85b286eca434704688d50612a95a23a, type: 3}
+    - {fileID: 8300000, guid: 76e35aaa17d29d8499fee7db6233006d, type: 3}
+    - {fileID: 8300000, guid: a5cd4207dd1d44b478c2bbd701f684cd, type: 3}
+    - {fileID: 8300000, guid: f3891c746fe2e244e950df5bab771020, type: 3}
+    - {fileID: 8300000, guid: 8af03a7f725db7a49996648033908582, type: 3}
+    - {fileID: 8300000, guid: ee39d9aa2c5648c4c88a8fc077c2ea12, type: 3}
+    - {fileID: 8300000, guid: a5cd5feefbd3fcc47bdbb1a4ecd6c4b6, type: 3}
     dirtAndGravelClipSet: []
     rockAndConcreteClipSet:
-    - {fileID: 8300000, guid: a9e804a8165699a49bceb84d083a34a6, type: 3}
-    - {fileID: 8300000, guid: fead5cfe6593ab64dac60ff7b677fb86, type: 3}
-    - {fileID: 8300000, guid: b129e694a0fa16f498b497481befe169, type: 3}
-    - {fileID: 8300000, guid: a3eb761c67da86e4d95a714d5040e215, type: 3}
-    - {fileID: 8300000, guid: 49a4a47af61a25b4fb37c589359ef09c, type: 3}
-    - {fileID: 8300000, guid: ffeb60b812fdc464499d8bd1c46cd055, type: 3}
-    - {fileID: 8300000, guid: 7b10d52be5966cc49b99c126a03640e5, type: 3}
-    - {fileID: 8300000, guid: fbe1939915c91b74f9eded7665492ef6, type: 3}
-    - {fileID: 8300000, guid: e2f81d653f70254468486696deb5e2d7, type: 3}
-    - {fileID: 8300000, guid: e38fa940edefdd9479e226e6a3d4787e, type: 3}
-    - {fileID: 8300000, guid: 965861ab37dcd9549912eca505055b63, type: 3}
+    - {fileID: 8300000, guid: 27680ce0730cef34bbac87d387a136ea, type: 3}
+    - {fileID: 8300000, guid: 9b0397d8cc3b7a243847866ef21d222e, type: 3}
+    - {fileID: 8300000, guid: f93a5cb5c9046ac408371c12c3505b0b, type: 3}
+    - {fileID: 8300000, guid: 5319169db5ca57f48b622a73208db2aa, type: 3}
+    - {fileID: 8300000, guid: ae856d07a2c3cda4ab66944bb819d194, type: 3}
+    - {fileID: 8300000, guid: 2d1d98c9c990ca04e8db5ceb3d67eafe, type: 3}
+    - {fileID: 8300000, guid: d1682e9898ca5f2408630862efc4b44d, type: 3}
+    - {fileID: 8300000, guid: 7d9d1231524703a4097a2f666cf4cb6e, type: 3}
+    - {fileID: 8300000, guid: 442f82abcaf06a845b4dd343140d74da, type: 3}
+    - {fileID: 8300000, guid: 319ce6f8c1f4fe04c80e3cf5861f88c4, type: 3}
+    - {fileID: 8300000, guid: 501f3c44e80a18b488ac224ecdb76ec5, type: 3}
     mudClipSet: []
     customClipSet:
-    - {fileID: 8300000, guid: fb6839219f2c6674996d76c7d9626311, type: 3}
-    - {fileID: 8300000, guid: a2cf935dcad44514894bf910c443d507, type: 3}
-    - {fileID: 8300000, guid: 0b36ebf0a6b6c234c89643b5bb83ec59, type: 3}
-    - {fileID: 8300000, guid: f556827165c098547be10e15323aa490, type: 3}
-    - {fileID: 8300000, guid: 5a1e73ebb16d027419df7efded694efa, type: 3}
-    - {fileID: 8300000, guid: 884f1d42e7a5e98478d53bfc4b98aada, type: 3}
-    - {fileID: 8300000, guid: 8bbd5871530ec774ebef27eaea21e860, type: 3}
-    - {fileID: 8300000, guid: 8742d0ca3e03b034fb383ae7aba7d4a6, type: 3}
-    - {fileID: 8300000, guid: fef61cddf814a2c49bf7a6c33791c766, type: 3}
-    - {fileID: 8300000, guid: 73f938638097f8042ad7842aa5b04ac5, type: 3}
-    - {fileID: 8300000, guid: e06c6ae1948cafd45a952ab85ebe4fa7, type: 3}
+    - {fileID: 8300000, guid: bb2cdd58fc819324a932e59566f6bb00, type: 3}
+    - {fileID: 8300000, guid: f485edaf3acc60446b675a53ef37c30b, type: 3}
+    - {fileID: 8300000, guid: a159e663857722a4dafc56878d074d34, type: 3}
+    - {fileID: 8300000, guid: abc252e3ae3154646a88cfda236a27e7, type: 3}
+    - {fileID: 8300000, guid: 87e5e50cffa2da1408ed975044220444, type: 3}
+    - {fileID: 8300000, guid: a06ae68da734ece44a9c4dc7b451b351, type: 3}
+    - {fileID: 8300000, guid: a48308240642d7c489718c19d7c2ad4c, type: 3}
+    - {fileID: 8300000, guid: 4e6b45ef34638a34883c61e679ed0de9, type: 3}
+    - {fileID: 8300000, guid: f998ace3fc86c2c4488fcaf52fed8fe4, type: 3}
+    - {fileID: 8300000, guid: 6f68bc2e1807ff0478d37ee6f1c6c29c, type: 3}
+    - {fileID: 8300000, guid: f268cfd457dd6124c87c112ab143aa1f, type: 3}
