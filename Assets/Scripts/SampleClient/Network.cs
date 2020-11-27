@@ -17,6 +17,11 @@ public class Network : MonoBehaviour
     {
         while ( true )
         {
+            if ( !socket.Connected )
+            {
+                continue;
+            }
+
             socket.Receive( buffer );
             if ( !ReferenceEquals( buffer, null ) )
             {
@@ -47,7 +52,7 @@ public class Network : MonoBehaviour
 
         // 서버 연결, 콜백주소 사용
         IPEndPoint endPoint = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), 10000 );
-        socket.Connect( endPoint );
+        socket.ConnectAsync( endPoint );
 
         thread = new Thread( Run );
         thread.Start();
