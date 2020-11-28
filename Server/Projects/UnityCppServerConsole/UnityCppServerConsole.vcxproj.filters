@@ -56,6 +56,9 @@
     <ClCompile Include="Thread\ThreadPool.cpp">
       <Filter>Synchronize</Filter>
     </ClCompile>
+    <ClCompile Include="Standard\Protocol.cpp">
+      <Filter>Standard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Thread\IOCPManager.h">

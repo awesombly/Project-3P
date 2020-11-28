@@ -83,6 +83,7 @@
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
     <ClCompile Include="Session\SessionManager.cpp" />
+    <ClCompile Include="Standard\Protocol.cpp" />
     <ClCompile Include="Thread\ThreadPool.cpp" />
     <ClCompile Include="Thread\IOCPManager.cpp" />
     <ClCompile Include="Packet\PacketManager.cpp" />
