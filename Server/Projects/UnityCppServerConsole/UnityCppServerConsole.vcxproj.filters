@@ -62,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Standard\Protocol.cpp">
+      <Filter>Standard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Thread\Thread.h">
