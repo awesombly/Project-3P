@@ -8,7 +8,7 @@ public class Network : MonoBehaviour
     public static Socket socket;
     private Thread thread;
 
-    private byte[] buffer = new byte[2048 + 4];
+    private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
 
     private void Run()
     {
@@ -23,20 +23,13 @@ public class Network : MonoBehaviour
             if ( !ReferenceEquals( buffer, null ) )
             {
                 UPACKET packet = Global.Deserialize<UPACKET>( buffer );
-                switch ( packet.type )
+                if ( packet.type == ChatMessage.PacketType )
                 {
-                    case ( ushort )1000:
-                        {
-                            ChatMain.texts.Add( System.Text.Encoding.UTF8.GetString( packet.message ) );
-                        }
-                        break;
-
-                    default:
-                        {
-
-                        }
-                        break;
+                    string data = System.Text.Encoding.UTF8.GetString( packet.data );
+                    ChatMessage protocol = JsonUtility.FromJson<ChatMessage>( data );
+                    ChatMain.texts.Add( protocol.Message );
                 }
+
                 System.Array.Clear( buffer, 0, packet.length );
             }
         }
