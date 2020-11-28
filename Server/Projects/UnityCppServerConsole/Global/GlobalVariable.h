@@ -1,6 +1,11 @@
 #pragma once
 #include <windows.h>
+#include <mutex>
 
+// Global
+static std::mutex GlobalMutex;
+
+// Global Const
 // namespace로 묶을 이름이 생각이 안남.
 const static u_short HeaderSize = 4;
 const static u_short WorkerThreadCount = 3;

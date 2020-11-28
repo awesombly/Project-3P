@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Global\GlobalConst.h"
+#include "..\Global\GlobalVariable.h"
 
 namespace PACKET_TYPE
 {

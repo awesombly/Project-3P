@@ -6,27 +6,40 @@
 #pragma warning( disable : 4267 )
 #pragma warning( disable : 4505 )
 
-// Windows Sockets
+// Windows
 #include <winsock2.h>
 #include <WS2tcpip.h>
 #include <windows.h>
 #include <process.h>
 
-// Characters
+// Character
 #include <string>
 #include <tchar.h>
 
-// Standard Template Libraries
+// Data Structure
 #include <vector>
 #include <list>
 #include <queue>
 
 // Standard
 #include <iostream>
+#include <cstdio>
+
+// Thread
+#include <thread>
+#include <mutex>
+#include <future>
+
+// Function
+#include <condition_variable>
+#include <functional>
+
+// Time
+#include <chrono>
 
 // Global
 #include "..\Global\GlobalFunc.h"
-#include "..\Global\GlobalConst.h"
+#include "..\Global\GlobalVariable.h"
 
-// External Libraries
+// External Library
 #pragma comment(lib,"ws2_32.lib")

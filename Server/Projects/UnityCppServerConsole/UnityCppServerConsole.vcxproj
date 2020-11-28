@@ -83,6 +83,7 @@
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
     <ClCompile Include="Session\SessionManager.cpp" />
+    <ClCompile Include="Thread\ThreadPool.cpp" />
     <ClCompile Include="Thread\IOCPManager.cpp" />
     <ClCompile Include="Packet\PacketManager.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
@@ -95,11 +96,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Acceptor\Acceptor.h" />
-    <ClInclude Include="Global\GlobalConst.h" />
+    <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Global\GlobalFunc.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />
+    <ClInclude Include="Thread\ThreadPool.h" />
     <ClInclude Include="Thread\IOCPManager.h" />
     <ClInclude Include="Packet\PacketManager.h" />
     <ClInclude Include="Session\Session.h" />
