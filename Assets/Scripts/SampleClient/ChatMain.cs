@@ -52,10 +52,10 @@ public class ChatMain : MonoBehaviour
     // 채팅바( InputField )에 입력한 내용이 서버로 전송됩니다.
     public void SendChatMessage()
     {
-        ChatMessage chat;
-        chat.message = inputMessage.text;
+        ChatMessage protocol;
+        protocol.Message = inputMessage.text;
 
-        UPACKET packet = new UPACKET( chat );
+        UPACKET packet = new UPACKET( protocol );
 
         byte[] _packet = Global.Serialize( packet );
         Network.socket.Send( _packet );

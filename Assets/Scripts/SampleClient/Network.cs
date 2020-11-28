@@ -8,7 +8,7 @@ public class Network : MonoBehaviour
     public static Socket socket;
     private Thread thread;
 
-    private byte[] buffer = new byte[2048 + 4];
+    private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
 
     private void Run()
     {
@@ -27,7 +27,7 @@ public class Network : MonoBehaviour
                 {
                     string data = System.Text.Encoding.UTF8.GetString( packet.data );
                     ChatMessage protocol = JsonUtility.FromJson<ChatMessage>( data );
-                    ChatMain.texts.Add( protocol.message );
+                    ChatMain.texts.Add( protocol.Message );
                 }
 
                 System.Array.Clear( buffer, 0, packet.length );
