@@ -22,25 +22,35 @@ public class UPACKET
 
     public void SetData( ISerializable protocol )
     {
-        type = ( ushort )protocol.GetHashCode();
+        type = protocol.GetPacketType();
         data = System.Text.Encoding.UTF8.GetBytes( JsonUtility.ToJson( protocol ) );
         length = ( ushort )( data.Length + HeaderSize );
+    }
+
+    // 서버/클라 결과 동일해야함. (Sdbm Hash)
+    public static ushort GetPacketType( string name )
+    {
+        uint hash = 0;
+        foreach ( char elem in name )
+        {
+            hash = elem + ( hash << 6 ) + ( hash << 16 ) - hash;
+        }
+        return ( ushort )hash;
     }
 }
 
 public interface ISerializable
 {
+    ushort GetPacketType();
 }
 
 public struct ChatMessage : ISerializable
 {
     public string Message;
 
-    // 패킷을 구분하기 위한 데이터(임시). 서버랑 맞춰야함
-    // 공통 코드. 매크로로 처리되면 좋을듯
-    public static ushort HashCode = ( ushort )( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name ).GetHashCode();
-    public override int GetHashCode()
+    public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+    public ushort GetPacketType()
     {
-        return ( int )HashCode;
+        return PacketType;
     }
 }

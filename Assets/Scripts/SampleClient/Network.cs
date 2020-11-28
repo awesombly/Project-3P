@@ -23,7 +23,7 @@ public class Network : MonoBehaviour
             if ( !ReferenceEquals( buffer, null ) )
             {
                 UPACKET packet = Global.Deserialize<UPACKET>( buffer );
-                if ( packet.type == ChatMessage.HashCode )
+                if ( packet.type == ChatMessage.PacketType )
                 {
                     string data = System.Text.Encoding.UTF8.GetString( packet.data );
                     ChatMessage protocol = JsonUtility.FromJson<ChatMessage>( data );
