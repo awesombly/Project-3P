@@ -19,21 +19,13 @@ void PacketManager::WorkPacket()
 		cv.wait( lock, [this] () { return !packets.empty(); } );
 		
 		PACKET* packet( std::move( &packets.front() ) );
-		switch ( packet->packet.type )
+		if ( packet->packet.type == PACKET_TYPE::ChatMessage )
 		{
-			case PACKET_TYPE::ChatMessage:
-			{
-				// 유니티 클라이언트에서 UTF-8 형식으로 인코딩한 후 전송되었기 때문에
-				// Ansi 형식으로 디코딩 하여 올바른 문자열을 만듭니다.
-				// packet->packet이라.. 좀 더 명확한 이름이 생각난다면 바꾸겠습니다.
-				Log::Instance().Push( "Broadcast : " + ToAnsi( ( char* )packet->packet.data ) );
-				SessionManager::Instance().BroadCast( packet->packet );
-			} break;
-
-			default:
-			{
-
-			} break;
+			// 유니티 클라이언트에서 UTF-8 형식으로 인코딩한 후 전송되었기 때문에
+			// Ansi 형식으로 디코딩 하여 올바른 문자열을 만듭니다.
+			// packet->packet이라.. 좀 더 명확한 이름이 생각난다면 바꾸겠습니다.
+			Log::Instance().Push( "Broadcast : " + ToAnsi( ( char* )packet->packet.data ) );
+			SessionManager::Instance().BroadCast( packet->packet );
 		}
 
 		packets.pop();

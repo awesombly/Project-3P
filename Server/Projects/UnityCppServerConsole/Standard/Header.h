@@ -29,6 +29,7 @@
 #include <thread>
 #include <mutex>
 #include <future>
+#include <type_traits>
 
 // Function
 #include <condition_variable>
