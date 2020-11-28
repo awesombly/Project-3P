@@ -27,7 +27,9 @@ void PacketManager::ExecuteThread()
 
 				default:
 				{
-				
+					// ÀÓ½Ã Ã³¸®. Å¬¶ó¶û packet.type ¸ÂÃç¾ßÇÔ
+					Log::Instance().Push( ToAnsi( ( char* )packet->packet.data ) );
+					SessionManager::Instance().BroadCast(packet->packet);
 				} break;
 			}
 

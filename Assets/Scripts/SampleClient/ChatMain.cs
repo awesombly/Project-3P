@@ -52,24 +52,10 @@ public class ChatMain : MonoBehaviour
     // 채팅바( InputField )에 입력한 내용이 서버로 전송됩니다.
     public void SendChatMessage()
     {
-        // Input Field 내용을 UTF-8 형식으로 인코딩 합니다.
-        // 영어나 숫자는 1바이트로 보내도 큰 문제가 없지만,
-        // 한글을 보낼시에 글자가 깨져서 보내지기 때문에 
-        // 인코딩 형식을 UTF-8형식으로 통일했습니다.
-        byte[] msg = System.Text.Encoding.UTF8.GetBytes( inputMessage.text );
+        ChatMessage chat;
+        chat.message = inputMessage.text;
 
-        UPACKET packet = new UPACKET();
-        // 서버에서 패킷의 message( data ) 기본 크기를 2048바이트로 잡았기 때문에 통일 합니다.
-        packet.message = new byte[2048];
-        // 메세지 바이트 사이즈 + 헤더 바이트 사이즈
-        packet.length = ( ushort )( msg.Length + 4 );
-        // 패킷 타입 : 메세지( 1000 ) 
-        packet.type = 1000;
-
-        for ( int count = 0; count < msg.Length; count++ )
-        {
-            packet.message[count] = msg[count];
-        }
+        UPACKET packet = new UPACKET( chat );
 
         byte[] _packet = Global.Serialize( packet );
         Network.socket.Send( _packet );

@@ -23,20 +23,13 @@ public class Network : MonoBehaviour
             if ( !ReferenceEquals( buffer, null ) )
             {
                 UPACKET packet = Global.Deserialize<UPACKET>( buffer );
-                switch ( packet.type )
+                if ( packet.type == ChatMessage.HashCode )
                 {
-                    case ( ushort )1000:
-                        {
-                            ChatMain.texts.Add( System.Text.Encoding.UTF8.GetString( packet.message ) );
-                        }
-                        break;
-
-                    default:
-                        {
-
-                        }
-                        break;
+                    string data = System.Text.Encoding.UTF8.GetString( packet.data );
+                    ChatMessage protocol = JsonUtility.FromJson<ChatMessage>( data );
+                    ChatMain.texts.Add( protocol.message );
                 }
+
                 System.Array.Clear( buffer, 0, packet.length );
             }
         }
@@ -46,7 +39,7 @@ public class Network : MonoBehaviour
     {
         socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
 
-        IPEndPoint endPoint = new IPEndPoint( IPAddress.Parse( "49.142.181.127" ), 10000 );
+        IPEndPoint endPoint = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), 10000 );
         socket.ConnectAsync( endPoint );
 
         thread = new Thread( Run );
