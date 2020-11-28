@@ -46,7 +46,7 @@ public class Network : MonoBehaviour
     {
         socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
 
-        IPEndPoint endPoint = new IPEndPoint( IPAddress.Parse( "49.142.181.127" ), 10000 );
+        IPEndPoint endPoint = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), 10000 );
         socket.ConnectAsync( endPoint );
 
         thread = new Thread( Run );

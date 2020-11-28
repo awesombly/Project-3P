@@ -1,23 +1,26 @@
 #include "Log.h"
+#include "..\Thread\ThreadPool.h"
 
 Log::Log()
 {
-	CreateThread();
+	ThreadPool::Instance().Enqueue( [&] () 
+	{
+		Log::PrintText(); 
+	} );
 }
 
-void Log::ExecuteThread()
+void Log::PrintText()
 {
 	while ( true )
 	{
+		std::unique_lock<std::mutex> lock( workMutex );
+		cv.wait( lock, [&] () 
 		{
-			Synchronize sync( this );
-			if ( errors.empty() == false )
-			{
-				std::cout << errors.front().c_str() << std::endl;
-				errors.pop();
-			}
-		}
-		::Sleep( 100 );
+			return !errors.empty(); 
+		} );
+
+		std::cout << errors.front().c_str() << std::endl;
+		errors.pop();
 	}
 }
 
@@ -49,21 +52,18 @@ void Log::Push( const int _errorCode )
 		} break;
 	}
 
-	{
-		Synchronize sync( this );
-		LPVOID message;
-		FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, _errorCode,
-					   MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), ( TCHAR* )&message, 0, NULL );
-		error += ( CHAR* )&message;
-		errors.push( error );
-		::LocalFree( message );
-	}
+	std::lock_guard<std::mutex> lock( workMutex );
+	LPVOID message;
+	FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, _errorCode,
+				   MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), ( TCHAR* )&message, 0, NULL );
+	error += ( CHAR* )&message;
+	errors.push( error );
+	::LocalFree( message );
 }
 
 void Log::Push( const std::string& _data )
 {
-	{
-		Synchronize sync( this );
-		errors.push( _data );
-	}
+	std::lock_guard<std::mutex> lock( workMutex );
+	errors.push( _data );
+	cv.notify_one();
 }

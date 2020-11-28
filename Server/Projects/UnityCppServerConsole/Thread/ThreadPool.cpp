@@ -7,7 +7,7 @@ ThreadPool::ThreadPool() : allStop( false )
 	{
 		workerThreads.emplace_back( [this] () 
 		{ 
-			this->WorkerThread(); 
+			ThreadPool::WorkerThread();
 		} );
 	}
 }

@@ -3,7 +3,7 @@
 #include "..\Synchronize\CriticalSection.h"
 #include "Session.h"
 
-class SessionManager : public CriticalSection, public Singleton<SessionManager>
+class SessionManager : public Singleton<SessionManager>
 {
 public:
 	SessionManager() = default;
@@ -16,4 +16,5 @@ public:
 
 private:
 	std::list<Session*> sessions;
+	CriticalSection cs;
 };

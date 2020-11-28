@@ -30,7 +30,6 @@ void Session::WaitForPacketRecv()
 	}
 }
 
-// 스트림패킷으로 보내는 메서드
 void Session::Dispatch( const LPOVERLAPPED& _ov )
 {
 	OVERLAPPEDEX* ovEx( ( OVERLAPPEDEX* )_ov );
@@ -40,7 +39,6 @@ void Session::Dispatch( const LPOVERLAPPED& _ov )
 		ZeroMemory( &wsaBuffer, sizeof( WSABUF ) );
 	}
 
-	// 보내고 나면 다시 Recv로 대기.
 	WaitForPacketRecv();
 }
 

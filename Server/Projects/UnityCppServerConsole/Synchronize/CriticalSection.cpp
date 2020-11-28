@@ -9,3 +9,13 @@ CriticalSection::~CriticalSection()
 {
 	::DeleteCriticalSection( &cs );
 }
+
+void CriticalSection::Lock()
+{
+	::EnterCriticalSection( &cs );
+}
+
+void CriticalSection::UnLock()
+{
+	::LeaveCriticalSection( &cs );
+}

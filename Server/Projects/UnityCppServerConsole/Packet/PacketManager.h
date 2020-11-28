@@ -1,19 +1,22 @@
 #pragma once
 #include "StreamPacket.h"
-#include "..\Thread\Thread.h"
 #include "..\Standard\Protocol.h"
 #include "..\Standard\Singleton.hpp"
 
-class PacketManager : public Thread, public Singleton<PacketManager>
+class PacketManager : public Singleton<PacketManager>
 {
 public:
 	PacketManager();
 	virtual ~PacketManager() = default;
 
 public:
-	void ExecuteThread() override;
 	void Push( const PACKET& _packet );
 
 private:
+	void WorkPacket();
+
+private:
 	std::queue<PACKET> packets;
+	std::condition_variable cv;
+	std::mutex workMutex;
 };

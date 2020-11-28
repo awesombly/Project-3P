@@ -1,8 +1,7 @@
 #pragma once
-#include "WorkerThread.h"
 #include "..\Standard\Singleton.hpp"
 
-class IOCPManager : public CriticalSection, public Singleton<IOCPManager>
+class IOCPManager : public Singleton<IOCPManager>
 {
 public:
 	IOCPManager();
@@ -10,10 +9,11 @@ public:
 
 public:
 	void Bind( const HANDLE& _sock, const ULONG_PTR _key );
-	const HANDLE& GetHandle();
+
+private:
+	void WaitCompletionStatus();
 
 private:
 	HANDLE iocpHandle;
-	WorkerThread threads[WorkerThreadCount];
 };
 

@@ -8,7 +8,7 @@ static std::string ToUFT8( const char* _string )
 	wchar_t* UnicodeBuffer = NULL;
 	char* multibyteBuffer = NULL;
 
-	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_ACP, 0, _string, ::strlen( _string ), NULL, 0 ) ) <= 0 )
+	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_ACP, 0, _string, ::strlen( _string ), NULL, 0 ) ) < 0 )
 	{
 		return 0;
 	}
@@ -19,7 +19,7 @@ static std::string ToUFT8( const char* _string )
 	// Ansi -> Unicode
 	lengthUnicode = ::MultiByteToWideChar( CP_ACP, 0, _string, ::strlen( _string ), UnicodeBuffer, lengthUnicode );
 
-	if ( ( lengthUTF = ::WideCharToMultiByte( CP_UTF8, 0, UnicodeBuffer, lengthUnicode, NULL, 0, NULL, NULL ) ) <= 0 )
+	if ( ( lengthUTF = ::WideCharToMultiByte( CP_UTF8, 0, UnicodeBuffer, lengthUnicode, NULL, 0, NULL, NULL ) ) < 0 )
 	{
 		delete[] UnicodeBuffer;
 		return 0;
@@ -45,7 +45,7 @@ static std::string ToAnsi( const char* _string )
 	wchar_t* UnicodeBuffer = NULL;
 	char* multibyteBuffer = NULL;
 
-	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_UTF8, 0, _string, ::strlen( _string ), NULL, 0 ) ) <= 0 )
+	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_UTF8, 0, _string, ::strlen( _string ), NULL, 0 ) ) < 0 )
 	{
 		return 0;
 	}
@@ -56,7 +56,7 @@ static std::string ToAnsi( const char* _string )
 	// UTF-8 -> Unicode
 	lengthUnicode = ::MultiByteToWideChar( CP_UTF8, 0, _string, ::strlen( _string ), UnicodeBuffer, lengthUnicode );
 
-	if ( ( lengthUTF = ::WideCharToMultiByte( CP_ACP, 0, UnicodeBuffer, lengthUnicode, NULL, 0, NULL, NULL ) ) <= 0 )
+	if ( ( lengthUTF = ::WideCharToMultiByte( CP_ACP, 0, UnicodeBuffer, lengthUnicode, NULL, 0, NULL, NULL ) ) < 0 )
 	{
 		delete[] UnicodeBuffer;
 		return 0;

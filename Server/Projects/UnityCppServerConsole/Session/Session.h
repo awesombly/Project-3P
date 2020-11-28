@@ -1,5 +1,4 @@
 #pragma once
-#include "..\Synchronize\Synchronize.h"
 #include "..\Packet\StreamPacket.h"
 
 class Session

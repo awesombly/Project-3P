@@ -1,14 +1,11 @@
 #pragma once
-#include "Acceptor/Acceptor.h"
+#include "Acceptor\Acceptor.h"
 
-class Server : public Thread
+class Server
 {
 public:
 	Server( const int _port, const char* _address = 0 );
 	virtual ~Server();
-
-public:
-	void ExecuteThread() override {}
 
 private:
 	Acceptor acceptor;

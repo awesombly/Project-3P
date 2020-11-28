@@ -1,6 +1,7 @@
 #include "Acceptor.h"
 #include "..\Thread\IOCPManager.h"
 #include "..\Session\SessionManager.h"
+#include "..\Thread\ThreadPool.h"
 #include "..\\Standard\Log.h"
 
 Acceptor::Acceptor( const int _port, const char* _address )
@@ -21,25 +22,25 @@ Acceptor::Acceptor( const int _port, const char* _address )
 	sa.sin_family = AF_INET;
 	if ( _address == nullptr )
 	{
-		// h : 리틀 엔디안 to : 에서 n : 빅엔디안으로 l : long자료형
 		sa.sin_addr.S_un.S_addr = ::htonl( INADDR_ANY );
 	}
 	else
 	{
-		// 10진수 표현방식( 192.168.0.1 같은.. )을 32비트 빅엔디안으로 바꿔줍니다.
 		sa.sin_addr.S_un.S_addr = ::inet_addr( _address );
 	}
 	sa.sin_port = ::htons( _port );
 
-	// bind : 소켓에 정보를 저장
-	// listen : 연결 요청 대기
 	if ( ::bind( listenSocket, ( sockaddr* )&sa, sizeof( sa ) ) == SOCKET_ERROR ||
 		::listen( listenSocket, SOMAXCONN ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
 		return;
 	}
-	CreateThread();
+
+	ThreadPool::Instance().Enqueue( [&] () 
+	{
+		Acceptor::ClientAccept();
+	} );
 }
 
 Acceptor::~Acceptor()
@@ -47,15 +48,15 @@ Acceptor::~Acceptor()
 	::WSACleanup();
 }
 
-void Acceptor::ExecuteThread()
+void Acceptor::ClientAccept()
 {
 	int errorCode( 0 );
 	SOCKET clientsock;
 	SOCKADDR_IN client{};
 	int length( sizeof( client ) );
-	while ( IsStart() )
+	while ( true )
 	{
-		// accept : 아직 처리되지않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 소켓을 가져온다.
+		// 아직 처리되지않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 소켓을 가져온다.
 		clientsock = ::accept( listenSocket, ( sockaddr* )&client, &length );
 		if ( errorCode == SOCKET_ERROR )
 		{

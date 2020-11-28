@@ -1,15 +1,16 @@
 #pragma once
-#include "..\Thread\Thread.h"
 #include "..\Session\Session.h"
 
-class Acceptor : public Thread
+class Acceptor
 {
 public:
 	Acceptor( const int _port, const char* _address = 0 );
 	virtual ~Acceptor();
 
 public:
-	void ExecuteThread() override;
+	void ClientAccept();
+
+private:
 	bool SetSocketOption();
 
 private:

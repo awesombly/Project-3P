@@ -1,16 +1,20 @@
 #include "IOCPManager.h"
+#include "..\Session\SessionManager.h"
+#include "..\Thread\ThreadPool.h"
 #include "..\Standard\Log.h"
-#include "..\Session\Session.h"
 
 IOCPManager::IOCPManager()
 {
 	Log::Instance().Push( "Create IOCP Handler" );
-	iocpHandle = ::CreateIoCompletionPort( INVALID_HANDLE_VALUE, 0, 0, WorkerThreadCount );
+	iocpHandle = ::CreateIoCompletionPort( INVALID_HANDLE_VALUE, 0, 0, 3 );
 
-	for ( int count = 0; count < WorkerThreadCount; count++ )
+	for ( int count = 0; count < 3; count++ )
 	{
-		Log::Instance().Push( "Create WorkerThread" );
-		threads[count].CreateThread();
+		Log::Instance().Push( "Wait GetQueuedCompletionStatus From Thread." );
+		ThreadPool::Instance().Enqueue( [&] ()
+		{
+			IOCPManager::WaitCompletionStatus();
+		} );
 	}
 }
 
@@ -28,7 +32,43 @@ void IOCPManager::Bind( const HANDLE& _socket, const ULONG_PTR _key )
 	session->WaitForPacketRecv();
 }
 
-const HANDLE& IOCPManager::GetHandle()
+void IOCPManager::WaitCompletionStatus()
 {
-	return iocpHandle;
+	ULONG_PTR keyValue;
+	LPOVERLAPPED ov;
+	DWORD transfer;
+
+	while ( true )
+	{
+		// IOCP의 입출력 완료 대기열부터 입출력 완료를 기다립니다.
+		// 대기열이 없다면 대기열에 입출력 완료가 있을 때까지 기다립니다.
+		if ( ::GetQueuedCompletionStatus( iocpHandle, &transfer, &keyValue, &ov, INFINITE ) == TRUE )
+		{
+			Session* session( ( Session* )keyValue );
+			if ( transfer != 0 )
+			{
+				if ( ov != NULL && session != nullptr )
+				{
+					session->Dispatch( ov );
+				}
+			}
+			else
+			{
+				SessionManager::Instance().Erase( session );
+			}
+		}
+		else
+		{
+			Session* session( ( Session* )keyValue );
+			if ( ::GetLastError() != ERROR_OPERATION_ABORTED )
+			{
+				if ( transfer == 0 && keyValue != NULL )
+				{
+					SessionManager::Instance().Erase( session );
+					continue;
+				}
+			}
+			Log::Instance().Push();
+		}
+	}
 }

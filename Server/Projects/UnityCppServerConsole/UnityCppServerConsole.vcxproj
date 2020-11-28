@@ -88,11 +88,8 @@
     <ClCompile Include="Packet\PacketManager.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Session\Session.cpp" />
-    <ClCompile Include="Synchronize\Synchronize.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Thread\Thread.cpp" />
-    <ClCompile Include="Thread\WorkerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Acceptor\Acceptor.h" />
@@ -108,11 +105,8 @@
     <ClInclude Include="Standard\Protocol.h" />
     <ClInclude Include="Standard\Singleton.hpp" />
     <ClInclude Include="Packet\StreamPacket.h" />
-    <ClInclude Include="Synchronize\Synchronize.h" />
     <ClInclude Include="Synchronize\CriticalSection.h" />
     <ClInclude Include="Standard\Header.h" />
-    <ClInclude Include="Thread\Thread.h" />
-    <ClInclude Include="Thread\WorkerThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

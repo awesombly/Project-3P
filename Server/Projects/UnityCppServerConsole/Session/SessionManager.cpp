@@ -3,41 +3,38 @@
 
 void SessionManager::Push( Session* _session )
 {
-	{
-		Synchronize sync( this );
-		std::string msg( "Enter Session : " );
-		msg += ::inet_ntoa( _session->address.sin_addr );
-		msg += " : ";
-		msg += std::to_string( ::ntohs( _session->address.sin_port ) );
-		Log::Instance().Push( msg );
-		
-		sessions.push_back( _session );
-	}
+	cs.Lock();
+	std::string msg( "Enter Session : " );
+	msg += ::inet_ntoa( _session->address.sin_addr );
+	msg += " : ";
+	msg += std::to_string( ::ntohs( _session->address.sin_port ) );
+	Log::Instance().Push( msg );
+	
+	sessions.push_back( _session );
+	cs.UnLock();
 }
 
 void SessionManager::Erase( Session* _session )
 {
+	cs.Lock();
+	std::list<Session*>::iterator iter( std::find( std::begin( sessions ), std::end( sessions ), _session ) );
+	if ( iter != std::end( sessions ) )
 	{
-		Synchronize sync( this );
-		std::list<Session*>::iterator iter( std::find( std::begin( sessions ), std::end( sessions ), _session ) );
-		if ( iter != std::end( sessions ) )
-		{
-			std::string msg( "Leave Session : " );
-			msg += ::inet_ntoa( _session->address.sin_addr );
-			msg += " : ";
-			msg += std::to_string( ::ntohs( _session->address.sin_port ) );
-			Log::Instance().Push( msg );
+		std::string msg( "Leave Session : " );
+		msg += ::inet_ntoa( _session->address.sin_addr );
+		msg += " : ";
+		msg += std::to_string( ::ntohs( _session->address.sin_port ) );
+		Log::Instance().Push( msg );
 
-			delete *iter;
-			*iter = nullptr;
-			sessions.erase( iter );
-		}
+		delete *iter;
+		*iter = nullptr;
+		sessions.erase( iter );
 	}
+	cs.UnLock();
 }
 
 void SessionManager::BroadCast( const UPACKET& _packet )
 {
-	Log::Instance().Push( "BroadCast" );
 	for ( Session* session : sessions )
 	{
 		std::string msg( "Send From Session : " );
