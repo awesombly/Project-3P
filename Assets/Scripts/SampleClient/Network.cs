@@ -11,7 +11,7 @@ public class Network : MonoBehaviour
 
     private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
 
-    public delegate void DelProcessPacket( string data );
+    public delegate void DelProcessPacket( string _data );
     private Dictionary<ushort/*packetType*/, DelProcessPacket> protocols = new Dictionary<ushort/*packetType*/, DelProcessPacket>();
 
     private void Run()
@@ -62,9 +62,9 @@ public class Network : MonoBehaviour
         protocols.Add( Protocol.ChatMessage.PacketType, ReceiveChatMessage );
     }
 
-    private void ReceiveChatMessage( string data )
+    private void ReceiveChatMessage( string _data )
     {
-        Protocol.ChatMessage protocol = JsonUtility.FromJson<Protocol.ChatMessage>( data );
+        Protocol.ChatMessage protocol = JsonUtility.FromJson<Protocol.ChatMessage>( _data );
 
         ChatMain.texts.Add( protocol.Message );
     }
