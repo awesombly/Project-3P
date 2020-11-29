@@ -6,7 +6,7 @@ namespace PACKET_TYPE
 	// 서버/클라 결과 동일해야함. (Sdbm Hash)
 	u_short GetPacketType( const char* _name );
 
-	const static u_short ChatMessage( GetPacketType( "ChatMessage" ) );
+	const static u_short ChatMessage = GetPacketType( "ChatMessage" );
 }
 
 #pragma pack( push, 1 )
@@ -19,7 +19,7 @@ struct UPACKET
 
 	u_short length;
 	u_short type;
-	byte data[DataMaxSize];
+	byte data[ DataMaxSize ];
 };
 #pragma pack( pop )
 

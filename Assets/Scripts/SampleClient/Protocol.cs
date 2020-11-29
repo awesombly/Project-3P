@@ -15,23 +15,23 @@ public class UPACKET
     [MarshalAs( UnmanagedType.ByValArray, SizeConst = DataMaxSize )]
     public byte[] data;
 
-    public UPACKET( ISerializable protocol )
+    public UPACKET( Protocol.IProtocol _protocol )
     {
-        SetData( protocol );
+        SetData( _protocol );
     }
 
-    public void SetData( ISerializable protocol )
+    public void SetData( Protocol.IProtocol _protocol )
     {
-        type = protocol.GetPacketType();
-        data = System.Text.Encoding.UTF8.GetBytes( JsonUtility.ToJson( protocol ) );
+        type = _protocol.GetPacketType();
+        data = System.Text.Encoding.UTF8.GetBytes( JsonUtility.ToJson( _protocol ) );
         length = ( ushort )( data.Length + HeaderSize );
     }
 
     // 서버/클라 결과 동일해야함. (Sdbm Hash)
-    public static ushort GetPacketType( string name )
+    public static ushort GetPacketType( string _name )
     {
         uint hash = 0;
-        foreach ( char elem in name )
+        foreach ( char elem in _name )
         {
             hash = elem + ( hash << 6 ) + ( hash << 16 ) - hash;
         }
@@ -39,18 +39,21 @@ public class UPACKET
     }
 }
 
-public interface ISerializable
+namespace Protocol
 {
-    ushort GetPacketType();
-}
-
-public struct ChatMessage : ISerializable
-{
-    public string Message;
-
-    public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
-    public ushort GetPacketType()
+    public interface IProtocol
     {
-        return PacketType;
+        ushort GetPacketType();
+    }
+
+    public struct ChatMessage : IProtocol
+    {
+        public string Message;
+
+        public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+        public ushort GetPacketType()
+        {
+            return PacketType;
+        }
     }
 }
