@@ -37,10 +37,13 @@ Acceptor::Acceptor( const int _port, const char* _address )
 		return;
 	}
 
-	ThreadPool::Instance().Enqueue( [&] () 
-	{
-		Acceptor::ClientAccept();
-	} );
+	//ThreadPool::Instance().Enqueue( [&] () 
+	//{
+	//	Acceptor::ClientAccept();
+	//} );
+
+	// 연습
+	const std::future<void>& fut( std::async( std::launch::async, [&] () { ClientAccept(); } ) );
 }
 
 Acceptor::~Acceptor()
@@ -50,7 +53,6 @@ Acceptor::~Acceptor()
 
 void Acceptor::ClientAccept()
 {
-	int errorCode( 0 );
 	SOCKET clientsock;
 	SOCKADDR_IN client{};
 	int length( sizeof( client ) );
@@ -58,11 +60,7 @@ void Acceptor::ClientAccept()
 	{
 		// 아직 처리되지않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 소켓을 가져온다.
 		clientsock = ::accept( listenSocket, ( sockaddr* )&client, &length );
-		if ( errorCode == SOCKET_ERROR )
-		{
-			Log::Instance().Push();
-			return;
-		}
+		
 		Session* session( new Session( clientsock, client ) );
 		SessionManager::Instance().Push( session );
 		IOCPManager::Instance().Bind( ( HANDLE )clientsock, ( ULONG_PTR )session );

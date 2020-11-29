@@ -22,4 +22,4 @@ private:
 };
 
 template<class Type>
-Type* Singleton<Type>::instance = nullptr;
+Type* Singleton<Type>::instance = new Type();

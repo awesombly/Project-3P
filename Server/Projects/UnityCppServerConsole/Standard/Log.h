@@ -16,7 +16,7 @@ public:
 
 private:
 	std::queue<std::string> errors;
-	std::mutex workMutex;
 	std::condition_variable cv;
+	std::mutex workMutex;
 };
 
