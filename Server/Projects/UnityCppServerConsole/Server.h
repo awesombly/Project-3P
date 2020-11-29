@@ -5,9 +5,8 @@ class Server
 {
 public:
 	Server( const int _port, const char* _address = 0 );
-	virtual ~Server();
+	virtual ~Server() = default;
 
 private:
 	Acceptor acceptor;
-	HANDLE destroyEvent;
 };

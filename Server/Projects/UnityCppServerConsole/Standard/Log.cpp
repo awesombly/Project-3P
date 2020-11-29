@@ -3,10 +3,7 @@
 
 Log::Log()
 {
-	ThreadPool::Instance().Enqueue( [&] () 
-	{
-		Log::PrintText(); 
-	} );
+	ThreadPool::Instance().Enqueue( [&] () { Log::PrintText(); } );
 }
 
 void Log::PrintText()
@@ -32,7 +29,7 @@ void Log::Push( const int _errorCode )
 	LPVOID message;
 	FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, _errorCode,
 				   MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), ( TCHAR* )&message, 0, NULL );
-	std::string error( ( CHAR* )&message );
+	std::string error = ( CHAR* )&message;
 	texts.push( error );
 	::LocalFree( message );
 }

@@ -31,16 +31,13 @@ Acceptor::Acceptor( const int _port, const char* _address )
 	sa.sin_port = ::htons( _port );
 
 	if ( ::bind( listenSocket, ( sockaddr* )&sa, sizeof( sa ) ) == SOCKET_ERROR ||
-		::listen( listenSocket, SOMAXCONN ) == SOCKET_ERROR )
+		 ::listen( listenSocket, SOMAXCONN ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
 		return;
 	}
 
-	ThreadPool::Instance().Enqueue( [&] () 
-	{
-		Acceptor::ClientAccept();
-	} );
+	ThreadPool::Instance().Enqueue( [&] () { Acceptor::ClientAccept(); } );
 
 	// 연습
 	//const std::future<void>& fut( std::async( std::launch::async, [&] () 
@@ -57,14 +54,14 @@ Acceptor::~Acceptor()
 void Acceptor::ClientAccept()
 {
 	SOCKET clientsock;
-	SOCKADDR_IN client{};
-	int length( sizeof( client ) );
+	SOCKADDR_IN client {};
+	int length = sizeof( client );
 	while ( true )
 	{
 		// 아직 처리되지않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 소켓을 가져온다.
 		clientsock = ::accept( listenSocket, ( sockaddr* )&client, &length );
 		
-		Session* session( new Session( clientsock, client ) );
+		Session* session = new Session( clientsock, client );
 		SessionManager::Instance().Push( session );
 		IOCPManager::Instance().Bind( ( HANDLE )clientsock, ( ULONG_PTR )session );
 	}
@@ -73,23 +70,24 @@ void Acceptor::ClientAccept()
 // 소켓 세부 설정
 bool Acceptor::SetSocketOption()
 {
-	int optionValue( 1 );
+	int optionValue = 1;
 	if ( ::setsockopt( listenSocket, SOL_SOCKET, SO_REUSEADDR, ( char* )&optionValue, sizeof( optionValue ) ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
 		return false;
 	}
 
-	char flag( 1 );
+	char flag = 1;
 	if ( ::setsockopt( listenSocket, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof( char ) ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
 		return false;
 	}
 
-	int size( sizeof( int ) );
+	int size = sizeof( int );
 	linger optLinger;
 	::getsockopt( listenSocket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, &size );
+
 	optLinger.l_linger = 1000;
 	optLinger.l_onoff = 1;
 	::setsockopt( listenSocket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, sizeof( linger ) );

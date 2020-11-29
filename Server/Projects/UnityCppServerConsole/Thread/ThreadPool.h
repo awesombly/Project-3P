@@ -30,7 +30,7 @@ private:
 
 // ... 그냥 람다로 넣으시는게 편한듯 합니다.
 // 클래스 멤버함수 등록 : ThreadPool.Instance().Enqueue( [&] () { SomeFunc(); } );
-// SomeFunc,  ClassName::SomeFunc,   this->ClassName::SomeFunc   더 나은걸로 하심됩니다.
+// SomeFunc,  ClassName::SomeFunc,   this->ClassName::SomeFunc 더 나은걸로 하심됩니다.
 template <class Func, class... Args>
 std::future<typename std::result_of<Func( Args... )>::type> ThreadPool::Enqueue( Func&& _func, Args&&... _args )
 {
@@ -46,10 +46,7 @@ std::future<typename std::result_of<Func( Args... )>::type> ThreadPool::Enqueue(
 	std::future<return_type> resultFuture( job->get_future() );
 	{
 		std::lock_guard<std::mutex> lock( jobMutex );
-		jobs.push( [job] () 
-		{ 
-			( *job )( ); 
-		} );
+		jobs.push( [job] () { ( *job )( ); } );
 	}
 	jobCV.notify_one();
 

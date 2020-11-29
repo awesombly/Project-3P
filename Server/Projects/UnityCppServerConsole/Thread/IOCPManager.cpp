@@ -28,7 +28,7 @@ void IOCPManager::Bind( const HANDLE& _socket, const ULONG_PTR _key )
 
 	// 바인드를 하고나면 첫 WSARecv를 해줍니다.
 	// 이제 무언가 전송되면 GetQueuedCompletionStatus에 들어갈 것입니다.
-	Session* session( ( Session* )_key );
+	Session* session = ( Session* )_key;
 	session->WaitForPacketRecv();
 }
 
@@ -44,7 +44,7 @@ void IOCPManager::WaitCompletionStatus()
 		// 대기열이 없다면 대기열에 입출력 완료가 있을 때까지 기다립니다.
 		if ( ::GetQueuedCompletionStatus( iocpHandle, &transfer, &keyValue, &ov, INFINITE ) == TRUE )
 		{
-			Session* session( ( Session* )keyValue );
+			Session* session = ( Session* )keyValue;
 			if ( transfer != 0 )
 			{
 				if ( ov != NULL && session != nullptr )
@@ -59,7 +59,7 @@ void IOCPManager::WaitCompletionStatus()
 		}
 		else
 		{
-			Session* session( ( Session* )keyValue );
+			Session* session = ( Session* )keyValue;
 			if ( ::GetLastError() != ERROR_OPERATION_ABORTED )
 			{
 				if ( transfer == 0 && keyValue != NULL )

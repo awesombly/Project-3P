@@ -15,8 +15,8 @@ Session::~Session()
 
 void Session::WaitForPacketRecv()
 {
-	DWORD transferred( 0 );
-	DWORD flags( 0 );
+	DWORD flags = 0;
+	DWORD transferred = 0;
 	ov.flag = OVERLAPPEDEX::MODE_RECV;
 	wsaBuffer.buf = buffer;
 	wsaBuffer.len = DataMaxSize + HeaderSize;
@@ -31,7 +31,7 @@ void Session::WaitForPacketRecv()
 
 void Session::Dispatch( const LPOVERLAPPED& _ov )
 {
-	OVERLAPPEDEX* ovEx( ( OVERLAPPEDEX* )_ov );
+	OVERLAPPEDEX* ovEx = ( OVERLAPPEDEX* )_ov;
 	if ( ovEx->flag == OVERLAPPEDEX::MODE_RECV )
 	{
 		streamPacket.Truncate( wsaBuffer );
