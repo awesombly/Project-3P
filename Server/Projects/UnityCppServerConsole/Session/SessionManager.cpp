@@ -37,7 +37,7 @@ void SessionManager::Erase( Session* _session )
 	cs.UnLock();
 }
 
-void SessionManager::BroadCast( const UPACKET& _packet )
+void SessionManager::BroadCast( const UPACKET& _packet ) const
 {
 	for ( Session* session : sessions )
 	{

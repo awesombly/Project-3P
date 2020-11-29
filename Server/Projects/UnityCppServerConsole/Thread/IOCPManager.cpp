@@ -18,7 +18,7 @@ IOCPManager::IOCPManager()
 	}
 }
 
-void IOCPManager::Bind( const HANDLE& _socket, const ULONG_PTR _key )
+void IOCPManager::Bind( const HANDLE& _socket, const ULONG_PTR _key ) const
 {
 	// IOCP를 사용하기 위해서는 해당 소켓을 바인드 해줘야 합니다.
 	// CreateIoCompletionPort 메서드의 2가지 용도
@@ -32,7 +32,7 @@ void IOCPManager::Bind( const HANDLE& _socket, const ULONG_PTR _key )
 	session->WaitForPacketRecv();
 }
 
-void IOCPManager::WaitCompletionStatus()
+void IOCPManager::WaitCompletionStatus() const
 {
 	ULONG_PTR keyValue;
 	LPOVERLAPPED ov;

@@ -8,10 +8,10 @@ public:
 	virtual ~Acceptor();
 
 public:
-	void ClientAccept();
+	void ClientAccept() const;
 
 private:
-	bool SetSocketOption();
+	bool SetSocketOption() const;
 
 private:
 	SOCKET listenSocket;

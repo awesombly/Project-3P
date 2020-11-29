@@ -8,10 +8,10 @@ public:
 	virtual ~IOCPManager() = default;
 
 public:
-	void Bind( const HANDLE& _sock, const ULONG_PTR _key );
+	void Bind( const HANDLE& _sock, const ULONG_PTR _key ) const;
 
 private:
-	void WaitCompletionStatus();
+	void WaitCompletionStatus() const;
 
 private:
 	HANDLE iocpHandle;

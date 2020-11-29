@@ -10,7 +10,7 @@ public:
 public:
 	void WaitForPacketRecv();
 	void Dispatch( const LPOVERLAPPED& _ov );
-	const SOCKET& GetSocket();
+	const SOCKET& GetSocket() const;
 
 private:
 	struct OVERLAPPEDEX : OVERLAPPED

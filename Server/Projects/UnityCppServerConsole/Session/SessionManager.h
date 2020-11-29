@@ -12,7 +12,7 @@ public:
 public:
 	void Push( Session* _session );
 	void Erase( Session* _session );
-	void BroadCast( const UPACKET& _packet );
+	void BroadCast( const UPACKET& _packet ) const;
 
 private:
 	std::list<Session*> sessions;

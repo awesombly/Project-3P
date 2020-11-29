@@ -41,7 +41,7 @@ void Session::Dispatch( const LPOVERLAPPED& _ov )
 	WaitForPacketRecv();
 }
 
-const SOCKET& Session::GetSocket()
+const SOCKET& Session::GetSocket() const
 {
 	return socket;
 }

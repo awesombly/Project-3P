@@ -51,7 +51,7 @@ Acceptor::~Acceptor()
 	::WSACleanup();
 }
 
-void Acceptor::ClientAccept()
+void Acceptor::ClientAccept() const
 {
 	SOCKET clientsock;
 	SOCKADDR_IN client {};
@@ -68,7 +68,7 @@ void Acceptor::ClientAccept()
 }
 
 // 家南 技何 汲沥
-bool Acceptor::SetSocketOption()
+bool Acceptor::SetSocketOption() const
 {
 	int optionValue = 1;
 	if ( ::setsockopt( listenSocket, SOL_SOCKET, SO_REUSEADDR, ( char* )&optionValue, sizeof( optionValue ) ) == SOCKET_ERROR )
