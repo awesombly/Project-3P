@@ -23,5 +23,5 @@ private:
 	std::condition_variable cv;
 	std::mutex workMutex;
 
-	std::unordered_map<u_short/*packetType*/, void( * )( const UPACKET& )> protocols;
+	std::unordered_map<u_short/*packetType*/, std::function<void( const UPACKET& )>> protocols;
 };
