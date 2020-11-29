@@ -15,12 +15,12 @@ public class UPACKET
     [MarshalAs( UnmanagedType.ByValArray, SizeConst = DataMaxSize )]
     public byte[] data;
 
-    public UPACKET( IProtocol _protocol )
+    public UPACKET( Protocol.IProtocol _protocol )
     {
         SetData( _protocol );
     }
 
-    public void SetData( IProtocol _protocol )
+    public void SetData( Protocol.IProtocol _protocol )
     {
         type = _protocol.GetPacketType();
         data = System.Text.Encoding.UTF8.GetBytes( JsonUtility.ToJson( _protocol ) );
@@ -39,18 +39,21 @@ public class UPACKET
     }
 }
 
-public interface IProtocol
+namespace Protocol
 {
-    ushort GetPacketType();
-}
-
-public struct ChatMessage : IProtocol
-{
-    public string Message;
-
-    public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
-    public ushort GetPacketType()
+    public interface IProtocol
     {
-        return PacketType;
+        ushort GetPacketType();
+    }
+
+    public struct ChatMessage : IProtocol
+    {
+        public string Message;
+
+        public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+        public ushort GetPacketType()
+        {
+            return PacketType;
+        }
     }
 }
