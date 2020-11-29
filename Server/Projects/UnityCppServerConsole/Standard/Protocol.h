@@ -33,6 +33,7 @@ namespace Protocol
 		// 서버/클라 결과 동일해야함. (Sdbm Hash)
 		u_short GetPacketType( const char* _name );
 
+
 		const static u_short ChatMessage = GetPacketType( "ChatMessage" );
 	}
 }
