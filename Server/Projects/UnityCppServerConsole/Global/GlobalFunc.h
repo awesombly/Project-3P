@@ -2,11 +2,17 @@
 #include <windows.h>
 #include <string>
 
+static std::string operator ""_s( const char* _str, size_t _len )
+{
+	return ( std::string( _str, _len ) );
+}
+
 static std::string ToUFT8( const char* _string )
 {
-	int lengthUnicode = 0, lengthUTF = 0;
-	wchar_t* UnicodeBuffer = NULL;
-	char* multibyteBuffer = NULL;
+	int lengthUnicode( 0 );
+	int lengthUTF( 0 );
+	wchar_t* UnicodeBuffer( NULL );
+	char* multibyteBuffer( NULL );
 
 	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_ACP, 0, _string, ::strlen( _string ), NULL, 0 ) ) < 0 )
 	{
@@ -41,9 +47,10 @@ static std::string ToUFT8( const char* _string )
 
 static std::string ToAnsi( const char* _string )
 {
-	int lengthUnicode = 0, lengthUTF = 0;
-	wchar_t* UnicodeBuffer = NULL;
-	char* multibyteBuffer = NULL;
+	int lengthUnicode( 0 );
+	int lengthUTF( 0 );
+	wchar_t* UnicodeBuffer( NULL );
+	char* multibyteBuffer( NULL );
 
 	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_UTF8, 0, _string, ::strlen( _string ), NULL, 0 ) ) < 0 )
 	{

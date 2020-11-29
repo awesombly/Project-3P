@@ -15,7 +15,7 @@ public:
 	void Push( const std::string& _data );
 
 private:
-	std::queue<std::string> errors;
+	std::queue<std::string> texts;
 	std::condition_variable cv;
 	std::mutex workMutex;
 };

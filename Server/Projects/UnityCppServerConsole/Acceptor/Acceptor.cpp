@@ -37,13 +37,16 @@ Acceptor::Acceptor( const int _port, const char* _address )
 		return;
 	}
 
-	//ThreadPool::Instance().Enqueue( [&] () 
-	//{
-	//	Acceptor::ClientAccept();
-	//} );
+	ThreadPool::Instance().Enqueue( [&] () 
+	{
+		Acceptor::ClientAccept();
+	} );
 
 	// ¿¬½À
-	const std::future<void>& fut( std::async( std::launch::async, [&] () { ClientAccept(); } ) );
+	//const std::future<void>& fut( std::async( std::launch::async, [&] () 
+	//{ 
+	//	Acceptor::ClientAccept();
+	//} ) );
 }
 
 Acceptor::~Acceptor()

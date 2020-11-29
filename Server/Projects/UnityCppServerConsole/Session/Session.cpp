@@ -15,17 +15,16 @@ Session::~Session()
 
 void Session::WaitForPacketRecv()
 {
-	DWORD transferred;
+	DWORD transferred( 0 );
 	DWORD flags( 0 );
 	ov.flag = OVERLAPPEDEX::MODE_RECV;
 	wsaBuffer.buf = buffer;
 	wsaBuffer.len = DataMaxSize + HeaderSize;
 	if ( ::WSARecv( socket, &wsaBuffer, 1, &transferred, &flags, ( LPOVERLAPPED )&ov, NULL ) == SOCKET_ERROR )
 	{
-		int iError = WSAGetLastError();
 		if ( ::WSAGetLastError() != WSA_IO_PENDING )
 		{
-			Log::Instance().Push( iError );
+			Log::Instance().Push( ::WSAGetLastError() );
 		}
 	}
 }

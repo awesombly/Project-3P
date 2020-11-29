@@ -12,6 +12,5 @@ public:
 	void UnLock();
 
 private:
-	friend class Synchronize;
 	CRITICAL_SECTION cs;
 };

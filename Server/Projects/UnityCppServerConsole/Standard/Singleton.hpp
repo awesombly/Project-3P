@@ -1,5 +1,6 @@
 #pragma once
 #include "Header.h"
+#include "..\Synchronize\CriticalSection.h"
 template<class Type>
 class Singleton
 {
@@ -10,16 +11,27 @@ public:
 public:
 	static Type& Instance()
 	{
-		if ( instance == nullptr )
+		std::call_once( flag, [&] () 
 		{
-			instance = new Type();
-		}
+			CriticalSection cs;
+			cs.Lock();
+			if ( instance == nullptr )
+			{
+				instance = new Type();
+			}
+			cs.UnLock();
+		} );
+
 		return *instance;
 	}
 
 private:
+	static std::once_flag flag;
 	static Type* instance;
 };
 
 template<class Type>
-Type* Singleton<Type>::instance = new Type();
+std::once_flag Singleton<Type>::flag;
+
+template<class Type>
+Type* Singleton<Type>::instance = nullptr;

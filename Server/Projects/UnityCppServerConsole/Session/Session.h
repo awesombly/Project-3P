@@ -32,6 +32,6 @@ private:
 	OVERLAPPEDEX ov;
 	WSABUF wsaBuffer;
 	StreamPacket streamPacket;
-	char buffer[DataMaxSize];
+	char buffer[DataMaxSize + HeaderSize];
 };
 

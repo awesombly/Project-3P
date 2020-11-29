@@ -10,9 +10,9 @@ IOCPManager::IOCPManager()
 
 	for ( int count = 0; count < 3; count++ )
 	{
-		Log::Instance().Push( "Wait GetQueuedCompletionStatus From Thread." );
 		ThreadPool::Instance().Enqueue( [&] ()
 		{
+			Log::Instance().Push( "Wait GetQueuedCompletionStatus From Thread." );
 			IOCPManager::WaitCompletionStatus();
 		} );
 	}

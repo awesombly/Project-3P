@@ -2,14 +2,14 @@
 
 namespace PACKET_TYPE
 {
-	u_short GetPacketType( const char* name )
+	u_short GetPacketType( const char* _name )
 	{
-		unsigned int hash = 0;
+		unsigned int hash( 0 );
 
-		size_t size = ::strlen( name );
-		for ( size_t i = 0; i < size; ++i )
+		size_t size = ::strlen( _name );
+		for ( size_t count = 0; count < size; count++ )
 		{
-			hash = name[ i ] + ( hash << 6 ) + ( hash << 16 ) - hash;
+			hash = _name[count] + ( hash << 6 ) + ( hash << 16 ) - hash;
 		}
 
 		return ( u_short )hash;

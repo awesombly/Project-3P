@@ -7,7 +7,7 @@ class SessionManager : public Singleton<SessionManager>
 {
 public:
 	SessionManager() = default;
-	virtual ~SessionManager() = default;
+	virtual ~SessionManager();
 
 public:
 	void Push( Session* _session );
