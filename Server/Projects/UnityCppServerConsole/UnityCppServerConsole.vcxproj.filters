@@ -59,6 +59,12 @@
     <ClCompile Include="Standard\Protocol.cpp">
       <Filter>Standard</Filter>
     </ClCompile>
+    <ClCompile Include="IO\OStream.cpp">
+      <Filter>Synchronize</Filter>
+    </ClCompile>
+    <ClCompile Include="Time\Timer.cpp">
+      <Filter>Synchronize</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Thread\IOCPManager.h">
@@ -102,6 +108,12 @@
       <Filter>Global</Filter>
     </ClInclude>
     <ClInclude Include="Thread\ThreadPool.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\OStream.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Time\Timer.h">
       <Filter>Thread</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,15 @@
 #pragma once
 #include "Singleton.hpp"
+#include "..\Time\Timer.h"
+#include "..\IO\OStream.h"
 #include "..\Synchronize\CriticalSection.h"
+
+enum class ELogType : char
+{
+	Log = 0,
+	Warning = 1,
+	Error = 2,
+};
 
 class Log : public Singleton<Log>
 {
@@ -12,11 +21,25 @@ public:
 	void PrintText();
 	void Push();
 	void Push( const int _errorCode );
-	void Push( const std::string& _data );
+	void Push( ELogType _type, const std::string& _data );
 
 private:
-	std::queue<std::string> texts;
+	struct LogData
+	{
+		ELogType type;
+		std::string text;
+		LogData( ELogType _type, const std::string& _text ) : type( _type ), text( _text )
+		{
+
+		}
+	};
+
+private:
+	std::queue<LogData> texts;
 	std::condition_variable cv;
 	std::mutex workMutex;
+
+	OStream file;
+	std::map<ELogType, std::string> types;
 };
 

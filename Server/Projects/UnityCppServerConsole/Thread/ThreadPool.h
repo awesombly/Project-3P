@@ -52,4 +52,3 @@ std::future<typename std::result_of<Func( Args... )>::type> ThreadPool::Enqueue(
 
 	return resultFuture;
 }
-

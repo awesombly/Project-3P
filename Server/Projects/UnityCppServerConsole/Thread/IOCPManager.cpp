@@ -5,14 +5,14 @@
 
 IOCPManager::IOCPManager()
 {
-	Log::Instance().Push( "Create IOCP Handler" );
+	Log::Instance().Push( ELogType::Log, "Create IOCP Handler" );
 	iocpHandle = ::CreateIoCompletionPort( INVALID_HANDLE_VALUE, 0, 0, 3 );
 
 	for ( int count = 0; count < 3; count++ )
 	{
 		ThreadPool::Instance().Enqueue( [&] ()
 		{
-			Log::Instance().Push( "Wait GetQueuedCompletionStatus From Thread." );
+			Log::Instance().Push( ELogType::Log, "Wait GetQueuedCompletionStatus From Thread." );
 			IOCPManager::WaitCompletionStatus();
 		} );
 	}

@@ -15,11 +15,13 @@
 // Character
 #include <string>
 #include <tchar.h>
+#include <fstream>
 
 // Data Structure
 #include <vector>
 #include <list>
 #include <queue>
+#include <map>
 
 // Standard
 #include <iostream>
@@ -37,6 +39,8 @@
 
 // Time
 #include <chrono>
+#include <iomanip>
+#include <ctime>
 
 // Global
 #include "..\Global\GlobalFunc.h"

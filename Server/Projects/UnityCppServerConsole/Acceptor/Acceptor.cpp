@@ -12,10 +12,10 @@ Acceptor::Acceptor( const int _port, const char* _address )
 
 	if ( !SetSocketOption() )
 	{
-		Log::Instance().Push( "Socket Setting Fail.." );
+		Log::Instance().Push( ELogType::Error, "Socket Setting Fail.." );
 		return;
 	}
-	Log::Instance().Push( "Socket Create Success : IPv4, TCP" );
+	Log::Instance().Push( ELogType::Log, "Socket Create Success : IPv4, TCP" );
 
 	SOCKADDR_IN sa;
 	ZeroMemory( &sa, sizeof( sa ) );
@@ -38,12 +38,6 @@ Acceptor::Acceptor( const int _port, const char* _address )
 	}
 
 	ThreadPool::Instance().Enqueue( [&] () { Acceptor::ClientAccept(); } );
-
-	// ¿¬½À
-	//const std::future<void>& fut( std::async( std::launch::async, [&] () 
-	//{ 
-	//	Acceptor::ClientAccept();
-	//} ) );
 }
 
 Acceptor::~Acceptor()
