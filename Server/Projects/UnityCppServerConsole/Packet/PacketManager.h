@@ -15,8 +15,13 @@ public:
 private:
 	void WorkPacket();
 
+	void BindProtocols();
+
+	static void Broadcast( const UPACKET& packet );
 private:
 	std::queue<PACKET> packets;
 	std::condition_variable cv;
 	std::mutex workMutex;
+
+	std::unordered_map<u_short/*packetType*/, void( * )( const UPACKET& )> protocols;
 };

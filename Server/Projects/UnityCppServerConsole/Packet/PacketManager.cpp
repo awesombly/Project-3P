@@ -1,10 +1,12 @@
-#include "PacketManager.h"
+ï»¿#include "PacketManager.h"
 #include "..\Standard\Log.h"
 #include "..\Session\SessionManager.h"
 #include "..\Thread\ThreadPool.h"
 
 PacketManager::PacketManager()
 {
+	BindProtocols();
+
 	ThreadPool::Instance().Enqueue( [&] () { PacketManager::WorkPacket(); } );
 }
 
@@ -16,16 +18,15 @@ void PacketManager::WorkPacket()
 		cv.wait( lock, [this] () { return !packets.empty(); } );
 		
 		PACKET* packet = std::move( &packets.front() );
-		if ( packet->packet.type == PACKET_TYPE::ChatMessage )
+		auto findItr = protocols.find( packet->packet.type );
+		if ( findItr == protocols.cend() || findItr->second == nullptr )
 		{
-			// À¯´ÏÆ¼ Å¬¶óÀÌ¾ğÆ®¿¡¼­ UTF-8 Çü½ÄÀ¸·Î ÀÎÄÚµùÇÑ ÈÄ Àü¼ÛµÇ¾ú±â ¶§¹®¿¡
-			// Ansi Çü½ÄÀ¸·Î µğÄÚµù ÇÏ¿© ¿Ã¹Ù¸¥ ¹®ÀÚ¿­À» ¸¸µì´Ï´Ù.
-			// packet->packetÀÌ¶ó.. Á» ´õ ¸íÈ®ÇÑ ÀÌ¸§ÀÌ »ı°¢³­´Ù¸é ¹Ù²Ù°Ú½À´Ï´Ù.
-			
-			Log::Instance().Push( "Broadcast : " + ToAnsi( ( char* )packet->packet.data ) );
-			SessionManager::Instance().BroadCast( packet->packet );
+			Log::Instance().Push( "Packet Not Bind : " + ToAnsi( ( char* )packet->packet.data ) );
+			packets.pop();
+			continue;
 		}
-
+	
+		protocols[ packet->packet.type ]( packet->packet );
 		packets.pop();
 	}
 }
@@ -35,4 +36,18 @@ void PacketManager::Push( const PACKET& _packet )
 	std::lock_guard<std::mutex> lock( workMutex );
 	packets.push( _packet );
 	cv.notify_one();
+}
+
+void PacketManager::BindProtocols()
+{
+	protocols[ Protocol::Type::ChatMessage ] = &PacketManager::Broadcast;
+}
+
+void PacketManager::Broadcast( const UPACKET& packet )
+{
+	// ìœ ë‹ˆí‹° í´ë¼ì´ì–¸íŠ¸ì—ì„œ UTF-8 í˜•ì‹ìœ¼ë¡œ ì¸ì½”ë”©í•œ í›„ ì „ì†¡ë˜ì—ˆê¸° ë•Œë¬¸ì—
+	// Ansi í˜•ì‹ìœ¼ë¡œ ë””ì½”ë”© í•˜ì—¬ ì˜¬ë°”ë¥¸ ë¬¸ìì—´ì„ ë§Œë“­ë‹ˆë‹¤.
+	// packet->packetì´ë¼.. ì¢€ ë” ëª…í™•í•œ ì´ë¦„ì´ ìƒê°ë‚œë‹¤ë©´ ë°”ê¾¸ê² ìŠµë‹ˆë‹¤.
+	Log::Instance().Push( "Broadcast : " + ToAnsi( ( char* )packet.data ) );
+	SessionManager::Instance().BroadCast( packet );
 }

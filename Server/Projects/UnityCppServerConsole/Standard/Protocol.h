@@ -1,14 +1,6 @@
 #pragma once
 #include "..\Global\GlobalVariable.h"
 
-namespace PACKET_TYPE
-{
-	// 서버/클라 결과 동일해야함. (Sdbm Hash)
-	u_short GetPacketType( const char* _name );
-
-	const static u_short ChatMessage = GetPacketType( "ChatMessage" );
-}
-
 #pragma pack( push, 1 )
 struct UPACKET
 {
@@ -33,3 +25,14 @@ struct PACKET
 	UPACKET packet;
 	SOCKET socket;
 };
+
+namespace Protocol
+{
+	namespace Type
+	{
+		// 서버/클라 결과 동일해야함. (Sdbm Hash)
+		u_short GetPacketType( const char* _name );
+
+		const static u_short ChatMessage = GetPacketType( "ChatMessage" );
+	}
+}
