@@ -5,7 +5,7 @@ ThreadPool::ThreadPool() : allStop( false )
 	workerThreads.reserve( WorkerThreadCount );
 	for ( size_t count = 0; count < WorkerThreadCount; count++ )
 	{
-		workerThreads.emplace_back( [&] () { ThreadPool::WorkerThread();	} );
+		workerThreads.emplace_back( [&] () { ThreadPool::WorkerThread(); } );
 	}
 }
 

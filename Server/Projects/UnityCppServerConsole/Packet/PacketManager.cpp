@@ -15,7 +15,7 @@ void PacketManager::WorkPacket()
 	while ( true )
 	{
 		std::unique_lock<std::mutex> lock( workMutex );
-		cv.wait( lock, [this] () { return !packets.empty(); } );
+		cv.wait( lock, [&] () { return !packets.empty(); } );
 		
 		PACKET* packet = std::move( &packets.front() );
 		auto findItr = protocols.find( packet->packet.type );

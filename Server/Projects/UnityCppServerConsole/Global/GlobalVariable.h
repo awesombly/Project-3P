@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#include <mutex>
+#include <string>
 
 // Global
 
@@ -11,3 +11,16 @@ const static u_short WorkerThreadCount = 6;
 const static u_short OneLineOfText = 256;
 const static u_short DataMaxSize = 2048;
 const static u_short RecvBufferMaxSize = 10000;
+
+namespace PATH
+{
+	// Path 변경시 빌드 후 이벤트 폴더 생성도 같이 변경하셔야 합니다.
+	const static std::string LogPath = "..\\..\\..\\Log\\";
+}
+
+namespace EXT
+{
+	const static std::string Text = ".txt";
+	const static std::string Exe = ".exe";
+	const static std::string Ini = ".Ini";
+}

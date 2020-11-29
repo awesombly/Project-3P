@@ -10,7 +10,7 @@ public:
 public:
 	// 폴더명에는 :, ! 같은 특수문자는 들어갈 수 없습니다.
 	// [Year-Month-Date Hour:Minute:Second]
-	std::string GetCurrentDateString( bool isFolder = false ) const;
+	std::string GetCurrentDateString( bool _isFolder = false ) const;
 	// 1 / 1000000000 seconds
 	ULONGLONG GetElapsedNanoSeconds() const;
 	// 1 / 1000000 seconds

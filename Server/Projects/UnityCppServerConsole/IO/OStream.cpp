@@ -43,11 +43,6 @@ void OStream::Write( const std::string& _data )
 		throw std::exception();
 	}
 
-	//if ( *--_data.end() == '\n' )
-	//{
-	//	outStream << _data << std::endl;
-	//	return;
-	//}
 	outStream << _data << std::endl;;
 }
 

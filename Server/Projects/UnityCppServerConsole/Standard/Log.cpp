@@ -6,12 +6,14 @@ Log::Log()
 {
 	ThreadPool::Instance().Enqueue( [&] () { Log::PrintText(); } );
 
+#pragma region LogType_String맵생성
 	// Enum 값을 String으로 변환하는 방법
 	// 1. #define EnumToString(s) #s
 	// 2. map으로 미리 생성하여 키값으로 찾기
 	types.insert( std::make_pair( ELogType::Log, std::string( "[Log]" ) ) );
 	types.insert( std::make_pair( ELogType::Warning, std::string( "[Warning]" ) ) );
 	types.insert( std::make_pair( ELogType::Error, std::string( "[Error]" ) ) );
+#pragma endregion
 }
 
 void Log::PrintText()
@@ -24,7 +26,7 @@ void Log::PrintText()
 		if ( !file.IsOpen() )
 		{
 			std::string pathName = Timer::Instance().GetCurrentDateString( true );
-			file.CreateNewFile( "..\\..\\..\\Log\\"_s + pathName.c_str() + ".txt"_s );
+			file.CreateNewFile( PATH::LogPath + pathName.c_str() + EXT::Text );
 		}
 
 		LogData data = std::move( texts.front() );
