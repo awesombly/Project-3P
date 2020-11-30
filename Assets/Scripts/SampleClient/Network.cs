@@ -13,8 +13,8 @@ public class Network : Singleton<Network>
 
     private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
 
-    private delegate void DelProcessPacket( string _data );
-    private Dictionary<ushort/*packetType*/, DelProcessPacket> protocols = new Dictionary<ushort/*packetType*/, DelProcessPacket>();
+    public delegate void DelProcessPacket( string _data );
+    public Dictionary<ushort/*packetType*/, DelProcessPacket> protocols = new Dictionary<ushort/*packetType*/, DelProcessPacket>();
 
     public delegate void DelConnect();
     public event DelConnect OnConnect;

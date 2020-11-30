@@ -848,6 +848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a84a31a0e69ea0b44b8a15bbc9041e43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ipAddress: 127.0.0.1
 --- !u!4 &1177321381
 Transform:
   m_ObjectHideFlags: 0
@@ -1123,7 +1124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMessage: {fileID: 1563568117}
   textContent: {fileID: 1602699948}
-  textObject: {fileID: 895400065406932687, guid: a276f3baa3d6937428fd2a4434dfb1b3, type: 3}
+  textPrefab: {fileID: 895400065406932687, guid: a276f3baa3d6937428fd2a4434dfb1b3, type: 3}
 --- !u!4 &1841815132
 Transform:
   m_ObjectHideFlags: 0

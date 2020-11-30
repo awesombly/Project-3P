@@ -17,6 +17,7 @@ public class ChatMain : MonoBehaviour
     public List<Message> messages = new List<Message>();
 
     public InputField inputMessage;
+    public GameObject chatPannel;
     public GameObject textContent;
     public GameObject textPrefab;
 
@@ -24,9 +25,14 @@ public class ChatMain : MonoBehaviour
 
     private void Update()
     {
+        if ( Input.GetKeyDown( KeyCode.Return ) )
+        {
+            OnVisibleChatPannel( true );
+        }
+
         if ( texts.Count > 0 )
         {
-            MakeMessage( texts[0] );
+            MakeMessage( texts[ 0 ] );
         }
     }
 
@@ -34,8 +40,8 @@ public class ChatMain : MonoBehaviour
     {
         if ( messages.Count >= maxMessageCount )
         {
-            Destroy( messages[0].textObject.gameObject );
-            messages.Remove( messages[0] );
+            Destroy( messages[ 0 ].textObject.gameObject );
+            messages.Remove( messages[ 0 ] );
         }
 
         Message newMessage = new Message();
@@ -57,5 +63,10 @@ public class ChatMain : MonoBehaviour
 
         Network.Instance.Send( protocol );
         inputMessage.text = "";
+    }
+
+    public void OnVisibleChatPannel( bool isVisible )
+    {
+        chatPannel.SetActive( isVisible );
     }
 }
