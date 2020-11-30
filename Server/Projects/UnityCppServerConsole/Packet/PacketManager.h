@@ -17,7 +17,7 @@ private:
 
 	void BindProtocols();
 
-	static void Broadcast( const UPACKET& packet );
+	static void Broadcast( const UPACKET& _packet );
 private:
 	std::queue<PACKET> packets;
 	std::condition_variable cv;
