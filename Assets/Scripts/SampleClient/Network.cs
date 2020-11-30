@@ -4,25 +4,62 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
-public class Network : MonoBehaviour
+public class Network : Singleton<Network>
 {
-    public static Socket socket;
+    public string ipAddress = "127.0.0.1";
+
+    private Socket socket;
     private Thread thread;
 
     private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
 
-    public delegate void DelProcessPacket( string _data );
+    private delegate void DelProcessPacket( string _data );
     private Dictionary<ushort/*packetType*/, DelProcessPacket> protocols = new Dictionary<ushort/*packetType*/, DelProcessPacket>();
+
+    public delegate void DelConnect();
+    public event DelConnect OnConnect;
+
+    public delegate void DelBindProtocols();
+    public event DelBindProtocols OnBindProtocols;
+
+    public void Send( Protocol.IProtocol _protocol )
+    {
+        if ( ReferenceEquals( socket, null ) || !socket.Connected )
+        {
+            Debug.LogError( "Not Connected." );
+            return;
+        }
+
+        UPACKET packet = new UPACKET( _protocol );
+
+        byte[] packetData = Global.Serialize( packet );
+        socket.Send( packetData );
+    }
 
     private void Run()
     {
-        while ( true )
+        // Connecting
         {
-            if ( !socket.Connected )
+            socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+            IPEndPoint endPoint = new IPEndPoint( IPAddress.Parse( ipAddress ), 10000 );
+
+            while ( !socket.Connected )
             {
-                continue;
+                try
+                {
+                    socket.Connect( endPoint );
+                }
+                catch ( SocketException ex )
+                {
+                    Debug.LogError( "Connect Failed. Ip = " + ipAddress + ", " + ex.Message );
+                }
             }
 
+            OnConnect?.Invoke();
+        }
+
+        while ( true )
+        {
             socket.Receive( buffer );
             if ( !ReferenceEquals( buffer, null ) )
             {
@@ -38,14 +75,15 @@ public class Network : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        OnConnect += OnConnected;
+        OnBindProtocols += BindProtocols;
+    }
+
     private void Start()
     {
-        BindProtocols();
-
-        socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-
-        IPEndPoint endPoint = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), 10000 );
-        socket.ConnectAsync( endPoint );
+        OnBindProtocols?.Invoke();
 
         thread = new Thread( Run );
         thread.Start();
@@ -55,6 +93,11 @@ public class Network : MonoBehaviour
     {
         // 테스트용으로 객체가 사라질때 닫기로 함
         socket.Close();
+    }
+
+    private void OnConnected()
+    {
+        Debug.Log( "Connected. Ip = " + ipAddress );
     }
 
     private void BindProtocols()

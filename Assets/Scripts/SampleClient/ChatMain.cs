@@ -18,7 +18,7 @@ public class ChatMain : MonoBehaviour
 
     public InputField inputMessage;
     public GameObject textContent;
-    public GameObject textObject;
+    public GameObject textPrefab;
 
     private const int maxMessageCount = 25;
 
@@ -41,7 +41,7 @@ public class ChatMain : MonoBehaviour
         Message newMessage = new Message();
         newMessage.text = _text;
 
-        GameObject newText = Instantiate( textObject, textContent.transform );
+        GameObject newText = Instantiate( textPrefab, textContent.transform );
         newMessage.textObject = newText.GetComponent<Text>();
         newMessage.textObject.text = newMessage.text;
         messages.Add( newMessage );
@@ -55,10 +55,7 @@ public class ChatMain : MonoBehaviour
         Protocol.ChatMessage protocol;
         protocol.Message = inputMessage.text;
 
-        UPACKET packet = new UPACKET( protocol );
-
-        byte[] _packet = Global.Serialize( packet );
-        Network.socket.Send( _packet );
+        Network.Instance.Send( protocol );
         inputMessage.text = "";
     }
 }
