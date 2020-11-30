@@ -1,4 +1,5 @@
 #include "Protocol.h"
+#include "Log.h"	
 
 namespace Protocol
 {

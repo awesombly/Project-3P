@@ -15,7 +15,7 @@ SessionManager::~SessionManager()
 void SessionManager::Push( Session* _session )
 {
 	cs.Lock();
-	std::string msg( "Enter Session : "_s + ::inet_ntoa( _session->address.sin_addr ) + " : "  + std::to_string( ::ntohs( _session->address.sin_port ) ) );
+	std::string msg( "Enter Session : "_s + ::inet_ntoa( _session->address.sin_addr ) + " : "_s  + std::to_string( ::ntohs( _session->address.sin_port ) ) );
 	Log::Instance().Push( ELogType::Log, msg );
 	
 	sessions.push_back( _session );

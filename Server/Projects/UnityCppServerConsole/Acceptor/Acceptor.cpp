@@ -12,7 +12,7 @@ Acceptor::Acceptor( const int _port, const char* _address )
 
 	if ( !SetSocketOption() )
 	{
-		Log::Instance().Push( ELogType::Error, "Socket Setting Fail.." );
+		Log::Instance().Push( ELogType::Warning, "Socket Setting Fail.." );
 		return;
 	}
 	Log::Instance().Push( ELogType::Log, "Socket Create Success : IPv4, TCP" );
@@ -78,19 +78,31 @@ bool Acceptor::SetSocketOption() const
 		return false;
 	}
 
-	int size = sizeof( int );
 	linger optLinger;
-	::getsockopt( listenSocket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, &size );
+	int size = sizeof( int );
+	if ( ::getsockopt( listenSocket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, &size ) == SOCKET_ERROR )
+	{
+		Log::Instance().Push();
+		return false;
+	}
 
 	optLinger.l_linger = 1000;
 	optLinger.l_onoff = 1;
-	::setsockopt( listenSocket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, sizeof( linger ) );
+	if ( ::setsockopt( listenSocket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, sizeof( linger ) ) == SOCKET_ERROR )
+	{
+		Log::Instance().Push();
+		return false;
+	}
 
 	int recvSize;
 	int sendSize;
 	size = sizeof( int );
-	::getsockopt( listenSocket, SOL_SOCKET, SO_RCVBUF, ( char* )&recvSize, &size );
-	::getsockopt( listenSocket, SOL_SOCKET, SO_SNDBUF, ( char* )&sendSize, &size );
+	if ( ::getsockopt( listenSocket, SOL_SOCKET, SO_RCVBUF, ( char* )&recvSize, &size ) == SOCKET_ERROR ||
+		 ::getsockopt( listenSocket, SOL_SOCKET, SO_SNDBUF, ( char* )&sendSize, &size ) == SOCKET_ERROR )
+	{
+		Log::Instance().Push();
+		return false;
+	}
 
 	return true;
 }

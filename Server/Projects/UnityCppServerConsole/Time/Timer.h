@@ -19,9 +19,9 @@ public:
 	ULONGLONG GetElapsedMilliSeconds() const;
 	// 1 seconds
 	ULONGLONG GetElapsedSeconds() const;
-	// 1 * 60 seconds
+	// 60 seconds
 	ULONGLONG GetElapsedMinutes() const;
-	// 1 * 3600 seconds
+	// 3600 seconds
 	ULONGLONG GetElapsedHours() const;
 
 private:

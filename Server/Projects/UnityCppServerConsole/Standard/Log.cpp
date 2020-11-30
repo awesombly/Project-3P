@@ -13,6 +13,7 @@ Log::Log()
 	types.insert( std::make_pair( ELogType::Log, std::string( "[Log]" ) ) );
 	types.insert( std::make_pair( ELogType::Warning, std::string( "[Warning]" ) ) );
 	types.insert( std::make_pair( ELogType::Error, std::string( "[Error]" ) ) );
+	types.insert( std::make_pair( ELogType::Error, std::string( "[Exception]" ) ) );
 #pragma endregion
 }
 
@@ -49,7 +50,7 @@ void Log::Push( const int _errorCode )
 	LPVOID message;
 	FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, _errorCode,
 				   MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), ( TCHAR* )&message, 0, NULL );
-	texts.push( LogData( ELogType::Error, ( CHAR* )&message ) );
+	texts.push( LogData( ELogType::Warning, ( CHAR* )&message ) );
 	::LocalFree( message );
 }
 

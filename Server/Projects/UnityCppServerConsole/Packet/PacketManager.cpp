@@ -21,7 +21,7 @@ void PacketManager::WorkPacket()
 		auto findItr = protocols.find( packet->packet.type );
 		if ( findItr == protocols.cend() || findItr->second == nullptr )
 		{
-			Log::Instance().Push( ELogType::Log, "Packet Not Bind : " + ToAnsi( ( char* )packet->packet.data ) );
+			Log::Instance().Push( ELogType::Warning, "Packet Not Bind : " + ToAnsi( ( char* )packet->packet.data ) );
 			packets.pop();
 			continue;
 		}

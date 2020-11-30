@@ -1,6 +1,6 @@
 #pragma once
-#include "Header.h"
 #include "..\Synchronize\CriticalSection.h"
+
 template<class Type>
 class Singleton
 {

@@ -1,14 +1,13 @@
 #pragma once
 #include "Singleton.hpp"
-#include "..\Time\Timer.h"
 #include "..\IO\OStream.h"
-#include "..\Synchronize\CriticalSection.h"
 
 enum class ELogType : char
 {
 	Log = 0,
 	Warning = 1,
 	Error = 2,
+	Exception = 3,
 };
 
 class Log : public Singleton<Log>
