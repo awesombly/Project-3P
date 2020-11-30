@@ -1,5 +1,4 @@
 #pragma once
-#include <windows.h>
 #include <string>
 
 static std::string operator ""_s( const char* _str, size_t _len )

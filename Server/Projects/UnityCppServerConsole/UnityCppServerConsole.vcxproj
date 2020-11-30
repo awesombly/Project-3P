@@ -45,10 +45,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\\..\\Outputs\\$(ProjectName)_d\\</OutDir>
     <IntDir>..\\..\\Outputs\\$(ProjectName)_d\\</IntDir>
+    <LibraryPath>..\\..\\ExternalLibraries\\MySQL\\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>..\\..\\ExternalLibraries\\MySQL\\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\\..\\Outputs\\$(ProjectName)\\</OutDir>
     <IntDir>..\\..\\Outputs\\$(ProjectName)\\</IntDir>
+    <IncludePath>..\\..\\ExternalLibraries\\MySQL\\include;$(VC_IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>..\\..\\ExternalLibraries\\MySQL\\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -61,12 +65,21 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "..\\..\\..\\Log" md "..\\..\\..\\Log"</Command>
+      <Command>if not exist "..\\..\\..\\Log" md "..\\..\\..\\Log"
+if not exist "$(OutDir)libmysql.lib" copy "..\\..\\ExternalLibraries\\MySQL\\Lib\\libmysql.lib" "$(OutDir)libmysql.lib"
+if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib\\libmysql.dll" "$(OutDir)libmysql.dll"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -88,7 +101,9 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "..\\..\\..\\Log" md "..\\..\\..\\Log"</Command>
+      <Command>if not exist "..\\..\\..\\Log" md "..\\..\\..\\Log"
+if not exist "$(OutDir)libmysql.lib" copy "..\\..\\ExternalLibraries\\MySQL\\Lib\\libmysql.lib" "$(OutDir)libmysql.lib"
+if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib\\libmysql.dll" "$(OutDir)libmysql.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
