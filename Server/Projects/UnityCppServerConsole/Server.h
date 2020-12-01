@@ -1,5 +1,5 @@
 #pragma once
-#include "Acceptor\Acceptor.h"
+#include "Network\Acceptor.h"
 
 class Server
 {
@@ -12,5 +12,6 @@ public:
 
 private:
 	Acceptor acceptor;
+	Network loginServer;
 	HANDLE destroyEvent;
 };

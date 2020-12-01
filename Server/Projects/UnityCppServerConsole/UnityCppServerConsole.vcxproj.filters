@@ -30,9 +30,6 @@
     <ClCompile Include="Synchronize\CriticalSection.cpp">
       <Filter>Synchronize</Filter>
     </ClCompile>
-    <ClCompile Include="Acceptor\Acceptor.cpp">
-      <Filter>Acceptor</Filter>
-    </ClCompile>
     <ClCompile Include="Standard\Log.cpp">
       <Filter>Standard</Filter>
     </ClCompile>
@@ -68,13 +65,16 @@
     <ClCompile Include="DB\Database.cpp">
       <Filter>Synchronize</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Acceptor.cpp">
+      <Filter>Acceptor</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Network.cpp">
+      <Filter>Synchronize</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Thread\IOCPManager.h">
       <Filter>Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="Acceptor\Acceptor.h">
-      <Filter>Acceptor</Filter>
     </ClInclude>
     <ClInclude Include="Standard\Log.h">
       <Filter>Standard</Filter>
@@ -121,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="Global\GlobalFunc.hpp">
       <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Acceptor.h">
+      <Filter>Acceptor</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Network.h">
+      <Filter>Thread</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

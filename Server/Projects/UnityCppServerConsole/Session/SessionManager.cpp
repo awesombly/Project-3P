@@ -42,6 +42,6 @@ void SessionManager::BroadCast( const UPACKET& _packet ) const
 	for ( Session* session : sessions )
 	{
 		Log::Instance().Push( ELogType::Log, "Send From Session : "_s + ::inet_ntoa( session->address.sin_addr ) + " : " + std::to_string( ::ntohs( session->address.sin_port ) ) );
-		::send( session->GetSocket(), ( char* )&_packet, _packet.length, 0 );
+		session->Send( _packet );
 	}
 }

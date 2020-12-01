@@ -24,7 +24,7 @@ void IOCPManager::Bind( const HANDLE& _socket, const ULONG_PTR _key ) const
 	// 바인드를 하고나면 첫 WSARecv를 해줍니다.
 	// 이제 무언가 전송되면 GetQueuedCompletionStatus에 들어갈 것입니다.
 	Session* session = ( Session* )_key;
-	session->WaitForPacketRecv();
+	session->Recieve();
 }
 
 void IOCPManager::WaitCompletionStatus() const
