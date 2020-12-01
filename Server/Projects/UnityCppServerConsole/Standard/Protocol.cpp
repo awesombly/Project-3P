@@ -1,5 +1,10 @@
 #include "Protocol.h"
-#include "Log.h"	
+#include "Log.h"
+
+std::string UPACKET::ToString() const
+{
+	return ToAnsi( ( char* )data );
+}
 
 namespace Protocol
 {

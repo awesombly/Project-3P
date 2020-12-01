@@ -12,6 +12,8 @@ struct UPACKET
 	u_short length;
 	u_short type;
 	byte data[ DataMaxSize ];
+
+	std::string ToString() const;
 };
 #pragma pack( pop )
 
