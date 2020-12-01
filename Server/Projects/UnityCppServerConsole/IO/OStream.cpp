@@ -1,18 +1,20 @@
 #include "OStream.h"
-//#include "..\Standard\Log.h"
+#include "..\Standard\Log.h"
 
 OStream::~OStream()
 {
 	Close();
 }
 
-void OStream::Open( const std::string& _path )
+bool OStream::Open( const std::string& _path )
 {
 	outStream.open( _path, std::ios::out | std::ios::trunc );
 	if ( !outStream.is_open() )
 	{
-		//Log::Instance().Push( ELogType::Warning, "logfile is not open" );
+		Log::Instance().Push( ELogType::Warning, "Failed To Open Logfile" );
+		return false;
 	}
+	return true;
 }
 
 void OStream::Close()
@@ -23,7 +25,7 @@ void OStream::Close()
 	}
 }
 
-void OStream::CreateNewFile( const std::string& _path )
+bool OStream::CreateNewFile( const std::string& _path )
 {
 	if ( outStream.is_open() )
 	{
@@ -33,15 +35,17 @@ void OStream::CreateNewFile( const std::string& _path )
 	outStream.open( _path.c_str(), std::ios::out | std::ios::trunc );
 	if ( !outStream.is_open() )
 	{
-		//Log::Instance().Push( ELogType::Warning, "logfile is not open" );
+		Log::Instance().Push( ELogType::Warning, "Failed To Open Logfile" );
+		return false;
 	}
+	return true;
 }
 
 void OStream::Write( const std::string& _data )
 {
 	if ( _data.empty() || !outStream.is_open() )
 	{
-		//Log::Instance().Push( ELogType::Warning, "logfile is not open or data empty" );
+		Log::Instance().Push( ELogType::Warning, "Data is Empty or Logfile Open Failed" );
 	}
 
 	outStream << _data << std::endl;;

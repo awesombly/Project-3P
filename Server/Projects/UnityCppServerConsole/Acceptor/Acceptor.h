@@ -4,13 +4,14 @@
 class Acceptor
 {
 public:
-	Acceptor( const int _port, const char* _address = 0 );
+	Acceptor() = default;
 	virtual ~Acceptor();
 
 public:
-	void ClientAccept() const;
+	bool Initialize( const int _port, const char* _address = 0 );
 
 private:
+	void ClientAccept() const;
 	bool SetSocketOption() const;
 
 private:

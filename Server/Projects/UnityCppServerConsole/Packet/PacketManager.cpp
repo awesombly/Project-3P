@@ -3,11 +3,11 @@
 #include "..\Session\SessionManager.h"
 #include "..\Thread\ThreadPool.h"
 
-PacketManager::PacketManager()
+bool PacketManager::Initialize()
 {
 	BindProtocols();
-
 	ThreadPool::Instance().Enqueue( [&] () { PacketManager::WorkPacket(); } );
+	return true;
 }
 
 void PacketManager::WorkPacket()

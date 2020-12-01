@@ -2,11 +2,7 @@
 
 ThreadPool::ThreadPool() : allStop( false )
 {
-	workerThreads.reserve( WorkerThreadCount );
-	for ( size_t count = 0; count < WorkerThreadCount; count++ )
-	{
-		workerThreads.emplace_back( [&] () { ThreadPool::WorkerThread(); } );
-	}
+
 }
 
 ThreadPool::~ThreadPool()
@@ -18,6 +14,16 @@ ThreadPool::~ThreadPool()
 	{
 		thread.join();
 	}
+}
+
+bool ThreadPool::Initialize()
+{
+	workerThreads.reserve( WorkerThreadCount );
+	for ( size_t count = 0; count < WorkerThreadCount; count++ )
+	{
+		workerThreads.emplace_back( [&] () { ThreadPool::WorkerThread(); } );
+	}
+	return true;
 }
 
 void ThreadPool::WorkerThread()

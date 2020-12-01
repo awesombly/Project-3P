@@ -2,6 +2,8 @@
 
 int main()
 {	
-	Server server( 10000 );
+	Server server;
+	server.Initialize( 10000 );
+
 	return 0;
 }

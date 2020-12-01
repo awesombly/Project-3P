@@ -4,8 +4,11 @@
 class Server
 {
 public:
-	Server( const int _port, const char* _address = 0 );
+	Server();
 	virtual ~Server();
+
+public:
+	void Initialize( const int _port, const char* _address = 0 );
 
 private:
 	Acceptor acceptor;

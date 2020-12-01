@@ -2,6 +2,11 @@
 #include "Singleton.hpp"
 #include "..\IO\OStream.h"
 
+// 로그 단계
+// Log : 대부분 생각하는 로그
+// Error : 로직상 발생하면 안되지만 진행시키는 것 ( outofrange, null ... )
+// Warning : 바꾸면 좋은 것
+// exception : 서버의 기능을 못할 정도의 에러
 enum class ELogType : char
 {
 	Log = 0,
@@ -17,6 +22,7 @@ public:
 	virtual ~Log() = default;
 
 public:
+	bool Initialize();
 	void PrintText();
 	void Push();
 	void Push( const int _errorCode );

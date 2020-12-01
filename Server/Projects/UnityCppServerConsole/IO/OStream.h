@@ -8,10 +8,10 @@ public:
 	virtual ~OStream();
 
 public:
-	void Open( const std::string& _path );
+	bool Open( const std::string& _path );
 	void Close();
 
-	void CreateNewFile( const std::string& _path );
+	bool CreateNewFile( const std::string& _path );
 
 	void Write( const std::string& _data );
 

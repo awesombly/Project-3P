@@ -4,10 +4,11 @@
 class IOCPManager : public Singleton<IOCPManager>
 {
 public:
-	IOCPManager();
+	IOCPManager() = default;
 	virtual ~IOCPManager() = default;
 
 public:
+	bool Initialize();
 	void Bind( const HANDLE& _sock, const ULONG_PTR _key ) const;
 
 private:

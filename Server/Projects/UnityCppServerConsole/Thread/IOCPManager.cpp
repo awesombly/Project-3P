@@ -3,13 +3,14 @@
 #include "..\Thread\ThreadPool.h"
 #include "..\Standard\Log.h"
 
-IOCPManager::IOCPManager()
+bool IOCPManager::Initialize()
 {
 	iocpHandle = ::CreateIoCompletionPort( INVALID_HANDLE_VALUE, 0, 0, 3 );
 	for ( int count = 0; count < 3; count++ )
 	{
 		ThreadPool::Instance().Enqueue( [&] () { IOCPManager::WaitCompletionStatus(); } );
 	}
+	return true;
 }
 
 void IOCPManager::Bind( const HANDLE& _socket, const ULONG_PTR _key ) const

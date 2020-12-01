@@ -6,6 +6,16 @@ static std::string operator ""_s( const char* _str, size_t _len )
 	return ( std::string( _str, _len ) );
 }
 
+template<class Type>
+static void SafeDelete( Type*& _pointer )
+{
+	if ( _pointer != nullptr )
+	{
+		delete _pointer;
+		_pointer = nullptr;
+	}
+}
+
 static std::string ToUFT8( const char* _string )
 {
 	int lengthUnicode = 0;

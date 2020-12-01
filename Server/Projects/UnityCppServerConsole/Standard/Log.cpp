@@ -17,6 +17,16 @@ Log::Log()
 #pragma endregion
 }
 
+bool Log::Initialize()
+{
+	std::string pathName = Timer::Instance().GetCurrentDateString( true );
+	if ( !file.Open( PATH::LogPath + pathName.c_str() + EXT::Text ) )
+	{
+		return false;
+	}
+	return true;
+}
+
 void Log::PrintText()
 {
 	while ( true )
@@ -24,18 +34,16 @@ void Log::PrintText()
 		std::unique_lock<std::mutex> lock( workMutex );
 		cv.wait( lock, [&] () { return !texts.empty(); } );
 		
-		if ( !file.IsOpen() )
-		{
-			std::string pathName = Timer::Instance().GetCurrentDateString( true );
-			file.CreateNewFile( PATH::LogPath + pathName.c_str() + EXT::Text );
-		}
-
 		LogData data = std::move( texts.front() );
 		std::string date = Timer::Instance().GetCurrentDateString();
-		file.Write( types[data.type] + date + data.text );
 		std::cout << data.text.c_str() << std::endl;
+		if ( file.IsOpen() )
+		{
+			file.Write( types[data.type] + date + data.text );
+		}
 
 		texts.pop();
+		::Sleep( 1 );
 	}
 }
 

@@ -8,6 +8,7 @@ public:
 	virtual ~ThreadPool();
 
 public:
+	bool Initialize();
 	template <class Func, class... Args>
 	std::future<typename std::result_of<Func( Args... )>::type> Enqueue( Func&& _func, Args&&... _args );
 	

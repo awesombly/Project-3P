@@ -4,18 +4,24 @@
 #include "..\Thread\ThreadPool.h"
 #include "..\\Standard\Log.h"
 
-Acceptor::Acceptor( const int _port, const char* _address )
+Acceptor::~Acceptor()
+{
+	::WSACleanup();
+}
+
+bool Acceptor::Initialize( const int _port, const char* _address )
 {
 	WSADATA wsa;
 	::WSAStartup( MAKEWORD( 2, 2 ), &wsa );
 	listenSocket = ::socket( AF_INET, SOCK_STREAM, 0 );
+	Log::Instance().Push( ELogType::Log, "ListenSocket Generation Success" );
 
 	if ( !SetSocketOption() )
 	{
-		Log::Instance().Push( ELogType::Warning, "Socket Setting Fail.." );
-		return;
+		Log::Instance().Push( ELogType::Warning, "ListenSocket Setup Failed" );
+		return false;
 	}
-	Log::Instance().Push( ELogType::Log, "Socket Create Success : IPv4, TCP" );
+	Log::Instance().Push( ELogType::Log, "ListenSocket Setup Success" );
 
 	SOCKADDR_IN sa;
 	ZeroMemory( &sa, sizeof( sa ) );
@@ -30,19 +36,23 @@ Acceptor::Acceptor( const int _port, const char* _address )
 	}
 	sa.sin_port = ::htons( _port );
 
-	if ( ::bind( listenSocket, ( sockaddr* )&sa, sizeof( sa ) ) == SOCKET_ERROR ||
-		 ::listen( listenSocket, SOMAXCONN ) == SOCKET_ERROR )
+	if ( ::bind( listenSocket, ( sockaddr* )&sa, sizeof( sa ) ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
-		return;
+		return false;
 	}
+	Log::Instance().Push( ELogType::Log, "ListenSocket Bind Success" );
+
+	if ( ::listen( listenSocket, SOMAXCONN ) == SOCKET_ERROR )
+	{
+		Log::Instance().Push();
+		return false;
+	}
+	Log::Instance().Push( ELogType::Log, "Connection Queue Generation Success" );
 
 	ThreadPool::Instance().Enqueue( [&] () { Acceptor::ClientAccept(); } );
-}
 
-Acceptor::~Acceptor()
-{
-	::WSACleanup();
+	return true;
 }
 
 void Acceptor::ClientAccept() const
@@ -54,7 +64,7 @@ void Acceptor::ClientAccept() const
 	{
 		// 아직 처리되지않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 소켓을 가져온다.
 		clientsock = ::accept( listenSocket, ( sockaddr* )&client, &length );
-		
+
 		Session* session = new Session( clientsock, client );
 		SessionManager::Instance().Push( session );
 		IOCPManager::Instance().Bind( ( HANDLE )clientsock, ( ULONG_PTR )session );
@@ -77,6 +87,7 @@ bool Acceptor::SetSocketOption() const
 		Log::Instance().Push();
 		return false;
 	}
+	Log::Instance().Push( ELogType::Log, "Socket Option : TCP NoDelay" );
 
 	linger optLinger;
 	int size = sizeof( int );
@@ -103,6 +114,8 @@ bool Acceptor::SetSocketOption() const
 		Log::Instance().Push();
 		return false;
 	}
+	Log::Instance().Push( ELogType::Log, "Socket Option RecvSize : " + std::to_string( recvSize ) );
+	Log::Instance().Push( ELogType::Log, "Socket Option SendSize : " + std::to_string( sendSize ) );
 
 	return true;
 }

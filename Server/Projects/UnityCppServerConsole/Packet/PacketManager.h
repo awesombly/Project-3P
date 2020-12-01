@@ -6,10 +6,11 @@
 class PacketManager : public Singleton<PacketManager>
 {
 public:
-	PacketManager();
+	PacketManager() = default;
 	virtual ~PacketManager() = default;
 
 public:
+	bool Initialize();
 	void Push( const PACKET& _packet );
 
 private:

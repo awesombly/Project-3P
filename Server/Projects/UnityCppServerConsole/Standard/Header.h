@@ -43,8 +43,12 @@
 #include <ctime>
 
 // Global
-#include "..\Global\GlobalFunc.h"
+#include "..\Global\GlobalFunc.hpp"
 #include "..\Global\GlobalVariable.h"
+
+// External Header
+#include "..\\..\\..\\ExternalLibraries\MySQL\Include\mysql.h"
 
 // External Library
 #pragma comment(lib,"ws2_32.lib")
+#pragma comment( lib, "libmysql.lib" )
