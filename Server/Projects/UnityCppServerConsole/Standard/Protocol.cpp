@@ -1,10 +1,5 @@
 #include "Protocol.h"
-#include "Log.h"
 
-std::string UPACKET::ToString() const
-{
-	return ToAnsi( ( char* )data );
-}
 
 namespace Protocol
 {
@@ -15,7 +10,7 @@ namespace Protocol
 			unsigned int hash = 0;
 
 			const size_t size = ::strlen( _name );
-			for ( size_t count = 0; count < size; count++ )
+			for ( size_t count = 0; count < size; ++count )
 			{
 				hash = _name[ count ] + ( hash << 6 ) + ( hash << 16 ) - hash;
 			}
@@ -23,4 +18,7 @@ namespace Protocol
 			return ( u_short )hash;
 		}
 	}
+
+	const std::string TestProtocol::Name = "TestProtocol";
+	const u_short TestProtocol::Type = Type::GetPacketType( TestProtocol::Name.c_str() );
 }

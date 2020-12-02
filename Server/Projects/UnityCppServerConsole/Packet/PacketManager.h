@@ -1,5 +1,6 @@
 #pragma once
-#include "..\Standard\Protocol.h"
+#include "StreamPacket.h"
+#include "..\Packet\Packet.h"
 #include "..\Standard\Singleton.hpp"
 
 class PacketManager : public Singleton<PacketManager>
@@ -18,11 +19,11 @@ private:
 	void BindProtocols();
 
 	static void Broadcast( const PACKET& _packet );
-	static void LoginCompareCheck( const PACKET& _packet );
+	static void ReceiveTestProtocol( const PACKET& _packet );
 private:
 	std::queue<PACKET> packets;
 	std::condition_variable cv;
 	std::mutex workMutex;
 
-	std::unordered_map<u_short/*packetType*/, std::function<void( PACKET )>> protocols;
+	std::unordered_map<u_short/*packetType*/, std::function<void( const PACKET& )>> protocols;
 };

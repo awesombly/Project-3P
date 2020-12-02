@@ -1,5 +1,6 @@
 #pragma once
-#include "..\\Standard\\Protocol.h"
+#include "../Standard/Header.h"
+#include "../Packet/Packet.h"
 
 class StreamPacket
 {
@@ -8,11 +9,12 @@ public:
 	virtual ~StreamPacket() = default;
 
 public:
-	void Truncate( const SOCKET& _socket, const WSABUF& _buf );
+	void Truncate( const WSABUF& _buf );
 
 private:
+	std::queue<UPACKET> packets;
 	UPACKET* packet;
-	byte recvBuffer[RecvBufferMaxSize];
+	byte recvBuffer[ RecvBufferMaxSize ];
 	u_int startPos;
 	u_int writePos;
 	u_int readPos;

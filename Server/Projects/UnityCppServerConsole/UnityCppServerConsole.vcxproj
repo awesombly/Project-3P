@@ -46,12 +46,12 @@
     <OutDir>..\\..\\Outputs\\$(ProjectName)_d\\</OutDir>
     <IntDir>..\\..\\Outputs\\$(ProjectName)_d\\</IntDir>
     <LibraryPath>..\\..\\ExternalLibraries\\MySQL\\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <IncludePath>..\\..\\ExternalLibraries\\MySQL\\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>..\\..\\ExternalLibraries;..\\..\\ExternalLibraries\\MySQL\\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\\..\\Outputs\\$(ProjectName)\\</OutDir>
     <IntDir>..\\..\\Outputs\\$(ProjectName)\\</IntDir>
-    <IncludePath>..\\..\\ExternalLibraries\\MySQL\\include;$(VC_IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>..\\..\\ExternalLibraries;..\\..\\ExternalLibraries\\MySQL\\include;$(VC_IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>..\\..\\ExternalLibraries\\MySQL\\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -111,6 +111,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Network\Acceptor.cpp" />
     <ClCompile Include="DB\Database.cpp" />
     <ClCompile Include="IO\OStream.cpp" />
+    <ClCompile Include="Packet\Packet.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
     <ClCompile Include="Session\SessionManager.cpp" />
@@ -131,6 +132,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="IO\OStream.h" />
+    <ClInclude Include="Packet\Packet.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />
