@@ -19,6 +19,5 @@ namespace Protocol
 		}
 	}
 
-	const std::string TestProtocol::Name = "TestProtocol";
-	const u_short TestProtocol::Type = Type::GetPacketType( TestProtocol::Name.c_str() );
+	PROTOCOL_BODY( TestProtocol )
 }
