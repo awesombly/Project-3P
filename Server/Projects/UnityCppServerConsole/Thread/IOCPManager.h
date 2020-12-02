@@ -16,5 +16,7 @@ private:
 
 private:
 	HANDLE iocpHandle;
+	std::condition_variable cv;
+	std::mutex workMutex;
 };
 

@@ -1,13 +1,13 @@
 #include "StreamPacket.h"
 #include "PacketManager.h"
 
-StreamPacket::StreamPacket() : packet( new UPACKET() ), recvBuffer{}, 
+StreamPacket::StreamPacket() : packet( new UPACKET() ), recvBuffer{},
 							   startPos( 0 ), writePos( 0 ), readPos( 0 )
 {
 
 }
 
-void StreamPacket::Truncate( const WSABUF& _buf )
+void StreamPacket::Truncate( const SOCKET& _socket, const WSABUF& _buf )
 {
 	// 들어온 패킷의 크기가 버퍼보다 클 때
 	if ( writePos + OneLineOfText > RecvBufferMaxSize )
@@ -40,12 +40,13 @@ void StreamPacket::Truncate( const WSABUF& _buf )
 			PACKET newPacket;
 			::memcpy( &newPacket, ( PACKET* )&recvBuffer[startPos], packet->length );
 
+			newPacket.socket = _socket;
 			PacketManager::Instance().Push( newPacket );
 			startPos += packet->length;
 			readPos -= packet->length;
 
 			if ( readPos < HeaderSize ||
-				 newPacket.packet.length == _buf.len )
+				newPacket.packet.length == _buf.len )
 			{
 				break;
 			}

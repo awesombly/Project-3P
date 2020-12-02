@@ -42,9 +42,6 @@
     <ClCompile Include="Packet\PacketManager.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
-    <ClCompile Include="Packet\StreamPacket.cpp">
-      <Filter>Packet</Filter>
-    </ClCompile>
     <ClCompile Include="Thread\IOCPManager.cpp">
       <Filter>Thread</Filter>
     </ClCompile>
@@ -69,6 +66,9 @@
       <Filter>Acceptor</Filter>
     </ClCompile>
     <ClCompile Include="Network\Network.cpp">
+      <Filter>Synchronize</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet\StreamPacket.cpp">
       <Filter>Synchronize</Filter>
     </ClCompile>
   </ItemGroup>
@@ -97,9 +97,6 @@
     <ClInclude Include="Packet\PacketManager.h">
       <Filter>Packet</Filter>
     </ClInclude>
-    <ClInclude Include="Packet\StreamPacket.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
     <ClInclude Include="Synchronize\CriticalSection.h">
       <Filter>Synchronize</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
       <Filter>Acceptor</Filter>
     </ClInclude>
     <ClInclude Include="Network\Network.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\StreamPacket.h">
       <Filter>Thread</Filter>
     </ClInclude>
   </ItemGroup>

@@ -15,23 +15,23 @@ public:
 		{
 			CriticalSection cs;
 			cs.Lock();
-			if ( instance == nullptr )
+			if ( instance.get() == nullptr )
 			{
-				instance = new Type();
+				instance = std::make_shared<Type>();
 			}
 			cs.UnLock();
 		} );
 
-		return *instance;
+		return *instance.get();
 	}
 
 private:
 	static std::once_flag flag;
-	static Type* instance;
+	static std::shared_ptr<Type> instance;
 };
 
 template<class Type>
 std::once_flag Singleton<Type>::flag;
 
 template<class Type>
-Type* Singleton<Type>::instance = nullptr;
+std::shared_ptr<Type> Singleton<Type>::instance;

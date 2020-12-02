@@ -1,15 +1,6 @@
 #pragma once
 #include "..\\Standard\Singleton.hpp"
 
-
-struct UserData
-{
-	unsigned int id;
-	std::string name;
-	std::string startDate;
-	std::string lastConnectDate;
-};
-
 class Database : public Singleton<Database>
 {
 public:
@@ -18,13 +9,18 @@ public:
 
 public:
 	bool Initialize();
-	UserData GetUserData( const std::string& _name );
+	bool SafeQuery( const std::string& _query );
+	bool CompareID( const std::string& _id );
+	bool ComparePW( const std::string& _id );
+	static std::string ToSQLString( const std::string& _data );
 	
 private:
 	enum EDBIndexType : short
 	{
-		ID = 0,
-		Name,
+		Key = 0,
+		NickName,
+		ID,
+		PW,
 		StartDate,
 		LastConnect
 	};

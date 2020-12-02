@@ -56,4 +56,27 @@ namespace Protocol
             return PacketType;
         }
     }
+
+    public struct LoginReq : IProtocol
+    {
+        public string ID;
+        public string PW;
+
+        public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+        public ushort GetPacketType()
+        {
+            return PacketType;
+        }
+    }
+
+    public struct LoginAck : IProtocol
+    {
+        public string Message;
+
+        public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+        public ushort GetPacketType()
+        {
+            return PacketType;
+        }
+    }
 }

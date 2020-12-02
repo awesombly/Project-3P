@@ -115,10 +115,10 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Standard\Log.cpp" />
     <ClCompile Include="Session\SessionManager.cpp" />
     <ClCompile Include="Standard\Protocol.cpp" />
+    <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Thread\ThreadPool.cpp" />
     <ClCompile Include="Thread\IOCPManager.cpp" />
     <ClCompile Include="Packet\PacketManager.cpp" />
-    <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Session\Session.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -134,13 +134,13 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClInclude Include="Server.h" />
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />
+    <ClInclude Include="Packet\StreamPacket.h" />
     <ClInclude Include="Thread\ThreadPool.h" />
     <ClInclude Include="Thread\IOCPManager.h" />
     <ClInclude Include="Packet\PacketManager.h" />
     <ClInclude Include="Session\Session.h" />
     <ClInclude Include="Standard\Protocol.h" />
     <ClInclude Include="Standard\Singleton.hpp" />
-    <ClInclude Include="Packet\StreamPacket.h" />
     <ClInclude Include="Synchronize\CriticalSection.h" />
     <ClInclude Include="Standard\Header.h" />
     <ClInclude Include="Time\Timer.h" />

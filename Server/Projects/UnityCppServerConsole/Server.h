@@ -4,8 +4,8 @@
 class Server
 {
 public:
-	Server();
-	virtual ~Server();
+	Server() = default;
+	virtual ~Server() = default;
 
 public:
 	void Initialize( const int _port, const char* _address = 0 );
@@ -13,5 +13,4 @@ public:
 private:
 	Acceptor acceptor;
 	Network loginServer;
-	HANDLE destroyEvent;
 };

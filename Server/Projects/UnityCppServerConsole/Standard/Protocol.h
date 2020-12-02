@@ -4,7 +4,7 @@
 #pragma pack( push, 1 )
 struct UPACKET
 {
-	UPACKET() : length( 0 ), type( 0 ), data{} // 배열 유니폼 초기화
+	UPACKET() : length( 0 ), type( 0 ), data{}
 	{
 		
 	}
@@ -19,7 +19,7 @@ struct UPACKET
 
 struct PACKET
 {
-	PACKET() : packet{}, socket{}
+	PACKET() : packet{}
 	{
 
 	}
@@ -36,5 +36,7 @@ namespace Protocol
 		u_short GetPacketType( const char* _name );
 
 		const static u_short ChatMessage = GetPacketType( "ChatMessage" );
+		const static u_short LoginReq = GetPacketType( "LoginReq" );
+		const static u_short LoginAck = GetPacketType( "LoginAck" );
 	}
 }

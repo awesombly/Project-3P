@@ -16,7 +16,10 @@ public:
 	void Recieve();
 	void Send( const UPACKET& _packet );
 
+public:
 	const SOCKET& GetSocket() const;
+	std::string GetAddressString() const;
+	std::string GetPortString() const;
 
 protected:
 	struct OVERLAPPEDEX : OVERLAPPED

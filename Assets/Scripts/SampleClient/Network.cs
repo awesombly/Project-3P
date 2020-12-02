@@ -91,7 +91,6 @@ public class Network : Singleton<Network>
 
     private void OnDestroy()
     {
-        // 테스트용으로 객체가 사라질때 닫기로 함
         socket.Close();
     }
 
