@@ -1,6 +1,6 @@
 #pragma once
-#include "..\Standard/Header.h"
-#include "..\Standard/Protocol.h"
+#include "../Standard/Header.h"
+#include "../Packet/Packet.h"
 
 class StreamPacket
 {
@@ -9,7 +9,7 @@ public:
 	virtual ~StreamPacket() = default;
 
 public:
-	void Truncate( const WSABUF& _buf );
+	void Truncate( const SOCKET& _socket, const WSABUF& _buf );
 
 private:
 	std::queue<UPACKET> packets;

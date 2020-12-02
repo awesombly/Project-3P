@@ -3,45 +3,65 @@
 
 SessionManager::~SessionManager()
 {
-	std::list<Session*>::iterator iter( std::begin( sessions ) );
+	std::unordered_map<SOCKET, Session*>::iterator iter( std::begin( sessions ) );
 	while ( iter != std::end( sessions ) )
 	{
-		delete *iter;
-		*iter = nullptr;
-		sessions.erase( iter++ );
+		SafeDelete( iter++->second );
 	}
+	sessions.clear();
+}
+
+Session* SessionManager::Find( const SOCKET& _socket )
+{
+	const auto& sessionIter = sessions.find( _socket );
+	if ( sessionIter == std::cend( sessions ) )
+	{
+		return nullptr;
+	}
+
+	return sessionIter->second;
+}
+
+Session* SessionManager::Find( const std::string& _name )
+{
+	auto sessionIter = std::cbegin( sessions );
+	while ( sessionIter++ == std::cend( sessions ) )
+	{
+		Session* session = sessionIter->second;
+		if ( _name.compare( session->GetData().nickName ) == 0 )
+		{
+			return session;
+		}
+	}
+	return nullptr;
 }
 
 void SessionManager::Push( Session* _session )
 {
 	cs.Lock();
-	std::string msg( "Enter Session : "_s + ::inet_ntoa( _session->address.sin_addr ) + " : "_s  + std::to_string( ::ntohs( _session->address.sin_port ) ) );
-	Log::Instance().Push( ELogType::Log, msg );
+	Log::Instance().Push( ELogType::Log, "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
 	
-	sessions.push_back( _session );
+	sessions[_session->GetSocket()] = _session;
 	cs.UnLock();
 }
 
 void SessionManager::Erase( Session* _session )
 {
 	cs.Lock();
-	std::list<Session*>::iterator iter( std::find( std::begin( sessions ), std::end( sessions ), _session ) );
-	if ( iter != std::end( sessions ) )
-	{
-		Log::Instance().Push( ELogType::Log, "Leave Session : "_s + ::inet_ntoa( _session->address.sin_addr ) + " : "_s + std::to_string( ::ntohs( _session->address.sin_port ) ) );
+	Log::Instance().Push( ELogType::Log, "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
 
-		delete *iter;
-		*iter = nullptr;
-		sessions.erase( iter );
-	}
+	int key = _session->GetSocket();
+	SafeDelete( _session );
+	sessions.erase( key );
 	cs.UnLock();
 }
 
 void SessionManager::BroadCast( const UPACKET& _packet ) const
 {
-	for ( Session* session : sessions )
+	for ( const std::pair<SOCKET, Session*>& pair : sessions )
 	{
-		Log::Instance().Push( ELogType::Log, "Send From Session : "_s + ::inet_ntoa( session->address.sin_addr ) + " : " + std::to_string( ::ntohs( session->address.sin_port ) ) );
+		Session* session = pair.second;
+		Log::Instance().Push( ELogType::Log, "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() );
 		session->Send( _packet );
 	}
 }

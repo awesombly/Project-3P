@@ -4,10 +4,9 @@
 Database::~Database()
 {
 	::mysql_close( connection );
-	SafeDelete( connection );
 
-	::mysql_free_result( data );
 	SafeDelete( data );
+	::mysql_free_result( data );
 }
 
 bool Database::Initialize()
@@ -21,7 +20,7 @@ bool Database::Initialize()
 				 DB::CONFIG::PW, DB::CONFIG::DBName, DB::CONFIG::Port, ( const char* )NULL, 0 );
 	if ( connection == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, "Database Connection Failed : "_s + ::mysql_error( connection ) );
+		Log::Instance().Push( ELogType::Error, "Database Connect Failed : "_s + ::mysql_error( connection ) );
 		return false;
 	}
 
@@ -35,31 +34,63 @@ bool Database::Initialize()
 	return true;
 }
 
-UserData Database::GetUserData( const std::string& _name )
+bool Database::SafeQuery( const std::string& _query )
 {
-	UserData result;
 	if ( connection == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, "Database Connection Failed"_s + ::mysql_error( connection ) );
-		return result;
+		Log::Instance().Push( ELogType::Error, "Database Connect Failed"_s + ::mysql_error( connection ) );
+		return false;
 	}
 
 	// Query
-	::mysql_query( connection, ( "select* from user where name = '"_s + _name + '\'' ).c_str() );
+	::mysql_query( connection, ( _query.c_str() ) );// "select* from user where nickname = '"_s + _name + '\'' ).c_str() );
 	data = ::mysql_store_result( connection );
 	if ( data == nullptr )
 	{
 		Log::Instance().Push( ELogType::Error, "Failed To Fetch Data Through Query"_s + ::mysql_error( connection ) );
-		return result;
+		return false;
 	}
 
-	// DB에서 받은 데이터는 문자열로 들어옵니다.
-	// 따라서 문자열을 맞는 데이터형으로 변환해줍니다.
-	MYSQL_ROW row = ::mysql_fetch_row( data );
-	result.id = std::stoi( row[EDBIndexType::ID] );
-	result.name = row[EDBIndexType::Name];
-	result.startDate = row[EDBIndexType::StartDate];
-	result.lastConnectDate = row[EDBIndexType::LastConnect];
+	return true;
+}
 
-	return result;
+bool Database::CompareID( const std::string& _id )
+{
+	if ( !SafeQuery( "select* from user where id = "_s + ToSQLString( _id ) ) )
+	{
+		Log::Instance().Push( ELogType::Error, "Failed To Query"_s + ::mysql_error( connection ) );
+		return false;
+	}
+
+	MYSQL_ROW row = ::mysql_fetch_row( data );
+	if ( row == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, "Not Find Data"_s + ::mysql_error( connection ) );
+		return false;
+	}
+
+	return _id.compare( row[EDBIndexType::ID] ) == 0;
+}
+
+bool Database::ComparePW( const std::string& _pw )
+{
+	if ( !SafeQuery( "select* from user where pw = "_s + ToSQLString( _pw ) ) )
+	{
+		Log::Instance().Push( ELogType::Error, "Failed To Query"_s + ::mysql_error( connection ) );
+		return false;
+	}
+
+	MYSQL_ROW row = ::mysql_fetch_row( data );
+	if ( row == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, "Not Find Data"_s + ::mysql_error( connection ) );
+		return false;
+	}
+
+	return _pw.compare( row[EDBIndexType::PW] ) == 0;
+}
+
+std::string Database::ToSQLString( const std::string& _data )
+{
+	return "\'" + _data + "\'";
 }

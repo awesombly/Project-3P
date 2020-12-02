@@ -66,21 +66,19 @@ void Network::Recieve()
 void Network::Send( const UPACKET& _packet )
 {
 	::send( socket, ( char* )&_packet, _packet.length, 0 );
-	// ov.flag = OVERLAPPEDEX::MODE_SEND;
-	// wsaBuffer.buf = ( char* )_packet.data;
-	// wsaBuffer.len = _packet.length;
-	// 
-	// DWORD sendBytes = _packet.length;
-	// if ( ::WSASend( socket, &wsaBuffer, 1, &sendBytes, 0, ( LPOVERLAPPED )&ov, NULL ) == SOCKET_ERROR )
-	// {
-	// 	if ( ::WSAGetLastError() != WSA_IO_PENDING )
-	// 	{
-	// 		Log::Instance().Push( ::WSAGetLastError() );
-	// 	}
-	// }
 }
 
 const SOCKET& Network::GetSocket() const
 {
 	return socket;
+}
+
+ std::string Network::GetAddressString() const
+{
+	return ::inet_ntoa( address.sin_addr );
+}
+
+ std::string Network::GetPortString() const
+{
+	return std::to_string( ::ntohs( address.sin_port ) );
 }

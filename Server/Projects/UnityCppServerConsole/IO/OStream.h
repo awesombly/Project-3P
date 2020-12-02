@@ -11,8 +11,6 @@ public:
 	bool Open( const std::string& _path );
 	void Close();
 
-	bool CreateNewFile( const std::string& _path );
-
 	void Write( const std::string& _data );
 
 	bool IsOpen() const;

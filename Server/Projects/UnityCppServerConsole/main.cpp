@@ -1,9 +1,12 @@
 #include "Server.h"
 
+Server server;
 int main()
 {	
-	Server server;
 	server.Initialize( 10000 );
+	while ( true )
+	{
 
+	}
 	return 0;
 }

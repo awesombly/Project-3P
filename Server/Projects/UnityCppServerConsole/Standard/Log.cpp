@@ -19,12 +19,7 @@ Log::Log()
 
 bool Log::Initialize()
 {
-	std::string pathName = Timer::Instance().GetCurrentDateString( true );
-	if ( !file.Open( PATH::LogPath + pathName.c_str() + EXT::Text ) )
-	{
-		return false;
-	}
-	return true;
+	return !file.Open( PATH::LogPath + Timer::Instance().GetCurrentDateString( true ).c_str() + EXT::Text );
 }
 
 void Log::PrintText()
@@ -33,7 +28,7 @@ void Log::PrintText()
 	{
 		std::unique_lock<std::mutex> lock( workMutex );
 		cv.wait( lock, [&] () { return !texts.empty(); } );
-		
+
 		LogData data = std::move( texts.front() );
 		std::string date = Timer::Instance().GetCurrentDateString();
 		std::cout << data.text.c_str() << std::endl;

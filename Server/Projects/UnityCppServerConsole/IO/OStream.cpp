@@ -8,6 +8,11 @@ OStream::~OStream()
 
 bool OStream::Open( const std::string& _path )
 {
+	if ( outStream.is_open() )
+	{
+		Close();
+	}
+
 	outStream.open( _path, std::ios::out | std::ios::trunc );
 	if ( !outStream.is_open() )
 	{
@@ -23,22 +28,6 @@ void OStream::Close()
 	{
 		outStream.close();
 	}
-}
-
-bool OStream::CreateNewFile( const std::string& _path )
-{
-	if ( outStream.is_open() )
-	{
-		Close();
-	}
-
-	outStream.open( _path.c_str(), std::ios::out | std::ios::trunc );
-	if ( !outStream.is_open() )
-	{
-		Log::Instance().Push( ELogType::Warning, "Failed To Open Logfile" );
-		return false;
-	}
-	return true;
 }
 
 void OStream::Write( const std::string& _data )

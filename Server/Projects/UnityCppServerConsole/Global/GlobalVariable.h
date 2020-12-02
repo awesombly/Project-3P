@@ -34,5 +34,5 @@ namespace EXT
 {
 	const static std::string Text = ".txt";
 	const static std::string Exe  = ".exe";
-	const static std::string Ini  = ".Ini";
+	const static std::string Ini  = ".ini";
 }

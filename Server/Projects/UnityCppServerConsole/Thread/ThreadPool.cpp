@@ -23,6 +23,7 @@ bool ThreadPool::Initialize()
 	{
 		workerThreads.emplace_back( [&] () { ThreadPool::WorkerThread(); } );
 	}
+
 	return true;
 }
 

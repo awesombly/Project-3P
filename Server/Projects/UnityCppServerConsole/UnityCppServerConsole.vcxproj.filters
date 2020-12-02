@@ -71,6 +71,9 @@
     <ClCompile Include="Network\Network.cpp">
       <Filter>Synchronize</Filter>
     </ClCompile>
+    <ClCompile Include="Packet\Packet.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Thread\IOCPManager.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="Network\Network.h">
       <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\Packet.h">
+      <Filter>Packet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,11 +10,17 @@ public:
 	virtual ~SessionManager();
 
 public:
+	Session* Find( const SOCKET& _socket );
+	Session* Find( const std::string& _name );
+
+public:
 	void Push( Session* _session );
 	void Erase( Session* _session );
+
+public:
 	void BroadCast( const UPACKET& _packet ) const;
 
 private:
-	std::list<Session*> sessions;
+	std::unordered_map<SOCKET, Session*> sessions;
 	CriticalSection cs;
 };

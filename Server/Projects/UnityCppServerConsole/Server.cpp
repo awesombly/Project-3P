@@ -5,16 +5,6 @@
 #include "Thread/IOCPManager.h"
 #include "Thread/ThreadPool.h"
 
-Server::Server()
-{
-	destroyEvent = CreateEvent( NULL, FALSE, FALSE, _T( "Server" ) );
-}
-
-Server::~Server()
-{
-	 ::SetEvent( destroyEvent );
-}
-
 void Server::Initialize( const int _port, const char* _address )
 {
 	if ( !Log::Instance().Initialize() )
@@ -53,6 +43,4 @@ void Server::Initialize( const int _port, const char* _address )
 	{
 		Log::Instance().Push( ELogType::Warning, "LoginServer Connect Fail"_s );
 	}
-
-	::WaitForSingleObject( destroyEvent, INFINITE );
 }
