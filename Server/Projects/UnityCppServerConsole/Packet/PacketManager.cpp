@@ -41,10 +41,28 @@ void PacketManager::Push( const PACKET& _packet )
 void PacketManager::BindProtocols()
 {
 	protocols[ Protocol::Type::ChatMessage ] = &PacketManager::Broadcast;
+
+	protocols[ Protocol::TestProtocol::Type ] = &PacketManager::ReceiveTestProtocol;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
 {
 	Log::Instance().Push( ELogType::Log, "Broadcast : " + _packet.packet.ToString() );
 	SessionManager::Instance().BroadCast( _packet.packet );
+}
+
+void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
+{
+	Protocol::TestProtocol protocol = _packet.packet.GetParsedData<Protocol::TestProtocol>();
+	Log::Instance().Push( ELogType::Log, protocol.Name + " : " + _packet.packet.ToString() );
+
+	{
+		protocol.Id = "ResponseTest";
+		protocol.ItemList.push_back( Protocol::TestProtocol::Item( "Dildo", 69 ) );
+		protocol.ItemList.push_back( Protocol::TestProtocol::Item( "Penis", 74 ) );
+
+		UPACKET response;
+		response.SetData( protocol );
+		SessionManager::Instance().BroadCast( response );
+	}
 }
