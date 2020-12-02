@@ -12,10 +12,10 @@ void Server::Initialize( const int _port, const char* _address )
 		Log::Instance().Push( ELogType::Warning, "Log Initialize Fail"_s );
 	}
 
-	//if ( !Database::Instance().Initialize() )
-	//{
-	//	Log::Instance().Push( ELogType::Warning, "Database Initialize Fail"_s );
-	//}
+	if ( !Database::Instance().Initialize() )
+	{
+		Log::Instance().Push( ELogType::Warning, "Database Initialize Fail"_s );
+	}
 
 	if ( !ThreadPool::Instance().Initialize() )
 	{
