@@ -18,11 +18,11 @@ private:
 
 	void BindProtocols();
 
-	static void Broadcast( const UPACKET& _packet );
+	static void Broadcast( const PACKET& _packet );
 private:
 	std::queue<PACKET> packets;
 	std::condition_variable cv;
 	std::mutex workMutex;
 
-	std::unordered_map<u_short/*packetType*/, std::function<void( const UPACKET& )>> protocols;
+	std::unordered_map<u_short/*packetType*/, std::function<void( const PACKET& )>> protocols;
 };
