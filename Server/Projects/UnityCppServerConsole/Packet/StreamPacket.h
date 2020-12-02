@@ -1,6 +1,6 @@
 #pragma once
-#include "..\Standard/Header.h"
-#include "..\Standard/Protocol.h"
+#include "../Standard/Header.h"
+#include "../Packet/Packet.h"
 
 class StreamPacket
 {

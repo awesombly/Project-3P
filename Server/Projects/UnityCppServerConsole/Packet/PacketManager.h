@@ -1,6 +1,6 @@
 #pragma once
 #include "StreamPacket.h"
-#include "..\Standard\Protocol.h"
+#include "..\Packet\Packet.h"
 #include "..\Standard\Singleton.hpp"
 
 class PacketManager : public Singleton<PacketManager>
