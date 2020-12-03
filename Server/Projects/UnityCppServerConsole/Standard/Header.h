@@ -3,9 +3,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
-#pragma warning( disable : 4244 )
-#pragma warning( disable : 4267 )
-#pragma warning( disable : 4505 )
+#pragma warning( disable : 4505 ) // 사용 안하는 함수 제거
 
 // Windows
 #include <winsock2.h>

@@ -39,7 +39,7 @@ struct UPACKET
 		jsonData = jsonData.substr( startPosition, endPosition );
 
 		type = _protocol.Type;
-		length = jsonData.length();
+		length = ( u_short )jsonData.length();
 		memcpy_s( ( char* )data, DataMaxSize, jsonData.c_str(), length );
 		length += HeaderSize;
 	}

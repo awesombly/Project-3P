@@ -50,7 +50,7 @@ void SessionManager::Erase( Session* _session )
 	cs.Lock();
 	Log::Instance().Push( ELogType::Log, "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
 
-	int key = _session->GetSocket();
+	SOCKET key = _session->GetSocket();
 	SafeDelete( _session );
 	sessions.erase( key );
 	cs.UnLock();

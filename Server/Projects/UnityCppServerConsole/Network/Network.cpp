@@ -30,7 +30,7 @@ bool Network::Initialize( const int _port, const char* _ip )
 	{
 		address.sin_addr.S_un.S_addr = ::inet_addr( _ip );
 	}
-	address.sin_port = ::htons( _port );
+	address.sin_port = ::htons( ( u_short )_port );
 
 	return true;
 }

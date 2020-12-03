@@ -1927,23 +1927,26 @@ private:
         kCopyFlag       = 0x0800,
         kInlineStrFlag  = 0x1000,
 
+#pragma warning( push )
+#pragma warning( disable : 5054 )
         // Initial flags of different types.
-        kNullFlag = kNullType,
-        kTrueFlag = kTrueType | kBoolFlag,
-        kFalseFlag = kFalseType | kBoolFlag,
-        kNumberIntFlag = kNumberType | kNumberFlag | kIntFlag | kInt64Flag,
-        kNumberUintFlag = kNumberType | kNumberFlag | kUintFlag | kUint64Flag | kInt64Flag,
-        kNumberInt64Flag = kNumberType | kNumberFlag | kInt64Flag,
-        kNumberUint64Flag = kNumberType | kNumberFlag | kUint64Flag,
-        kNumberDoubleFlag = kNumberType | kNumberFlag | kDoubleFlag,
-        kNumberAnyFlag = kNumberType | kNumberFlag | kIntFlag | kInt64Flag | kUintFlag | kUint64Flag | kDoubleFlag,
-        kConstStringFlag = kStringType | kStringFlag,
-        kCopyStringFlag = kStringType | kStringFlag | kCopyFlag,
-        kShortStringFlag = kStringType | kStringFlag | kCopyFlag | kInlineStrFlag,
-        kObjectFlag = kObjectType,
-        kArrayFlag = kArrayType,
+        kNullFlag = Type::kNullType,
+        kTrueFlag = Type::kTrueType | kBoolFlag,
+        kFalseFlag = Type::kFalseType | kBoolFlag,
+        kNumberIntFlag = Type::kNumberType | kNumberFlag | kIntFlag | kInt64Flag,
+        kNumberUintFlag = Type::kNumberType | kNumberFlag | kUintFlag | kUint64Flag | kInt64Flag,
+        kNumberInt64Flag = Type::kNumberType | kNumberFlag | kInt64Flag,
+        kNumberUint64Flag = Type::kNumberType | kNumberFlag | kUint64Flag,
+        kNumberDoubleFlag = Type::kNumberType | kNumberFlag | kDoubleFlag,
+        kNumberAnyFlag = Type::kNumberType | kNumberFlag | kIntFlag | kInt64Flag | kUintFlag | kUint64Flag | kDoubleFlag,
+        kConstStringFlag = Type::kStringType | kStringFlag,
+        kCopyStringFlag = Type::kStringType | kStringFlag | kCopyFlag,
+        kShortStringFlag = Type::kStringType | kStringFlag | kCopyFlag | kInlineStrFlag,
+        kObjectFlag = Type::kObjectType,
+        kArrayFlag = Type::kArrayType,
 
         kTypeMask = 0x07
+#pragma warning( pop )
     };
 
     static const SizeType kDefaultArrayCapacity = 16;
