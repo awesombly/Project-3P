@@ -42,8 +42,9 @@ void PacketManager::Push( const PACKET& _packet )
 void PacketManager::BindProtocols()
 {
 	protocols[ Protocol::Both::ChatMessage::Type ] = &PacketManager::Broadcast;
-
 	protocols[ Protocol::Both::TestProtocol::Type ] = &PacketManager::ReceiveTestProtocol;
+
+	protocols[ Protocol::ToServer::EnterStage::Type ] = &PacketManager::ReceiveEnterStage;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -66,4 +67,28 @@ void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
 		response.SetData( protocol );
 		SessionManager::Instance().BroadCast( response );
 	}
+}
+
+void PacketManager::ReceiveEnterStage( const PACKET& _packet )
+{
+	Protocol::FromServer::CreatePlayer createPlayer;
+	createPlayer.Position = { 1.0f, 30.0f, 2.0f };
+	createPlayer.Direction = { 0.1f, 0.2f, 0.3f };
+	createPlayer.IsLocal = true;
+
+	UPACKET response;
+	response.SetData( createPlayer );
+
+	Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, "Session is null. socket = " + _packet.socket );
+		return;
+	}
+	session->Send( response );
+
+	// 직렬화 처리가 또 필요하다.. Id 같은거로 구분해야할듯
+	createPlayer.IsLocal = false;
+	response.SetData( createPlayer );
+	SessionManager::Instance().BroadCastExceptSelf( response, session );
 }

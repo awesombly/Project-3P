@@ -20,6 +20,7 @@ private:
 
 	static void Broadcast( const PACKET& _packet );
 	static void ReceiveTestProtocol( const PACKET& _packet );
+	static void ReceiveEnterStage( const PACKET& _packet );
 private:
 	std::queue<PACKET> packets;
 	std::condition_variable cv;

@@ -27,6 +27,21 @@
 // 데이터 처리 없이, 타입 체크만 사용할 때
 #define SIMPLE_PROTOCOL( _name ) namespace _name { const std::string Name = #_name; const u_short Type = GetPacketType( Name.c_str() ); }
 
+// TODO : 별로 파일로 분리
+struct Vector3
+{
+	float x;
+	float y;
+	float z;
+
+	template <class Archive>
+	void serialize( Archive& ar )
+	{
+		ar( CEREAL_NVP( x ) );
+		ar( CEREAL_NVP( y ) );
+		ar( CEREAL_NVP( z ) );
+	}
+};
 
 namespace Protocol
 {
@@ -88,9 +103,26 @@ namespace Protocol
 
 	namespace ToServer
 	{
+		SIMPLE_PROTOCOL( EnterStage );
 	}
 
 	namespace FromServer
 	{
+		struct CreatePlayer : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			Vector3 Position;
+			Vector3 Direction;
+			bool IsLocal;
+			
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Position ) );
+				ar( CEREAL_NVP( Direction ) );
+				ar( CEREAL_NVP( IsLocal ) );
+			}
+		};
 	}
 }

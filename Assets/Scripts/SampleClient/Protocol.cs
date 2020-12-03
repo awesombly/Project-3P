@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 
@@ -52,9 +53,29 @@ namespace Protocol
     
     namespace ToServer
     {
+        public struct EnterStage : IProtocol
+        {
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
 
     namespace FromServer
     {
+        public struct CreatePlayer : IProtocol
+        {
+            public Vector3 Position;
+            public Vector3 Direction;
+            public bool IsLocal;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
 }
