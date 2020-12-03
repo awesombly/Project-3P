@@ -18,7 +18,7 @@ Log::Log()
 
 bool Log::Initialize()
 {
-	return !file.Open( PATH::LogPath + Timer::Instance().GetCurrentDateString( true ).c_str() + EXT::Text );
+	return file.Open( PATH::LogPath + Timer::Instance().GetCurrentDateString( true ).c_str() + EXT::Text );
 }
 
 void Log::PrintText()
