@@ -9,39 +9,52 @@ namespace Protocol
         ushort GetPacketType();
     }
 
-    public struct ChatMessage : IProtocol
+    // Both : 클라/서버 양쪽에서 사용
+    // ToServer : 서버로 보내는 패킷
+    // FromServer : 서버에서 온 패킷
+    namespace Both
     {
-        public string Message;
-
-        public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
-        public ushort GetPacketType()
+        public struct ChatMessage : IProtocol
         {
-            return PacketType;
+            public string Message;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
+
+        public struct TestProtocol : IProtocol
+        {
+            public int Level;
+            public string Id;
+
+            // JsonUtility에서 Dictionary를 지원하지 않는다..
+            // keys, values List 쌍으로 흉내낼 수는 있는듯
+            //public Dictionary<int/*SlotIndex*/, string/*EquipId*/ > Equipments;
+
+            [Serializable]
+            public struct Item
+            {
+                public int Count;
+                public string Id;
+            };
+            public List<Item> ItemList;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
         }
     }
-
-    [Serializable]
-    public struct TestProtocol : IProtocol
+    
+    namespace ToServer
     {
-        public int Level;
-        public string Id;
+    }
 
-        // JsonUtility에서 Dictionary를 지원하지 않는다..
-        // keys, values List 쌍으로 흉내낼 수는 있는듯
-        //public Dictionary<int/*SlotIndex*/, string/*EquipId*/ > Equipments;
-
-        [Serializable]
-        public struct Item
-        {
-            public int Count;
-            public string Id;
-        };
-        public List<Item> ItemList;
-
-        public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
-        public ushort GetPacketType()
-        {
-            return PacketType;
-        }
+    namespace FromServer
+    {
     }
 }

@@ -58,7 +58,7 @@ public class ChatMain : MonoBehaviour
     // 채팅바( InputField )에 입력한 내용이 서버로 전송됩니다.
     public void SendChatMessage()
     {
-        Protocol.ChatMessage protocol;
+        Protocol.Both.ChatMessage protocol;
         protocol.Message = inputMessage.text;
         
         Network.Instance.Send( protocol );
@@ -69,12 +69,12 @@ public class ChatMain : MonoBehaviour
 
     public void SendTestProtocol()
     {
-        Protocol.TestProtocol protocol;
+        Protocol.Both.TestProtocol protocol;
         protocol.Level = 1234;
         protocol.Id = "태홍준환성수";
-        protocol.ItemList = new List<Protocol.TestProtocol.Item>();
+        protocol.ItemList = new List<Protocol.Both.TestProtocol.Item>();
         {
-            Protocol.TestProtocol.Item item;
+            Protocol.Both.TestProtocol.Item item;
             item.Id = "Unity";
             item.Count = 44;
             protocol.ItemList.Add( item );
@@ -89,6 +89,9 @@ public class ChatMain : MonoBehaviour
 
     public void OnVisibleChatPannel( bool isVisible )
     {
-        chatPannel.SetActive( isVisible );
+        if ( chatPannel != null )
+        {
+            chatPannel.SetActive( isVisible );
+        }
     }
 }

@@ -101,13 +101,13 @@ public class Network : Singleton<Network>
 
     private void BindProtocols()
     {
-        protocols.Add( Protocol.ChatMessage.PacketType, ReceiveChatMessage );
-        protocols.Add( Protocol.TestProtocol.PacketType, ReceiveTestProtocol );
+        protocols.Add( Protocol.Both.ChatMessage.PacketType, ReceiveChatMessage );
+        protocols.Add( Protocol.Both.TestProtocol.PacketType, ReceiveTestProtocol );
     }
 
     private void ReceiveChatMessage( string _data )
     {
-        Protocol.ChatMessage protocol = JsonUtility.FromJson<Protocol.ChatMessage>( _data );
+        Protocol.Both.ChatMessage protocol = JsonUtility.FromJson<Protocol.Both.ChatMessage>( _data );
 
         ChatMain.texts.Add( protocol.Message );
     }
@@ -115,6 +115,6 @@ public class Network : Singleton<Network>
     private void ReceiveTestProtocol( string _data )
     {
         Debug.Log( _data );
-        Protocol.TestProtocol protocol = JsonUtility.FromJson<Protocol.TestProtocol>( _data );
+        Protocol.Both.TestProtocol protocol = JsonUtility.FromJson<Protocol.Both.TestProtocol>( _data );
     }
 }
