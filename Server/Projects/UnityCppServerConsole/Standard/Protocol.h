@@ -23,19 +23,15 @@
 #include <cereal/types/polymorphic.hpp>
 
 #define PROTOCOL_HEADER() const static std::string Name; const static u_short Type;
-#define PROTOCOL_BODY( _name ) const std::string _name::Name = #_name; const u_short _name::Type = Type::GetPacketType( _name::Name.c_str() );
+#define PROTOCOL_BODY( _namespace, _name ) const std::string _namespace::_name::Name = #_name; const u_short _namespace::_name::Type = GetPacketType( _name::Name.c_str() );
+// 데이터 처리 없이, 타입 체크만 사용할 때
+#define SIMPLE_PROTOCOL( _name ) namespace _name { const std::string Name = #_name; const u_short Type = GetPacketType( Name.c_str() ); }
 
 
 namespace Protocol
 {
-	namespace Type
-	{
-		// 서버/클라 결과 동일해야함. (Sdbm Hash)
-		u_short GetPacketType( const char* _name );
-
-		// 별도로 구조체 생성없이 타입 체크만 필요한 것들
-		const static u_short ChatMessage = GetPacketType( "ChatMessage" );
-	}
+	// 서버/클라 결과 동일해야함. (Sdbm Hash)
+	u_short GetPacketType( const char* _name );
 
 	interface IProtocol
 	{
@@ -49,11 +45,13 @@ namespace Protocol
 	// FromServer : 서버에서 온 패킷
 	namespace Both
 	{
+		SIMPLE_PROTOCOL( ChatMessage );
+
 		struct TestProtocol : public IProtocol
 		{
-			PROTOCOL_HEADER()
+			PROTOCOL_HEADER();
 
-				int Level;
+			int Level;
 			std::string Id;
 			//std::map< int/*SlotIndex*/, std::string/*EquipId*/ > Equipments;
 

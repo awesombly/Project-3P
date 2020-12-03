@@ -41,7 +41,7 @@ void PacketManager::Push( const PACKET& _packet )
 
 void PacketManager::BindProtocols()
 {
-	protocols[ Protocol::Type::ChatMessage ] = &PacketManager::Broadcast;
+	protocols[ Protocol::Both::ChatMessage::Type ] = &PacketManager::Broadcast;
 
 	protocols[ Protocol::Both::TestProtocol::Type ] = &PacketManager::ReceiveTestProtocol;
 }
