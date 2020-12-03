@@ -14,7 +14,7 @@ public class Network : Singleton<Network>
     private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
 
     public delegate void DelProcessPacket( string _data );
-    public Dictionary<ushort/*packetType*/, DelProcessPacket> protocols = new Dictionary<ushort/*packetType*/, DelProcessPacket>();
+    private Dictionary<ushort/*packetType*/, DelProcessPacket> protocols = new Dictionary<ushort/*packetType*/, DelProcessPacket>();
 
     public delegate void DelConnect();
     public event DelConnect OnConnect;
@@ -34,6 +34,11 @@ public class Network : Singleton<Network>
 
         byte[] packetData = Global.Serialize( packet );
         socket.Send( packetData );
+    }
+
+    public void AddBind( ushort _packetType, DelProcessPacket _processor )
+    {
+        protocols.Add( _packetType, _processor );
     }
 
     private void Run()
@@ -77,7 +82,7 @@ public class Network : Singleton<Network>
 
     private void Awake()
     {
-        OnConnect += OnConnected;
+        OnConnect += Connected;
         OnBindProtocols += BindProtocols;
     }
 
@@ -94,15 +99,15 @@ public class Network : Singleton<Network>
         socket.Close();
     }
 
-    private void OnConnected()
+    private void Connected()
     {
         Debug.Log( "Connected. Ip = " + ipAddress );
     }
 
     private void BindProtocols()
     {
-        protocols.Add( Protocol.Both.ChatMessage.PacketType, ReceiveChatMessage );
-        protocols.Add( Protocol.Both.TestProtocol.PacketType, ReceiveTestProtocol );
+        AddBind( Protocol.Both.ChatMessage.PacketType, ReceiveChatMessage );
+        AddBind( Protocol.Both.TestProtocol.PacketType, ReceiveTestProtocol );
     }
 
     private void ReceiveChatMessage( string _data )
