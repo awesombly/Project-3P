@@ -22,6 +22,10 @@
 #include <cereal/types/chrono.hpp>
 #include <cereal/types/polymorphic.hpp>
 
+#define PROTOCOL_HEADER() const static std::string Name; const static u_short Type;
+#define PROTOCOL_BODY( _name ) const std::string _name::Name = #_name; const u_short _name::Type = Type::GetPacketType( _name::Name.c_str() );
+
+
 namespace Protocol
 {
 	namespace Type
@@ -42,6 +46,8 @@ namespace Protocol
 
 	struct TestProtocol : public IProtocol
 	{
+		PROTOCOL_HEADER()
+
 		int Level;
 		std::string Id;
 		//std::map< int/*SlotIndex*/, std::string/*EquipId*/ > Equipments;
@@ -74,9 +80,5 @@ namespace Protocol
 			//ar( CEREAL_NVP( Equipments ) );
 			ar( CEREAL_NVP( ItemList ) );
 		}
-
-		// TODO : Define으로 변경
-		const static std::string Name;
-		const static u_short Type;
 	};
 }
