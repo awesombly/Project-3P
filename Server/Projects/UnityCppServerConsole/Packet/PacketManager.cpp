@@ -43,7 +43,7 @@ void PacketManager::BindProtocols()
 {
 	protocols[ Protocol::Type::ChatMessage ] = &PacketManager::Broadcast;
 
-	protocols[ Protocol::TestProtocol::Type ] = &PacketManager::ReceiveTestProtocol;
+	protocols[ Protocol::Both::TestProtocol::Type ] = &PacketManager::ReceiveTestProtocol;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -54,13 +54,13 @@ void PacketManager::Broadcast( const PACKET& _packet )
 
 void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
 {
-	Protocol::TestProtocol protocol = _packet.packet.GetParsedData<Protocol::TestProtocol>();
+	Protocol::Both::TestProtocol protocol = _packet.packet.GetParsedData<Protocol::Both::TestProtocol>();
 	Log::Instance().Push( ELogType::Log, protocol.Name + " : " + _packet.packet.ToString() );
 
 	{
 		protocol.Id = "ResponseTest";
-		protocol.ItemList.push_back( Protocol::TestProtocol::Item( "Dildo", 69 ) );
-		protocol.ItemList.push_back( Protocol::TestProtocol::Item( "Penis", 74 ) );
+		protocol.ItemList.push_back( Protocol::Both::TestProtocol::Item( "Dildo", 69 ) );
+		protocol.ItemList.push_back( Protocol::Both::TestProtocol::Item( "Penis", 74 ) );
 
 		UPACKET response;
 		response.SetData( protocol );

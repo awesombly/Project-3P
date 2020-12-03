@@ -44,41 +44,55 @@ namespace Protocol
 		// void serialize( Archive& ar )
 	};
 
-	struct TestProtocol : public IProtocol
+	// Both : 클라/서버 양쪽에서 사용
+	// ToServer : 서버로 보내는 패킷
+	// FromServer : 서버에서 온 패킷
+	namespace Both
 	{
-		PROTOCOL_HEADER()
-
-		int Level;
-		std::string Id;
-		//std::map< int/*SlotIndex*/, std::string/*EquipId*/ > Equipments;
-
-		struct Item
+		struct TestProtocol : public IProtocol
 		{
-			int Count;
-			std::string Id;
+			PROTOCOL_HEADER()
 
-			Item() = default;
-			Item( const std::string& _id, int _count )
-				: Id( _id )
-				, Count( _count )
-			{ }
+				int Level;
+			std::string Id;
+			//std::map< int/*SlotIndex*/, std::string/*EquipId*/ > Equipments;
+
+			struct Item
+			{
+				int Count;
+				std::string Id;
+
+				Item() = default;
+				Item( const std::string& _id, int _count )
+					: Id( _id )
+					, Count( _count )
+				{ }
+
+				template <class Archive>
+				void serialize( Archive& ar )
+				{
+					ar( CEREAL_NVP( Count ) );
+					ar( CEREAL_NVP( Id ) );
+				}
+			};
+			std::vector< Item > ItemList;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
-				ar( CEREAL_NVP( Count ) );
+				ar( CEREAL_NVP( Level ) );
 				ar( CEREAL_NVP( Id ) );
+				//ar( CEREAL_NVP( Equipments ) );
+				ar( CEREAL_NVP( ItemList ) );
 			}
 		};
-		std::vector< Item > ItemList;
+	}
 
-		template <class Archive>
-		void serialize( Archive& ar )
-		{
-			ar( CEREAL_NVP( Level ) );
-			ar( CEREAL_NVP( Id ) );
-			//ar( CEREAL_NVP( Equipments ) );
-			ar( CEREAL_NVP( ItemList ) );
-		}
-	};
+	namespace ToServer
+	{
+	}
+
+	namespace FromServer
+	{
+	}
 }

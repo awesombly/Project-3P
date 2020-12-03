@@ -19,5 +19,5 @@ namespace Protocol
 		}
 	}
 
-	PROTOCOL_BODY( TestProtocol )
+	PROTOCOL_BODY( Both::TestProtocol )
 }
