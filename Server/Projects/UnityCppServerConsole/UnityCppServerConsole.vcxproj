@@ -20,13 +20,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -67,6 +67,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <AdditionalOptions>/Wv: 18 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,8 +118,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Session\SessionManager.cpp" />
     <ClCompile Include="Standard\Protocol.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
-    <ClCompile Include="Thread\ThreadPool.cpp" />
-    <ClCompile Include="Thread\IOCPManager.cpp" />
+    <ClCompile Include="Network\IOCP\IOCPManager.cpp" />
     <ClCompile Include="Packet\PacketManager.cpp" />
     <ClCompile Include="Session\Session.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
@@ -137,8 +137,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />
     <ClInclude Include="Packet\StreamPacket.h" />
-    <ClInclude Include="Thread\ThreadPool.h" />
-    <ClInclude Include="Thread\IOCPManager.h" />
+    <ClInclude Include="Network\IOCP\IOCPManager.h" />
     <ClInclude Include="Packet\PacketManager.h" />
     <ClInclude Include="Session\Session.h" />
     <ClInclude Include="Standard\Protocol.h" />

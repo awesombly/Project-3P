@@ -2,6 +2,7 @@
 // Warning Ignore
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4267 )
 #pragma warning( disable : 4505 )

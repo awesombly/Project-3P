@@ -1,12 +1,13 @@
 ﻿#include "PacketManager.h"
 #include "..\Standard\Log.h"
 #include "..\Session\SessionManager.h"
-#include "..\Thread\ThreadPool.h"
 
 bool PacketManager::Initialize()
 {
 	BindProtocols();
-	ThreadPool::Instance().Enqueue( [&] () { PacketManager::WorkPacket(); } );
+
+	std::thread th( [&] () { PacketManager::WorkPacket(); } );
+	th.detach();
 	return true;
 }
 

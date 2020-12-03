@@ -1,7 +1,6 @@
 #include "Acceptor.h"
-#include "..\Thread\IOCPManager.h"
+#include "..\Network\\IOCP\\IOCPManager.h"
 #include "..\Session\SessionManager.h"
-#include "..\Thread\ThreadPool.h"
 #include "..\\Standard\Log.h"
 
 
@@ -28,7 +27,8 @@ bool Acceptor::ListenStart()
 		return false;
 	}
 
-	ThreadPool::Instance().Enqueue( [&] () { Acceptor::WaitForClients(); } );
+	std::thread th( [&] () { Acceptor::WaitForClients(); } );
+	th.detach();
 	return true;
 }
 
@@ -94,6 +94,6 @@ bool Acceptor::SetSocketOption() const
 	}
 	Log::Instance().Push( ELogType::Log, "Socket Option RecvSize : " + std::to_string( recvSize ) );
 	Log::Instance().Push( ELogType::Log, "Socket Option SendSize : " + std::to_string( sendSize ) );
-
+	
 	return true;
 }

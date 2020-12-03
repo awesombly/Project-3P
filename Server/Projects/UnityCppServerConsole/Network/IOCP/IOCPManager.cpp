@@ -1,14 +1,14 @@
 #include "IOCPManager.h"
-#include "..\Session\SessionManager.h"
-#include "..\Thread\ThreadPool.h"
-#include "..\Standard\Log.h"
+#include "..\\..\Session\SessionManager.h"
+#include "..\\..\Standard\Log.h"
 
 bool IOCPManager::Initialize()
 {
 	iocpHandle = ::CreateIoCompletionPort( INVALID_HANDLE_VALUE, 0, 0, 3 );
 	for ( int count = 0; count < 3; count++ )
 	{
-		ThreadPool::Instance().Enqueue( [&] () { IOCPManager::WaitCompletionStatus(); } );
+		std::thread th( [&] () { IOCPManager::WaitCompletionStatus(); } );
+		th.detach();
 	}
 	return true;
 }

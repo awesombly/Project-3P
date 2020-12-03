@@ -1,11 +1,10 @@
 #include "Log.h"
-#include "..\Thread\ThreadPool.h"
 #include "..\Time\Timer.h"
 
 Log::Log()
 {
-	ThreadPool::Instance().Enqueue( [&] () { Log::PrintText(); } );
-
+	std::thread th( [&] () { Log::PrintText(); } );
+	th.detach();
 #pragma region LogType_String맵생성
 	// Enum 값을 String으로 변환하는 방법
 	// 1. #define EnumToString(s) #s

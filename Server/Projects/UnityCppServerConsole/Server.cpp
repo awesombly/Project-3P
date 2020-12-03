@@ -2,8 +2,7 @@
 #include "Standard/Log.h"
 #include "DB/Database.h"
 #include "Packet/PacketManager.h"
-#include "Thread/IOCPManager.h"
-#include "Thread/ThreadPool.h"
+#include "Network/IOCP/IOCPManager.h"
 
 void Server::Initialize( const int _port, const char* _address )
 {
@@ -16,11 +15,6 @@ void Server::Initialize( const int _port, const char* _address )
 	//{
 	//	Log::Instance().Push( ELogType::Warning, "Database Initialize Fail"_s );
 	//}
-
-	if ( !ThreadPool::Instance().Initialize() )
-	{
-		Log::Instance().Push( ELogType::Warning, "ThreadPool Initialize Fail"_s );
-	}
 
 	if ( !IOCPManager::Instance().Initialize() )
 	{
