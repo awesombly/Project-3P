@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
+using ReceivedPacket = System.Collections.Generic.KeyValuePair<ushort/*packetType*/, string/*data*/>;
+
 public class Network : Singleton<Network>
 {
     public string ipAddress = "127.0.0.1";
@@ -12,6 +14,7 @@ public class Network : Singleton<Network>
     private Thread thread;
 
     private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
+    private Queue<ReceivedPacket> receivedPackets = new Queue<ReceivedPacket>();
 
     public delegate void DelProcessPacket( string _data );
     private Dictionary<ushort/*packetType*/, DelProcessPacket> protocols = new Dictionary<ushort/*packetType*/, DelProcessPacket>();
@@ -36,9 +39,9 @@ public class Network : Singleton<Network>
         socket.Send( packetData );
     }
 
-    public void AddBind( ushort _packetType, DelProcessPacket _processor )
+    public void AddBind( ushort _packetType, DelProcessPacket _handler )
     {
-        protocols.Add( _packetType, _processor );
+        protocols.Add( _packetType, _handler );
     }
 
     private void Run()
@@ -69,14 +72,35 @@ public class Network : Singleton<Network>
             if ( !ReferenceEquals( buffer, null ) )
             {
                 UPACKET packet = Global.Deserialize<UPACKET>( buffer );
-                if ( protocols.ContainsKey( packet.type ) )
-                {
-                    string data = System.Text.Encoding.UTF8.GetString( packet.data, 0, packet.length - UPACKET.HeaderSize );
-                    protocols[ packet.type ]?.Invoke( data );
-                }
-
                 System.Array.Clear( buffer, 0, packet.length );
+
+                string data = System.Text.Encoding.UTF8.GetString( packet.data, 0, packet.length - UPACKET.HeaderSize );
+                receivedPackets.Enqueue( new ReceivedPacket( packet.type, data ) );
             }
+        }
+    }
+
+    private void Update()
+    {
+        // 메인 쓰레드 외엔 Instantiate() 같은 작업이 안돼 따로 처리
+        while ( receivedPackets.Count > 0 )
+        {
+            ReceivedPacket packet = receivedPackets.Dequeue();
+
+            if ( !protocols.ContainsKey( packet.Key ) )
+            {
+                Debug.LogWarning( "Packet not bind. type = " + packet.Key + ", data = " + packet.Value );
+                continue;
+            }
+
+            DelProcessPacket handler = protocols[ packet.Key ];
+            if ( ReferenceEquals( handler, null ) )
+            {
+                Debug.LogWarning( "Packet handler is null. type = " + packet.Key + ", data = " + packet.Value );
+                continue;
+            }
+
+            handler.Invoke( packet.Value );
         }
     }
 
