@@ -1,132 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Acceptor">
-      <UniqueIdentifier>{585f0004-5229-46c2-a700-9505d282eeed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Global">
-      <UniqueIdentifier>{f1c3ffa0-d0e5-4662-8f19-b0d8efbbae1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Packet">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Session">
-      <UniqueIdentifier>{91a1a00c-7716-4cf0-9674-d4ff28270018}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Standard">
-      <UniqueIdentifier>{f6c7f376-bae4-4da5-a436-0a2af34269d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Synchronize">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Thread">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Synchronize\CriticalSection.cpp">
-      <Filter>Synchronize</Filter>
-    </ClCompile>
-    <ClCompile Include="Standard\Log.cpp">
-      <Filter>Standard</Filter>
-    </ClCompile>
-    <ClCompile Include="Session\Session.cpp">
-      <Filter>Session</Filter>
-    </ClCompile>
-    <ClCompile Include="Session\SessionManager.cpp">
-      <Filter>Session</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet\PacketManager.cpp">
-      <Filter>Packet</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet\StreamPacket.cpp">
-      <Filter>Packet</Filter>
-    </ClCompile>
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Standard\Protocol.cpp">
-      <Filter>Standard</Filter>
-    </ClCompile>
-    <ClCompile Include="IO\OStream.cpp">
-      <Filter>Synchronize</Filter>
-    </ClCompile>
-    <ClCompile Include="Time\Timer.cpp">
-      <Filter>Synchronize</Filter>
-    </ClCompile>
-    <ClCompile Include="DB\Database.cpp">
-      <Filter>Synchronize</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Acceptor.cpp">
-      <Filter>Acceptor</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\Network.cpp">
-      <Filter>Synchronize</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet\Packet.cpp">
-      <Filter>Packet</Filter>
-    </ClCompile>
-    <ClCompile Include="Network\IOCP\IOCPManager.cpp">
-      <Filter>Thread</Filter>
-    </ClCompile>
+    <ClCompile Include="Network\IOCP\IOCPManager.cpp" />
+    <ClCompile Include="Time\Timer.cpp" />
+    <ClCompile Include="Synchronize\CriticalSection.cpp" />
+    <ClCompile Include="DB\Database.cpp" />
+    <ClCompile Include="Network\Network.cpp" />
+    <ClCompile Include="IO\OStream.cpp" />
+    <ClCompile Include="Standard\Log.cpp" />
+    <ClCompile Include="Standard\Protocol.cpp" />
+    <ClCompile Include="Session\Session.cpp" />
+    <ClCompile Include="Session\SessionManager.cpp" />
+    <ClCompile Include="Packet\Packet.cpp" />
+    <ClCompile Include="Packet\PacketManager.cpp" />
+    <ClCompile Include="Packet\StreamPacket.cpp" />
+    <ClCompile Include="Network\Acceptor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Standard\Log.h">
-      <Filter>Standard</Filter>
-    </ClInclude>
-    <ClInclude Include="Standard\Header.h">
-      <Filter>Standard</Filter>
-    </ClInclude>
-    <ClInclude Include="Standard\Protocol.h">
-      <Filter>Standard</Filter>
-    </ClInclude>
-    <ClInclude Include="Standard\Singleton.hpp">
-      <Filter>Standard</Filter>
-    </ClInclude>
-    <ClInclude Include="Session\Session.h">
-      <Filter>Session</Filter>
-    </ClInclude>
-    <ClInclude Include="Session\SessionManager.h">
-      <Filter>Session</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet\PacketManager.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet\StreamPacket.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="Synchronize\CriticalSection.h">
-      <Filter>Synchronize</Filter>
-    </ClInclude>
     <ClInclude Include="Server.h" />
-    <ClInclude Include="Global\GlobalVariable.h">
-      <Filter>Global</Filter>
-    </ClInclude>
-    <ClInclude Include="IO\OStream.h">
-      <Filter>Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="Time\Timer.h">
-      <Filter>Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="DB\Database.h">
-      <Filter>Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="Global\GlobalFunc.hpp">
-      <Filter>Global</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Acceptor.h">
-      <Filter>Acceptor</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Network.h">
-      <Filter>Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet\Packet.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\IOCP\IOCPManager.h">
-      <Filter>Thread</Filter>
-    </ClInclude>
+    <ClInclude Include="DB\Database.h" />
+    <ClInclude Include="Network\IOCP\IOCPManager.h" />
+    <ClInclude Include="Network\Network.h" />
+    <ClInclude Include="IO\OStream.h" />
+    <ClInclude Include="Time\Timer.h" />
+    <ClInclude Include="Synchronize\CriticalSection.h" />
+    <ClInclude Include="Standard\Header.h" />
+    <ClInclude Include="Standard\Log.h" />
+    <ClInclude Include="Standard\Protocol.h" />
+    <ClInclude Include="Standard\Singleton.hpp" />
+    <ClInclude Include="Session\Session.h" />
+    <ClInclude Include="Session\SessionManager.h" />
+    <ClInclude Include="Packet\Packet.h" />
+    <ClInclude Include="Packet\PacketManager.h" />
+    <ClInclude Include="Packet\StreamPacket.h" />
+    <ClInclude Include="Global\GlobalFunc.hpp" />
+    <ClInclude Include="Global\GlobalVariable.h" />
+    <ClInclude Include="Network\Acceptor.h" />
   </ItemGroup>
 </Project>
