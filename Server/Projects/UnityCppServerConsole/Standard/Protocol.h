@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "..\Global\GlobalVariable.h"
+#include "Header.h"
 // 각 타입 serialize시 필요
 #include <cereal/types/array.hpp>
 #include <cereal/types/atomic.hpp>
@@ -27,21 +27,6 @@
 // 데이터 처리 없이, 타입 체크만 사용할 때
 #define SIMPLE_PROTOCOL( _name ) namespace _name { const std::string PacketName = #_name; const u_short PacketType = GetPacketType( PacketName.c_str() ); }
 
-// TODO : 별로 파일로 분리
-struct Vector3
-{
-	float x;
-	float y;
-	float z;
-
-	template <class Archive>
-	void serialize( Archive& ar )
-	{
-		ar( CEREAL_NVP( x ) );
-		ar( CEREAL_NVP( y ) );
-		ar( CEREAL_NVP( z ) );
-	}
-};
 
 namespace Protocol
 {
