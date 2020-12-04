@@ -53,6 +53,18 @@ void PacketManager::Broadcast( const PACKET& _packet )
 	SessionManager::Instance().BroadCast( _packet.packet );
 }
 
+void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
+{
+	const Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, "Session is null. socket = " + _packet.socket );
+		return;
+	}
+
+	SessionManager::Instance().BroadCastExceptSelf( _packet.packet, session );
+}
+
 void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
 {
 	Protocol::Both::TestProtocol protocol = _packet.packet.GetParsedData<Protocol::Both::TestProtocol>();
