@@ -42,6 +42,7 @@ void PacketManager::Push( const PACKET& _packet )
 void PacketManager::BindProtocols()
 {
 	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::Broadcast;
+	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::BroadCastExceptSelf;
 	protocols[ Protocol::Both::TestProtocol::PacketType ] = &PacketManager::ReceiveTestProtocol;
 
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::ReceiveEnterStage;
@@ -87,6 +88,11 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 	createPlayer.Position = { 1.0f, 30.0f, 2.0f };
 	createPlayer.Direction = { 0.1f, 0.2f, 0.3f };
 	createPlayer.IsLocal = true;
+	/// 테스트용 코드
+	static const std::vector<std::string> names( { "Junhwan", "Taehong", "Sungsu" } );
+	static int index = 0;
+	createPlayer.Name = names[ index % names.size() ];
+	++index;
 
 	UPACKET response;
 	response.SetData( createPlayer );

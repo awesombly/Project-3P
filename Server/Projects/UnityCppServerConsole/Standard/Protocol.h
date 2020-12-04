@@ -61,6 +61,7 @@ namespace Protocol
 	namespace Both
 	{
 		SIMPLE_PROTOCOL( ChatMessage );
+		SIMPLE_PROTOCOL( SyncTransform );
 
 		struct TestProtocol : public IProtocol
 		{
@@ -112,6 +113,7 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
+			std::string Name;
 			Vector3 Position;
 			Vector3 Direction;
 			bool IsLocal;
@@ -119,6 +121,7 @@ namespace Protocol
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
+				ar( CEREAL_NVP( Name ) );
 				ar( CEREAL_NVP( Position ) );
 				ar( CEREAL_NVP( Direction ) );
 				ar( CEREAL_NVP( IsLocal ) );

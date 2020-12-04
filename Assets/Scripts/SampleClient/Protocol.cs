@@ -49,6 +49,19 @@ namespace Protocol
                 return PacketType;
             }
         }
+
+        public struct SyncTransform : IProtocol
+        {
+            public string Name;
+            public Vector3 Position;
+            public Quaternion Rotation;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
     
     namespace ToServer
@@ -67,6 +80,7 @@ namespace Protocol
     {
         public struct CreatePlayer : IProtocol
         {
+            public string Name;
             public Vector3 Position;
             public Vector3 Direction;
             public bool IsLocal;
