@@ -27,7 +27,7 @@ struct UPACKET
 		std::ostringstream stream;
 		{
 			cereal::JSONOutputArchive archive( stream, cereal::JSONOutputArchive::Options::NoIndent() );
-			archive( cereal::make_nvp( _protocol.Name, _protocol ) );
+			archive( cereal::make_nvp( _protocol.PacketName, _protocol ) );
 		}
 
 		std::string jsonData = std::move( stream.str() );
@@ -38,7 +38,7 @@ struct UPACKET
 		const size_t endPosition = jsonData.rfind( '}' ) - startPosition;
 		jsonData = jsonData.substr( startPosition, endPosition );
 
-		type = _protocol.Type;
+		type = _protocol.PacketType;
 		length = ( u_short )jsonData.length();
 		memcpy_s( ( char* )data, DataMaxSize, jsonData.c_str(), length );
 		length += HeaderSize;

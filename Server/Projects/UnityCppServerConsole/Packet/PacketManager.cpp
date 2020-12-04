@@ -41,10 +41,10 @@ void PacketManager::Push( const PACKET& _packet )
 
 void PacketManager::BindProtocols()
 {
-	protocols[ Protocol::Both::ChatMessage::Type ] = &PacketManager::Broadcast;
-	protocols[ Protocol::Both::TestProtocol::Type ] = &PacketManager::ReceiveTestProtocol;
+	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::Broadcast;
+	protocols[ Protocol::Both::TestProtocol::PacketType ] = &PacketManager::ReceiveTestProtocol;
 
-	protocols[ Protocol::ToServer::EnterStage::Type ] = &PacketManager::ReceiveEnterStage;
+	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::ReceiveEnterStage;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -56,7 +56,7 @@ void PacketManager::Broadcast( const PACKET& _packet )
 void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
 {
 	Protocol::Both::TestProtocol protocol = _packet.packet.GetParsedData<Protocol::Both::TestProtocol>();
-	Log::Instance().Push( ELogType::Log, protocol.Name + " : " + _packet.packet.ToString() );
+	Log::Instance().Push( ELogType::Log, protocol.PacketName + " : " + _packet.packet.ToString() );
 
 	{
 		protocol.Id = "ResponseTest";
