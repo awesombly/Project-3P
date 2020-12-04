@@ -23,10 +23,12 @@ public:
 
 public:
 	bool Initialize();
-	void PrintText();
 	void Push();
 	void Push( const int _errorCode );
 	void Push( ELogType _type, const std::string& _data );
+
+private:
+	void PrintText();
 
 private:
 	struct LogData

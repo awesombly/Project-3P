@@ -37,8 +37,9 @@ protected:
 protected:
 	SOCKET socket;
 	SOCKADDR_IN address;
-	OVERLAPPEDEX ov;
 	WSABUF wsaBuffer;
-	char buffer[DataMaxSize + HeaderSize];
+private:
+	OVERLAPPEDEX ov;
+	char buffer[ DataMaxSize + HeaderSize ];
 };
 

@@ -28,7 +28,7 @@ Session* SessionManager::Find( const std::string& _name )
 	while ( sessionIter++ == std::cend( sessions ) )
 	{
 		Session* session = sessionIter->second;
-		if ( _name.compare( session->GetData().nickName ) == 0 )
+		if ( _name.compare( session->GetSessionData().NickName ) == 0 )
 		{
 			return session;
 		}

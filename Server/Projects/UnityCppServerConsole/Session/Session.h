@@ -4,12 +4,12 @@
 
 struct SessionData
 {
-	unsigned int key;
-	std::string nickName;
-	std::string id;
-	std::string pw;
-	std::string startDate;
-	std::string lastConnectDate;
+	unsigned int Key;
+	std::string NickName;
+	std::string Id;
+	std::string Pw;
+	std::string StartDate;
+	std::string LastConnectDate;
 };
 
 class Session : public Network
@@ -23,9 +23,9 @@ public:
 	void Dispatch( const LPOVERLAPPED& _ov );
 
 public:
-	const SessionData& GetData() const;
+	const SessionData& GetSessionData() const;
 
 private:
 	StreamPacket stream;
-	SessionData data;
+	SessionData sessionData;
 };
