@@ -12,7 +12,7 @@ Network::~Network()
 	::WSACleanup();
 }
 
-const bool Network::Initialize( const int _port, const char* _ip )
+bool Network::Initialize( const int _port, const char* _ip )
 {
 	WSADATA wsa;
 	int errorCode = ::WSAStartup( MAKEWORD( 2, 2 ), &wsa );
@@ -24,23 +24,23 @@ const bool Network::Initialize( const int _port, const char* _ip )
 			// WSAGetLastError에서 받을 수 없습니다.
 			case WSASYSNOTREADY:
 			{
-				Log::Instance().Push( ELogType::Error, "네트워크 통신에 대한 준비가 되지 않았습니다."_s );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( "네트워크 통신에 대한 준비가 되지 않았습니다."_s ) );
 			} break;
 			case WSAVERNOTSUPPORTED:
 			{
-				Log::Instance().Push( ELogType::Error, "요청된 윈도우 소켓지원버전은 제공되지 않습니다."_s );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( "요청된 윈도우 소켓지원버전은 제공되지 않습니다."_s ) );
 			} break;
 			case WSAEINPROGRESS:
 			{
-				Log::Instance().Push( ELogType::Error, "차단 윈도우 소켓 1.1작업이 진행 중입니다."_s );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( "차단 윈도우 소켓 1.1작업이 진행 중입니다."_s ) );
 			} break;
 			case WSAEPROCLIM:
 			{
-				Log::Instance().Push( ELogType::Error, "윈도우 소켓 구현에서 지원하는 작업 수에 대한 제한에 도달했습니다."_s );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( "윈도우 소켓 구현에서 지원하는 작업 수에 대한 제한에 도달했습니다."_s ) );
 			} break;
 			case WSAEFAULT:
 			{
-				Log::Instance().Push( ELogType::Error, "WSAData가 유효한 포인터가 아닙니다."_s );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( "WSAData가 유효한 포인터가 아닙니다."_s ) );
 			} break;
 			default:
 			{
@@ -50,7 +50,7 @@ const bool Network::Initialize( const int _port, const char* _ip )
 	}
 
 	socket = ::WSASocket( AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED );
-	Log::Instance().Push( ELogType::Log, "Socket Generation Success" );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Generation Success" ) );
 
 	ZeroMemory( &address, sizeof( address ) );
 	address.sin_family = AF_INET;
@@ -67,7 +67,7 @@ const bool Network::Initialize( const int _port, const char* _ip )
 	return true;
 }
 
-const bool Network::Connect() const
+bool Network::Connect() const
 {
 	if ( ::connect( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR )
 	{
@@ -76,7 +76,7 @@ const bool Network::Connect() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, "Connect Success : "_s + ::inet_ntoa( address.sin_addr ) + " : "_s + std::to_string( ::ntohs( address.sin_port ) ) );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Connect Success : "_s + ::inet_ntoa( address.sin_addr ) + " : "_s + std::to_string( ::ntohs( address.sin_port ) ) ) );
 
 	return true;
 }
@@ -110,17 +110,17 @@ const SOCKET& Network::GetSocket() const
 	return socket;
 }
 
-const std::string Network::GetAddressString() const
+std::string Network::GetAddressString() const
 {
 	return ::inet_ntoa( address.sin_addr );
 }
 
-const std::string Network::GetPortString() const
+std::string Network::GetPortString() const
 {
 	return std::to_string( ::ntohs( address.sin_port ) );
 }
 
-const bool Network::ClosedSocket() const
+bool Network::ClosedSocket() const
 {
 	if ( ::closesocket( socket ) == SOCKET_ERROR )
 	{

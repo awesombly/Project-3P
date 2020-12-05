@@ -10,7 +10,7 @@ public:
 	virtual ~PacketManager() = default;
 
 public:
-	const bool Initialize();
+	bool Initialize();
 	void Push( const PACKET& _packet );
 
 private:
@@ -23,6 +23,7 @@ private:
 
 	static void ReceiveTestProtocol( const PACKET& _packet );
 	static void ReceiveEnterStage( const PACKET& _packet );
+
 private:
 	std::queue<PACKET> packets;
 	std::condition_variable cv;

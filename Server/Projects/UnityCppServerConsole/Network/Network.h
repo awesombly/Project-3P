@@ -10,19 +10,19 @@ public:
 	virtual ~Network();
 
 public:
-	const bool Initialize( const int _port, const char* _ip );
-	const bool Connect() const;
+	bool Initialize( const int _port, const char* _ip );
+	bool Connect() const;
 
 	void Recieve();
 	void Send( const UPACKET& _packet ) const;
 
 public:
 	const SOCKET& GetSocket() const;
-	const std::string GetAddressString() const;
-	const std::string GetPortString() const;
+	std::string GetAddressString() const;
+	std::string GetPortString() const;
 
 protected:
-	const bool ClosedSocket() const;
+	bool ClosedSocket() const;
 
 protected:
 	struct OVERLAPPEDEX : OVERLAPPED

@@ -8,9 +8,9 @@ public:
 	virtual ~Acceptor() = default;
 
 public:
-	const bool ListenStart() const;
+	bool ListenStart() const;
 
 private:
 	void WaitForClients() const;
-	const bool SetSocketOption() const;
+	bool SetSocketOption() const;
 };

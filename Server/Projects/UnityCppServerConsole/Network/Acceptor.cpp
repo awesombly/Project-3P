@@ -4,7 +4,7 @@
 #include "../Standard/Log.h"
 
 
-const bool Acceptor::ListenStart() const
+bool Acceptor::ListenStart() const
 {
 	if ( !SetSocketOption()
 		 || ::bind( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR
@@ -39,7 +39,7 @@ void Acceptor::WaitForClients() const
 }
 
 // 家南 技何 汲沥
-const bool Acceptor::SetSocketOption() const
+bool Acceptor::SetSocketOption() const
 {
 	int optionValue = 1;
 	if ( ::setsockopt( socket, SOL_SOCKET, SO_REUSEADDR, ( char* )&optionValue, sizeof( optionValue ) ) == SOCKET_ERROR )
@@ -56,7 +56,7 @@ const bool Acceptor::SetSocketOption() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, "Socket Option : TCP NoDelay" );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option : TCP NoDelay"_s ) );
 
 	linger optLinger;
 	int size = sizeof( int );
@@ -86,8 +86,8 @@ const bool Acceptor::SetSocketOption() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, "Socket Option RecvSize : " + std::to_string( recvSize ) );
-	Log::Instance().Push( ELogType::Log, "Socket Option SendSize : " + std::to_string( sendSize ) );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option RecvSize : "_s + std::to_string( recvSize ) ) );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option SendSize : "_s + std::to_string( sendSize ) ) );
 	
 	return true;
 }
