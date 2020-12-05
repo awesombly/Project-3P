@@ -1,6 +1,6 @@
 #pragma once
-#include "..\\Network\\Network.h"
-#include "..\\Packet\\StreamPacket.h"
+#include "../Network/Network.h"
+#include "../Packet/StreamPacket.h"
 
 struct SessionData
 {

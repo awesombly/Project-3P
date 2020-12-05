@@ -4,6 +4,11 @@
 #include "Packet/PacketManager.h"
 #include "Network/IOCP/IOCPManager.h"
 
+Server::Server() 
+{
+	killEvent = ::CreateEvent( NULL, FALSE, FALSE, _T( "ServerKillEvent" ) );
+}
+
 void Server::Initialize( const int _port, const char* _address )
 {
 	if ( !Log::Instance().Initialize() )
@@ -32,9 +37,8 @@ void Server::Initialize( const int _port, const char* _address )
 		Log::Instance().Push( ELogType::Warning, "PacketManager Initialize Fail"_s );
 	}
 
-	if ( !loginServer.Initialize( _port, "127.0.0.1" ) ||
-		 !loginServer.Connect() )
+	if ( ::WaitForSingleObject( killEvent, INFINITE ) == WAIT_FAILED )
 	{
-		Log::Instance().Push( ELogType::Warning, "LoginServer Connect Fail"_s );
+		Log::Instance().Push( ELogType::Warning, "KillEvent Wait Failed" );
 	}
 }

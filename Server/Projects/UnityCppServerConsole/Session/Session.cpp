@@ -1,9 +1,10 @@
 #include "Session.h"
-#include "..\Standard\Log.h"
-#include "..\\Standard\Protocol.h"
-#include "..\\Packet\PacketManager.h"
+#include "../Standard/Log.h"
+#include "../Standard/Protocol.h"
+#include "../Packet/PacketManager.h"
 
-Session::Session( const SOCKET& _socket, const SOCKADDR_IN& _address ) : Network( _socket, _address )
+Session::Session( const SOCKET& _socket, const SOCKADDR_IN& _address ) 
+	: Network( _socket, _address )
 {
 
 }

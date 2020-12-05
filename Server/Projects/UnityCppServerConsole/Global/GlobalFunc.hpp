@@ -3,7 +3,7 @@
 
 static std::string operator ""_s( const char* _str, size_t _len )
 {
-	return ( std::string( _str, _len ) );
+	return std::string( _str, _len );
 }
 
 template<class Type>
@@ -32,23 +32,26 @@ static std::string ToUFT8( const char* _string )
 	int lengthUTF = 0;
 	wchar_t* UnicodeBuffer = nullptr;
 	char* multibyteBuffer = nullptr;
-
+	
 	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_ACP, 0, _string, ( int )::strlen( _string ), NULL, 0 ) ) < 0 )
 	{
-		return 0;
+		return std::string();
 	}
-	UnicodeBuffer = new wchar_t[lengthUnicode + 1];
-	::memset( UnicodeBuffer, 0x00, sizeof( wchar_t ) * ( lengthUnicode + 1 ) );
+	lengthUnicode = lengthUnicode + ( int )1;
+	UnicodeBuffer = new wchar_t[lengthUnicode];
+	::memset( UnicodeBuffer, 0x00, ( size_t )( sizeof( wchar_t ) * lengthUnicode ) );
 
 	// Ansi -> Unicode
 	lengthUnicode = ::MultiByteToWideChar( CP_ACP, 0, _string, ( int )::strlen( _string ), UnicodeBuffer, lengthUnicode );
 	if ( ( lengthUTF = ::WideCharToMultiByte( CP_UTF8, 0, UnicodeBuffer, lengthUnicode, NULL, 0, NULL, NULL ) ) < 0 )
 	{
 		delete[] UnicodeBuffer;
-		return 0;
+
+		return std::string();
 	}
-	multibyteBuffer = new char[lengthUTF + 1];
-	::memset( multibyteBuffer, 0x00, sizeof( char ) * ( lengthUTF + 1 ) );
+	lengthUTF = lengthUTF + ( int )1;
+	multibyteBuffer = new char[lengthUTF];
+	::memset( multibyteBuffer, 0x00, ( size_t )( sizeof( char ) * lengthUTF ) );
 
 	// Unicode -> UTF-8
 	lengthUTF = ::WideCharToMultiByte( CP_UTF8, 0, UnicodeBuffer, lengthUnicode, multibyteBuffer, lengthUTF, NULL, NULL );
@@ -70,20 +73,23 @@ static std::string ToAnsi( const char* _string )
 
 	if ( ( lengthUnicode = ::MultiByteToWideChar( CP_UTF8, 0, _string, ( int )::strlen( _string ), NULL, 0 ) ) < 0 )
 	{
-		return 0;
+		return std::string();
 	}
-	UnicodeBuffer = new wchar_t[lengthUnicode + 1];
-	::memset( UnicodeBuffer, 0x00, sizeof( wchar_t )*( lengthUnicode + 1 ) );
+	UnicodeBuffer = UnicodeBuffer + ( int )1;
+	UnicodeBuffer = new wchar_t[lengthUnicode];
+	::memset( UnicodeBuffer, 0x00, ( size_t )( sizeof( wchar_t ) * lengthUnicode ) );
 
 	// UTF-8 -> Unicode
 	lengthUnicode = ::MultiByteToWideChar( CP_UTF8, 0, _string, ( int )::strlen( _string ), UnicodeBuffer, lengthUnicode );
 	if ( ( lengthUTF = ::WideCharToMultiByte( CP_ACP, 0, UnicodeBuffer, lengthUnicode, NULL, 0, NULL, NULL ) ) < 0 )
 	{
 		delete[] UnicodeBuffer;
-		return 0;
+
+		return std::string();
 	}
-	multibyteBuffer = new char[lengthUTF + 1];
-	::memset( multibyteBuffer, 0x00, sizeof( char )*( lengthUTF + 1 ) );
+	lengthUTF = lengthUTF + ( int )1;
+	multibyteBuffer = new char[lengthUTF];
+	::memset( multibyteBuffer, 0x00, ( size_t )( sizeof( char ) * lengthUTF ) );
 
 	// Unicode -> Ansi
 	lengthUTF = ::WideCharToMultiByte( CP_ACP, 0, UnicodeBuffer, lengthUnicode, multibyteBuffer, lengthUTF, NULL, NULL );

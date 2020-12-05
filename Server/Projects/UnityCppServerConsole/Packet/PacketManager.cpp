@@ -1,13 +1,14 @@
 ﻿#include "PacketManager.h"
-#include "..\Standard\Log.h"
-#include "..\Session\SessionManager.h"
+#include "../Standard/Log.h"
+#include "../Session/SessionManager.h"
 
-bool PacketManager::Initialize()
+const bool PacketManager::Initialize()
 {
 	BindProtocols();
 
 	std::thread th( [&] () { PacketManager::WorkPacket(); } );
 	th.detach();
+
 	return true;
 }
 
@@ -15,10 +16,10 @@ void PacketManager::WorkPacket()
 {
 	while ( true )
 	{
-		std::unique_lock<std::mutex> lock( workMutex );
+		std::unique_lock<std::mutex> lock( packetsMutex );
 		cv.wait( lock, [&] () { return !packets.empty(); } );
 		
-		PACKET* packet = std::move( &packets.front() );
+		PACKET* packet = &packets.front();
 		auto findItr = protocols.find( packet->packet.type );
 		if ( findItr == protocols.cend() || findItr->second == nullptr )
 		{
@@ -34,7 +35,7 @@ void PacketManager::WorkPacket()
 
 void PacketManager::Push( const PACKET& _packet )
 {
-	std::lock_guard<std::mutex> lock( workMutex );
+	std::lock_guard<std::mutex> lock( packetsMutex );
 	packets.push( _packet );
 	cv.notify_one();
 }

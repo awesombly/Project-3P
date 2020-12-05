@@ -1,5 +1,5 @@
 #pragma once
-#include "..\\..\Standard\Singleton.hpp"
+#include "../../Standard/Singleton.hpp"
 
 class IOCPManager : public Singleton<IOCPManager>
 {
@@ -8,7 +8,7 @@ public:
 	virtual ~IOCPManager() = default;
 
 public:
-	bool Initialize();
+	const bool Initialize();
 	void Bind( const HANDLE& _sock, const ULONG_PTR _key ) const;
 
 private:
@@ -16,7 +16,5 @@ private:
 
 private:
 	HANDLE iocpHandle;
-	std::condition_variable cv;
-	std::mutex workMutex;
 };
 

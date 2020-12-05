@@ -35,7 +35,7 @@ namespace DB
 namespace PATH
 {
 	// Path 변경시 빌드 후 이벤트 폴더 생성도 같이 변경하셔야 합니다.
-	const static std::string LogPath = "..\\..\\..\\Log\\";
+	const static std::string LogPath = "../../../Log/";
 }
 
 namespace EXT

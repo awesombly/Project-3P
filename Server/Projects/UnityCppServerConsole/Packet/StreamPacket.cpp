@@ -1,8 +1,8 @@
 #include "StreamPacket.h"
 #include "PacketManager.h"
 
-StreamPacket::StreamPacket() : packet( new UPACKET() ), recvBuffer{},
-							   startPos( 0 ), writePos( 0 ), readPos( 0 )
+StreamPacket::StreamPacket() 
+	: packet( new UPACKET() ), recvBuffer{}, startPos( 0 ), writePos( 0 ), readPos( 0 )
 {
 
 }
@@ -45,8 +45,7 @@ void StreamPacket::Truncate( const SOCKET& _socket, const WSABUF& _buf )
 			startPos += packet->length;
 			readPos -= packet->length;
 
-			if ( readPos < HeaderSize ||
-				newPacket.packet.length == _buf.len )
+			if ( readPos < HeaderSize || newPacket.packet.length == _buf.len )
 			{
 				break;
 			}

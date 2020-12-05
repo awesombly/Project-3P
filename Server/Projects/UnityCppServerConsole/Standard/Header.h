@@ -49,8 +49,8 @@
 #include "../Logic/Vector.h"
 
 // External Header
-#include "..\\..\\..\\ExternalLibraries\MySQL\Include\mysql.h"
+#include "../../../ExternalLibraries/MySQL/Include/mysql.h"
 
 // External Library
-#pragma comment(lib,"ws2_32.lib")
+#pragma comment( lib, "ws2_32.lib" )
 #pragma comment( lib, "libmysql.lib" )

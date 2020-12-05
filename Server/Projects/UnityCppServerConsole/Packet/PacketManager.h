@@ -1,7 +1,7 @@
 #pragma once
 #include "StreamPacket.h"
-#include "..\Packet\Packet.h"
-#include "..\Standard\Singleton.hpp"
+#include "../Packet/Packet.h"
+#include "../Standard/Singleton.hpp"
 
 class PacketManager : public Singleton<PacketManager>
 {
@@ -10,7 +10,7 @@ public:
 	virtual ~PacketManager() = default;
 
 public:
-	bool Initialize();
+	const bool Initialize();
 	void Push( const PACKET& _packet );
 
 private:
@@ -26,7 +26,7 @@ private:
 private:
 	std::queue<PACKET> packets;
 	std::condition_variable cv;
-	std::mutex workMutex;
+	std::mutex packetsMutex;
 
 	std::unordered_map<u_short/*packetType*/, std::function<void( const PACKET& )>> protocols;
 };

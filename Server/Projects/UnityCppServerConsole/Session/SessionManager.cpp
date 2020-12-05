@@ -1,17 +1,18 @@
 #include "SessionManager.h"
-#include "..\Standard\Log.h"
+#include "../Standard/Log.h"
 
 SessionManager::~SessionManager()
 {
-	std::unordered_map<SOCKET, Session*>::iterator iter( std::begin( sessions ) );
-	while ( iter != std::end( sessions ) )
+	std::unordered_map<SOCKET, Session*>::iterator pair( std::begin( sessions ) );
+	while ( pair != std::end( sessions ) )
 	{
-		SafeDelete( iter++->second );
+		SafeDelete( pair->second );
+		++pair;
 	}
 	sessions.clear();
 }
 
-Session* SessionManager::Find( const SOCKET& _socket )
+Session* SessionManager::Find( const SOCKET& _socket ) const
 {
 	const auto& sessionIter = sessions.find( _socket );
 	if ( sessionIter == std::cend( sessions ) )
@@ -22,35 +23,21 @@ Session* SessionManager::Find( const SOCKET& _socket )
 	return sessionIter->second;
 }
 
-Session* SessionManager::Find( const std::string& _name )
-{
-	auto sessionIter = std::cbegin( sessions );
-	while ( sessionIter++ == std::cend( sessions ) )
-	{
-		Session* session = sessionIter->second;
-		if ( _name.compare( session->GetSessionData().NickName ) == 0 )
-		{
-			return session;
-		}
-	}
-	return nullptr;
-}
-
 void SessionManager::Push( Session* _session )
 {
-	cs.Lock();
 	Log::Instance().Push( ELogType::Log, "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
 	
+	cs.Lock();
 	sessions[_session->GetSocket()] = _session;
 	cs.UnLock();
 }
 
 void SessionManager::Erase( Session* _session )
 {
-	cs.Lock();
 	Log::Instance().Push( ELogType::Log, "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
 
 	SOCKET key = _session->GetSocket();
+	cs.Lock();
 	SafeDelete( _session );
 	sessions.erase( key );
 	cs.UnLock();

@@ -1,6 +1,6 @@
 #pragma once
 #include "Singleton.hpp"
-#include "..\IO\OStream.h"
+#include "../IO/OStream.h"
 
 // 로그 단계
 // Log : 대부분 생각하는 로그
@@ -42,11 +42,10 @@ private:
 	};
 
 private:
+	OStream file;
 	std::queue<LogData> texts;
 	std::condition_variable cv;
-	std::mutex workMutex;
-
-	OStream file;
+	std::mutex textsMutex;
 	std::map<ELogType, std::string> types;
 };
 

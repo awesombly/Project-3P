@@ -1,5 +1,5 @@
 #pragma once
-#include "..\\Standard\Singleton.hpp"
+#include "../Standard/Singleton.hpp"
 
 class Database : public Singleton<Database>
 {
@@ -8,11 +8,11 @@ public:
 	virtual ~Database();
 
 public:
-	bool Initialize();
-	bool SafeQuery( const std::string& _query );
-	bool CompareID( const std::string& _id );
-	bool ComparePW( const std::string& _pw );
-	static std::string ToSQLString( const std::string& _data );
+	const bool Initialize();
+	const bool SafeQuery( const std::string& _query );
+	const bool CompareID( const std::string& _id );
+	const bool ComparePW( const std::string& _pw );
+	const static std::string ToSQLString( const std::string& _data );
 	
 private:
 	enum EDBIndexType : short

@@ -1,34 +1,23 @@
 #include "Acceptor.h"
-#include "..\Network\\IOCP\\IOCPManager.h"
-#include "..\Session\SessionManager.h"
-#include "..\\Standard\Log.h"
+#include "../Network/IOCP/IOCPManager.h"
+#include "../Session/SessionManager.h"
+#include "../Standard/Log.h"
 
 
-bool Acceptor::ListenStart()
+const bool Acceptor::ListenStart() const
 {
-	if ( !SetSocketOption() )
+	if ( !SetSocketOption()
+		 || ::bind( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR
+		 || ::listen( socket, SOMAXCONN ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push( ELogType::Warning, "Socket Setup Failed" );
-		::closesocket( socket );
-		return false;
-	}
+		ClosedSocket();
 
-	if ( ::bind( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR )
-	{
-		Log::Instance().Push();
-		::closesocket( socket );
-		return false;
-	}
-
-	if ( ::listen( socket, SOMAXCONN ) == SOCKET_ERROR )
-	{
-		Log::Instance().Push();
-		::closesocket( socket );
 		return false;
 	}
 
 	std::thread th( [&] () { Acceptor::WaitForClients(); } );
 	th.detach();
+
 	return true;
 }
 
@@ -50,12 +39,13 @@ void Acceptor::WaitForClients() const
 }
 
 // 家南 技何 汲沥
-bool Acceptor::SetSocketOption() const
+const bool Acceptor::SetSocketOption() const
 {
 	int optionValue = 1;
 	if ( ::setsockopt( socket, SOL_SOCKET, SO_REUSEADDR, ( char* )&optionValue, sizeof( optionValue ) ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
+
 		return false;
 	}
 
@@ -63,6 +53,7 @@ bool Acceptor::SetSocketOption() const
 	if ( ::setsockopt( socket, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof( char ) ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
+
 		return false;
 	}
 	Log::Instance().Push( ELogType::Log, "Socket Option : TCP NoDelay" );
@@ -72,6 +63,7 @@ bool Acceptor::SetSocketOption() const
 	if ( ::getsockopt( socket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, &size ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
+
 		return false;
 	}
 
@@ -80,6 +72,7 @@ bool Acceptor::SetSocketOption() const
 	if ( ::setsockopt( socket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, sizeof( linger ) ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
+
 		return false;
 	}
 
@@ -90,6 +83,7 @@ bool Acceptor::SetSocketOption() const
 		 ::getsockopt( socket, SOL_SOCKET, SO_SNDBUF, ( char* )&sendSize, &size ) == SOCKET_ERROR )
 	{
 		Log::Instance().Push();
+
 		return false;
 	}
 	Log::Instance().Push( ELogType::Log, "Socket Option RecvSize : " + std::to_string( recvSize ) );

@@ -1,12 +1,12 @@
 #include "OStream.h"
-#include "..\Standard\Log.h"
+#include "../Standard/Log.h"
 
 OStream::~OStream()
 {
 	Close();
 }
 
-bool OStream::Open( const std::string& _path )
+const bool OStream::Open( const std::string& _path )
 {
 	if ( outStream.is_open() )
 	{
@@ -17,8 +17,10 @@ bool OStream::Open( const std::string& _path )
 	if ( !outStream.is_open() )
 	{
 		Log::Instance().Push( ELogType::Warning, "Failed To Open Logfile" );
+
 		return false;
 	}
+
 	return true;
 }
 
@@ -40,7 +42,7 @@ void OStream::Write( const std::string& _data )
 	outStream << _data << std::endl;;
 }
 
-bool OStream::IsOpen() const
+const bool OStream::IsOpen() const
 {
 	return outStream.is_open();
 }

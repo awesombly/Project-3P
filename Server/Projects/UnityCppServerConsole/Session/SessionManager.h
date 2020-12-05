@@ -1,6 +1,6 @@
 #pragma once
-#include "..\Standard\Singleton.hpp"
-#include "..\Synchronize\CriticalSection.h"
+#include "../Standard/Singleton.hpp"
+#include "../Synchronize/CriticalSection.h"
 #include "Session.h"
 
 class SessionManager : public Singleton<SessionManager>
@@ -10,8 +10,7 @@ public:
 	virtual ~SessionManager();
 
 public:
-	Session* Find( const SOCKET& _socket );
-	Session* Find( const std::string& _name );
+	Session* Find( const SOCKET& _socket ) const;
 
 public:
 	void Push( Session* _session );

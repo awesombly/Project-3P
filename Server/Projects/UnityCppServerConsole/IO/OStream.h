@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Standard\Header.h"
+#include "../Standard/Header.h"
 
 class OStream
 {
@@ -8,14 +8,13 @@ public:
 	virtual ~OStream();
 
 public:
-	bool Open( const std::string& _path );
+	const bool Open( const std::string& _path );
 	void Close();
 
 	void Write( const std::string& _data );
 
-	bool IsOpen() const;
+	const bool IsOpen() const;
 
 private:
 	std::ofstream outStream;
 };
-

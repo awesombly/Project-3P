@@ -1,10 +1,10 @@
 #pragma once
-#include "Network\Acceptor.h"
+#include "Network/Acceptor.h"
 
 class Server
 {
 public:
-	Server() = default;
+	Server();
 	virtual ~Server() = default;
 
 public:
@@ -12,5 +12,5 @@ public:
 
 private:
 	Acceptor acceptor;
-	Network loginServer;
+	HANDLE killEvent;
 };

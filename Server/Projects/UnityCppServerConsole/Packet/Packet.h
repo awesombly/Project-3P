@@ -7,7 +7,7 @@
 #pragma pack( push, 1 )
 struct UPACKET
 {
-	UPACKET() : length( 0 ), type( 0 ), data{} // 배열 유니폼 초기화
+	UPACKET() : length( 0 ), type( 0 ), data{}
 	{
 	}
 
