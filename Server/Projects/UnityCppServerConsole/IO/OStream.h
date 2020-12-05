@@ -8,12 +8,12 @@ public:
 	virtual ~OStream();
 
 public:
-	const bool Open( const std::string& _path );
+	bool Open( const std::string& _path );
 	void Close();
 
 	void Write( const std::string& _data );
 
-	const bool IsOpen() const;
+	bool IsOpen() const;
 
 private:
 	std::ofstream outStream;

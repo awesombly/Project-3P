@@ -10,7 +10,7 @@ public:
 	virtual ~PacketManager() = default;
 
 public:
-	const bool Initialize();
+	bool Initialize();
 	void Push( const PACKET& _packet );
 
 private:

@@ -25,7 +25,7 @@ Session* SessionManager::Find( const SOCKET& _socket ) const
 
 void SessionManager::Push( Session* _session )
 {
-	Log::Instance().Push( ELogType::Log, "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() ) );
 	
 	cs.Lock();
 	sessions[_session->GetSocket()] = _session;
@@ -34,7 +34,7 @@ void SessionManager::Push( Session* _session )
 
 void SessionManager::Erase( Session* _session )
 {
-	Log::Instance().Push( ELogType::Log, "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() ) );
 
 	SOCKET key = _session->GetSocket();
 	cs.Lock();
@@ -48,7 +48,7 @@ void SessionManager::BroadCast( const UPACKET& _packet ) const
 	for ( const std::pair<SOCKET, Session*>& pair : sessions )
 	{
 		Session* session = pair.second;
-		Log::Instance().Push( ELogType::Log, "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() );
+		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
 		session->Send( _packet );
 	}
 }
@@ -63,7 +63,7 @@ void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session*
 			continue;
 		}
 
-		Log::Instance().Push( ELogType::Log, "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() );
+		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
 		session->Send( _packet );
 	}
 }

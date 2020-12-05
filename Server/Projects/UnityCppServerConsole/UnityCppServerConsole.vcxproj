@@ -110,7 +110,6 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
   <ItemGroup>
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
-    <ClCompile Include="DB\Database.cpp" />
     <ClCompile Include="IO\OStream.cpp" />
     <ClCompile Include="Packet\Packet.cpp" />
     <ClCompile Include="Server.cpp" />
@@ -129,7 +128,6 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
   <ItemGroup>
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="Network\Acceptor.h" />
-    <ClInclude Include="DB\Database.h" />
     <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="IO\OStream.h" />

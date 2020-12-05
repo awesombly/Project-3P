@@ -26,8 +26,3 @@ void Session::Dispatch( const LPOVERLAPPED& _ov )
 
 	Recieve();
 }
-
-const SessionData& Session::GetSessionData() const
-{
-	return sessionData;
-}

@@ -6,7 +6,6 @@
     <ClCompile Include="Network\IOCP\IOCPManager.cpp" />
     <ClCompile Include="Time\Timer.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
-    <ClCompile Include="DB\Database.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="IO\OStream.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
@@ -21,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
-    <ClInclude Include="DB\Database.h" />
     <ClInclude Include="Network\IOCP\IOCPManager.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="IO\OStream.h" />

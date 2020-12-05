@@ -2,6 +2,8 @@
 #include "Singleton.hpp"
 #include "../IO/OStream.h"
 
+#define LOGFUNC( log ) __FUNCTION__ + " : "_s + log
+
 // 로그 단계
 // Log : 대부분 생각하는 로그
 // Error : 로직상 발생하면 안되지만 진행시키는 것 ( outofrange, null ... )
