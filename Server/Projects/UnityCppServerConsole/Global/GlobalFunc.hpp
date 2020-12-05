@@ -26,51 +26,6 @@ static void SafeDeleteArray( Type*& _pointer )
 	}
 }
 
-struct LoginInfo
-{
-	std::string ID;
-	std::string PW;
-};
-
-static std::string SimpleJsonToString( std::string::const_iterator& _iter )
-{
-	std::string result;
-	while ( *( ++_iter ) != ':' )
-	{
-		continue;
-	}
-
-	while ( *( ++_iter ) != ',' )
-	{
-		if ( *_iter == '}' )
-		{
-			break;
-		}
-
-		if ( *_iter == '\"' || *_iter == ' ' )
-		{
-			continue;
-		}
-
-		result.push_back( *_iter );
-	}
-	return result;
-}
-
-static LoginInfo SimpleJsonToLoginInfo( const char* _data )
-{
-	LoginInfo result;
-	std::string data = _data;
-	std::string::const_iterator iter = std::begin( data );
-	if ( *iter == '{' )
-	{
-		result.ID = SimpleJsonToString( iter );
-		result.PW = SimpleJsonToString( iter );
-	}
-
-	return result;
-}
-
 static std::string ToUFT8( const char* _string )
 {
 	int lengthUnicode = 0;
