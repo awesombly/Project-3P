@@ -7,11 +7,6 @@ Network::Network( const SOCKET& _socket, const SOCKADDR_IN& _address )
 
 }
 
-Network::~Network()
-{
-	::WSACleanup();
-}
-
 bool Network::Initialize( const int _port, const char* _ip )
 {
 	WSADATA wsa;
@@ -40,14 +35,10 @@ bool Network::Initialize( const int _port, const char* _ip )
 			{
 				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : WSAData가 유효하지 않습니다."_s ) );
 			} break;
-			default:
-			{
-
-			} break;
 		}
 	}
 
-	socket = ::WSASocket( AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED );
+	socket = ::socket( AF_INET, SOCK_STREAM, 0 );
 	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Generation Success" ) );
 
 	ZeroMemory( &address, sizeof( address ) );

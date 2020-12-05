@@ -43,6 +43,7 @@ void SessionManager::Erase( Session* _session )
 
 	SOCKET key = _session->GetSocket();
 	cs.Lock();
+	_session->ClosedSocket();
 	SafeDelete( _session );
 	sessions.erase( key );
 	cs.UnLock();
