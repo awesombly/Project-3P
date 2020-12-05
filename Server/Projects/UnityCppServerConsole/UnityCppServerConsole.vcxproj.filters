@@ -16,7 +16,6 @@
     <ClCompile Include="Packet\PacketManager.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
-    <ClCompile Include="Logic\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
@@ -37,6 +36,5 @@
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Network\Acceptor.h" />
-    <ClInclude Include="Logic\Vector.h" />
   </ItemGroup>
 </Project>

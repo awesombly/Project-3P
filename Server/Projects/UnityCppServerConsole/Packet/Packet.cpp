@@ -1,5 +1,5 @@
 #include "Packet.h"
-#include "../Global/GlobalFunc.hpp"
+#include "../Standard/Log.h"
 
 
 std::string UPACKET::ToString() const
