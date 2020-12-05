@@ -23,6 +23,11 @@ Session* SessionManager::Find( const SOCKET& _socket ) const
 	return sessionIter->second;
 }
 
+std::unordered_map<SOCKET, Session*> SessionManager::GetSessions() const
+{
+	return sessions;
+}
+
 void SessionManager::Push( Session* _session )
 {
 	Log::Instance().Push( ELogType::Log, "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );

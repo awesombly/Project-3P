@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Header.h"
-#include "../Logic/GameObject.h"
+#include "../Logic/ServerObject.h"
 // 각 타입 serialize시 필요
 #include <cereal/types/array.hpp>
 #include <cereal/types/atomic.hpp>
@@ -23,7 +23,7 @@
 #include <cereal/types/chrono.hpp>
 #include <cereal/types/polymorphic.hpp>
 
-#define PROTOCOL_HEADER() const static std::string PacketName; const static u_short PacketType;
+#define PROTOCOL_HEADER() static const std::string PacketName; static const u_short PacketType;
 #define PROTOCOL_BODY( _namespace, _name ) const std::string _namespace::_name::PacketName = #_name; const u_short _namespace::_name::PacketType = GetPacketType( _name::PacketName.c_str() );
 // 데이터 처리 없이, 타입 체크만 사용할 때
 #define SIMPLE_PROTOCOL( _name ) namespace _name { const std::string PacketName = #_name; const u_short PacketType = GetPacketType( PacketName.c_str() ); }

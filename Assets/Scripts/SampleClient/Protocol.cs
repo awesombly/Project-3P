@@ -2,6 +2,14 @@
 using System;
 using System.Collections.Generic;
 
+// 서버/클라 통신용
+[Serializable]
+public struct ServerObject
+{
+    public string Name;
+    public Vector3 Position;
+    public Quaternion Rotation;
+}
 
 namespace Protocol
 {

@@ -13,7 +13,7 @@ public:
 	Quaternion();
 	Quaternion( float _x, float _y, float _z, float _w );
 
-	static const Quaternion Zero;
+	static const Quaternion Identity;
 
 public:
 	template <class Archive>
