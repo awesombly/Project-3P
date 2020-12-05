@@ -25,6 +25,7 @@
 // Standard
 #include <iostream>
 #include <cstdio>
+#include <random>
 
 // Thread
 #include <thread>

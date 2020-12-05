@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include "..\Global\GlobalVariable.h"
+#include "Header.h"
+#include "../Logic/ServerObject.h"
 // 각 타입 serialize시 필요
 #include <cereal/types/array.hpp>
 #include <cereal/types/atomic.hpp>
@@ -22,26 +23,11 @@
 #include <cereal/types/chrono.hpp>
 #include <cereal/types/polymorphic.hpp>
 
-#define PROTOCOL_HEADER() const static std::string PacketName; const static u_short PacketType;
+#define PROTOCOL_HEADER() static const std::string PacketName; static const u_short PacketType;
 #define PROTOCOL_BODY( _namespace, _name ) const std::string _namespace::_name::PacketName = #_name; const u_short _namespace::_name::PacketType = GetPacketType( _name::PacketName.c_str() );
 // 데이터 처리 없이, 타입 체크만 사용할 때
 #define SIMPLE_PROTOCOL( _name ) namespace _name { const std::string PacketName = #_name; const u_short PacketType = GetPacketType( PacketName.c_str() ); }
 
-// TODO : 별로 파일로 분리
-struct Vector3
-{
-	float x;
-	float y;
-	float z;
-
-	template <class Archive>
-	void serialize( Archive& ar )
-	{
-		ar( CEREAL_NVP( x ) );
-		ar( CEREAL_NVP( y ) );
-		ar( CEREAL_NVP( z ) );
-	}
-};
 
 namespace Protocol
 {
@@ -113,17 +99,13 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			std::string Name;
-			Vector3 Position;
-			Vector3 Direction;
+			ServerObject Player;
 			bool IsLocal;
 			
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
-				ar( CEREAL_NVP( Name ) );
-				ar( CEREAL_NVP( Position ) );
-				ar( CEREAL_NVP( Direction ) );
+				ar( CEREAL_NVP( Player ) );
 				ar( CEREAL_NVP( IsLocal ) );
 			}
 		};

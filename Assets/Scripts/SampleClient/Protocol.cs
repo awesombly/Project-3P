@@ -2,6 +2,14 @@
 using System;
 using System.Collections.Generic;
 
+// 서버/클라 통신용
+[Serializable]
+public struct ServerObject
+{
+    public string Name;
+    public Vector3 Position;
+    public Quaternion Rotation;
+}
 
 namespace Protocol
 {
@@ -52,9 +60,7 @@ namespace Protocol
 
         public struct SyncTransform : IProtocol
         {
-            public string Name;
-            public Vector3 Position;
-            public Quaternion Rotation;
+            public ServerObject Player;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
@@ -80,9 +86,7 @@ namespace Protocol
     {
         public struct CreatePlayer : IProtocol
         {
-            public string Name;
-            public Vector3 Position;
-            public Vector3 Direction;
+            public ServerObject Player;
             public bool IsLocal;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );

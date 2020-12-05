@@ -11,6 +11,7 @@ public:
 
 public:
 	Session* Find( const SOCKET& _socket ) const;
+	std::unordered_map<SOCKET, Session*> GetSessions() const;
 
 public:
 	void Push( Session* _session );

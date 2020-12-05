@@ -6,6 +6,7 @@
     <ClCompile Include="Network\IOCP\IOCPManager.cpp" />
     <ClCompile Include="Time\Timer.cpp" />
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
+    <ClCompile Include="DB\Database.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="IO\OStream.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
@@ -16,9 +17,13 @@
     <ClCompile Include="Packet\PacketManager.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
+    <ClCompile Include="Logic\Vector.cpp" />
+    <ClCompile Include="Logic\Quaternion.cpp" />
+    <ClCompile Include="Logic\ServerObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
+    <ClInclude Include="DB\Database.h" />
     <ClInclude Include="Network\IOCP\IOCPManager.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="IO\OStream.h" />
@@ -36,5 +41,8 @@
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Network\Acceptor.h" />
+    <ClInclude Include="Logic\Vector.h" />
+    <ClInclude Include="Logic\Quaternion.h" />
+    <ClInclude Include="Logic\ServerObject.h" />
   </ItemGroup>
 </Project>

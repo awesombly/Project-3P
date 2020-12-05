@@ -108,10 +108,12 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Logic\ServerObject.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
     <ClCompile Include="IO\OStream.cpp" />
     <ClCompile Include="Packet\Packet.cpp" />
+    <ClCompile Include="Logic\Quaternion.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
     <ClCompile Include="Session\SessionManager.cpp" />
@@ -125,12 +127,14 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Time\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Logic\ServerObject.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="Network\Acceptor.h" />
     <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="IO\OStream.h" />
     <ClInclude Include="Packet\Packet.h" />
+    <ClInclude Include="Logic\Quaternion.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />
