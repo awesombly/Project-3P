@@ -4,11 +4,7 @@
 #include "../Standard/Log.h"
 
 
-<<<<<<< Updated upstream
-bool Acceptor::ListenStart() const
-=======
 const bool Acceptor::ListenStart() const
->>>>>>> Stashed changes
 {
 	if ( !SetSocketOption()
 		 || ::bind( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR
@@ -60,7 +56,7 @@ const bool Acceptor::SetSocketOption() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option : TCP NoDelay"_s ) );
+	Log::Instance().Push( ELogType::Log, "Socket Option : TCP NoDelay" );
 
 	linger optLinger;
 	int size = sizeof( int );
@@ -90,8 +86,8 @@ const bool Acceptor::SetSocketOption() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option RecvSize : "_s + std::to_string( recvSize ) ) );
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option SendSize : "_s + std::to_string( sendSize ) ) );
+	Log::Instance().Push( ELogType::Log, "Socket Option RecvSize : " + std::to_string( recvSize ) );
+	Log::Instance().Push( ELogType::Log, "Socket Option SendSize : " + std::to_string( sendSize ) );
 	
 	return true;
 }

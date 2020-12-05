@@ -1,11 +1,6 @@
 #pragma once
 #include "Singleton.hpp"
 #include "../IO/OStream.h"
-<<<<<<< Updated upstream
-
-#define LOGFUNC( log ) __FUNCTION__ + " : "_s + log
-=======
->>>>>>> Stashed changes
 
 // 로그 단계
 // Log : 대부분 생각하는 로그

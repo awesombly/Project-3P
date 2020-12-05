@@ -24,35 +24,6 @@ const bool Network::Initialize( const int _port, const char* _ip )
 			// WSAGetLastError에서 받을 수 없습니다.
 			case WSASYSNOTREADY:
 			{
-<<<<<<< Updated upstream
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 네트워크 통신에 대한 준비가 되지 않았습니다."_s ) );
-			} break;
-			case WSAVERNOTSUPPORTED:
-			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 요청된 윈도우소켓 지원버전은 제공되지 않습니다."_s ) );
-			} break;
-			case WSAEINPROGRESS:
-			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 윈도우소켓 1.1작업이 진행 중입니다."_s ) );
-			} break;
-			case WSAEPROCLIM:
-			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 윈도우소켓 구현에서 지원하는 작업 수가 제한에 도달했습니다."_s ) );
-			} break;
-			case WSAEFAULT:
-			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : WSAData가 유효하지 않습니다."_s ) );
-			} break;
-			default:
-			{
-
-			} break;
-		}
-	}
-
-	socket = ::WSASocket( AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED );
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Generation Success"_s ) );
-=======
 				Log::Instance().Push( ELogType::Error, "네트워크 통신에 대한 준비가 되지 않았습니다."_s );
 			} break;
 			case WSAVERNOTSUPPORTED:
@@ -80,7 +51,6 @@ const bool Network::Initialize( const int _port, const char* _ip )
 
 	socket = ::WSASocket( AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED );
 	Log::Instance().Push( ELogType::Log, "Socket Generation Success" );
->>>>>>> Stashed changes
 
 	ZeroMemory( &address, sizeof( address ) );
 	address.sin_family = AF_INET;
@@ -97,11 +67,7 @@ const bool Network::Initialize( const int _port, const char* _ip )
 	return true;
 }
 
-<<<<<<< Updated upstream
-bool Network::Connect() const
-=======
 const bool Network::Connect() const
->>>>>>> Stashed changes
 {
 	if ( ::connect( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR )
 	{
@@ -110,11 +76,7 @@ const bool Network::Connect() const
 
 		return false;
 	}
-<<<<<<< Updated upstream
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Connect Success : "_s + ::inet_ntoa( address.sin_addr ) + " : "_s + std::to_string( ::ntohs( address.sin_port ) ) ) );
-=======
 	Log::Instance().Push( ELogType::Log, "Connect Success : "_s + ::inet_ntoa( address.sin_addr ) + " : "_s + std::to_string( ::ntohs( address.sin_port ) ) );
->>>>>>> Stashed changes
 
 	return true;
 }
@@ -148,29 +110,17 @@ const SOCKET& Network::GetSocket() const
 	return socket;
 }
 
-<<<<<<< Updated upstream
-std::string Network::GetAddressString() const
-=======
 const std::string Network::GetAddressString() const
->>>>>>> Stashed changes
 {
 	return ::inet_ntoa( address.sin_addr );
 }
 
-<<<<<<< Updated upstream
-std::string Network::GetPortString() const
-=======
 const std::string Network::GetPortString() const
->>>>>>> Stashed changes
 {
 	return std::to_string( ::ntohs( address.sin_port ) );
 }
 
-<<<<<<< Updated upstream
-bool Network::ClosedSocket() const
-=======
 const bool Network::ClosedSocket() const
->>>>>>> Stashed changes
 {
 	if ( ::closesocket( socket ) == SOCKET_ERROR )
 	{

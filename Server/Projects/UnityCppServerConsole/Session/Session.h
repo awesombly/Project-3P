@@ -1,8 +1,6 @@
 #pragma once
 #include "../Network/Network.h"
 #include "../Packet/StreamPacket.h"
-<<<<<<< Updated upstream
-=======
 
 struct SessionData
 {
@@ -13,7 +11,6 @@ struct SessionData
 	std::string StartDate;
 	std::string LastConnectDate;
 };
->>>>>>> Stashed changes
 
 class Session : public Network
 {
@@ -25,6 +22,10 @@ public:
 public:
 	void Dispatch( const LPOVERLAPPED& _ov );
 
+public:
+	const SessionData& GetSessionData() const;
+
 private:
 	StreamPacket stream;
+	SessionData sessionData;
 };

@@ -7,11 +7,7 @@ Timer::Timer() : startRunTime( std::chrono::system_clock::now() )
 
 const std::string Timer::GetCurrentDateString( bool _isFolder ) const
 {
-<<<<<<< Updated upstream
-	const std::time_t now = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
-=======
 	const std::time_t& now = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
->>>>>>> Stashed changes
 	std::string data( 30, '\0' );
 	if ( _isFolder )
 	{
@@ -21,10 +17,6 @@ const std::string Timer::GetCurrentDateString( bool _isFolder ) const
 	}
 
 	std::strftime( &data[0], data.size(), "[%Y-%m-%d %H:%M:%S]", std::localtime( &now ) );
-<<<<<<< Updated upstream
-
-	return data;
-=======
 
 	return data;
 }
@@ -57,5 +49,4 @@ const ULONGLONG Timer::GetElapsedMinutes() const
 const ULONGLONG Timer::GetElapsedHours() const
 {
 	return std::chrono::duration_cast< std::chrono::hours >( std::chrono::system_clock::now() - startRunTime ).count();
->>>>>>> Stashed changes
 }

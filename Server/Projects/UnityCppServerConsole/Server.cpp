@@ -1,5 +1,6 @@
 #include "Server.h"
 #include "Standard/Log.h"
+#include "DB/Database.h"
 #include "Packet/PacketManager.h"
 #include "Network/IOCP/IOCPManager.h"
 
@@ -12,31 +13,32 @@ void Server::Initialize( const int _port, const char* _address )
 {
 	if ( !Log::Instance().Initialize() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Log Initialize Fail"_s ) );
+		Log::Instance().Push( ELogType::Warning, "Log Initialize Fail"_s );
+	}
+
+	if ( !Database::Instance().Initialize() )
+	{
+		Log::Instance().Push( ELogType::Warning, "Database Initialize Fail"_s );
 	}
 
 	if ( !IOCPManager::Instance().Initialize() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "IOCPManager Initialize Fail"_s ) );
+		Log::Instance().Push( ELogType::Warning, "IOCPManager Initialize Fail"_s );
 	}
 
 	if ( !acceptor.Initialize( _port, _address ) ||
 		 !acceptor.ListenStart() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Client Lieten Fail"_s ) );
+		Log::Instance().Push( ELogType::Warning, "Client Lieten Fail"_s );
 	}
 
 	if ( !PacketManager::Instance().Initialize() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "PacketManager Initialize Fail"_s ) );
+		Log::Instance().Push( ELogType::Warning, "PacketManager Initialize Fail"_s );
 	}
 
 	if ( ::WaitForSingleObject( killEvent, INFINITE ) == WAIT_FAILED )
 	{
-<<<<<<< Updated upstream
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "KillEvent Wait Fail"_s ) );
-=======
 		Log::Instance().Push( ELogType::Warning, "KillEvent Wait Failed" );
->>>>>>> Stashed changes
 	}
 }
