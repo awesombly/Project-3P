@@ -13,7 +13,7 @@ public class Network : Singleton<Network>
     private Socket socket;
     private Thread thread;
 
-    private byte[] buffer = new byte[ UPACKET.DataMaxSize + UPACKET.HeaderSize ];
+    private byte[] buffer = new byte[ 1024 * 16 ];
     private Queue<ReceivedPacket> receivedPackets = new Queue<ReceivedPacket>();
 
     public delegate void DelProcessPacket( string _data );
@@ -81,13 +81,27 @@ public class Network : Singleton<Network>
                 return;
             }
 
-            if ( !ReferenceEquals( buffer, null ) )
+            // TODO : 패킷이 중간에 짤린 경우에 대한 처리. (buffer length 이상 들어올시)
+            int offset = 0;
+            while ( true )
             {
-                UPACKET packet = Global.Deserialize<UPACKET>( buffer );
-                System.Array.Clear( buffer, 0, packet.length );
+                UPACKET packet = Global.Deserialize<UPACKET>( buffer, offset );
+                if ( ReferenceEquals( packet, null ) || packet.length == 0 )
+                {
+                    break;
+                }
 
+                if ( packet.length > buffer.Length )
+                {
+                    Debug.LogError( "buffer overflow. packet = " + packet.length + ", buffer = "+ buffer.Length );
+                    break;
+                }
+                
                 string data = System.Text.Encoding.UTF8.GetString( packet.data, 0, packet.length - UPACKET.HeaderSize );
                 receivedPackets.Enqueue( new ReceivedPacket( packet.type, data ) );
+
+                System.Array.Clear( buffer, offset, packet.length );
+                offset += packet.length;
             }
         }
     }

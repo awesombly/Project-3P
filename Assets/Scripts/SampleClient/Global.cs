@@ -15,11 +15,11 @@ public class Global
     }
 
     // 역직렬화
-    public static Type Deserialize<Type>( byte[] _value )
+    public static Type Deserialize<Type>( byte[] _value, int startIndex )
     {
         int size = Marshal.SizeOf( typeof( Type ) );
         System.IntPtr buffer = Marshal.AllocHGlobal( size );
-        Marshal.Copy( _value, 0, buffer, size );
+        Marshal.Copy( _value, startIndex, buffer, size );
         Type obj = ( Type )Marshal.PtrToStructure( buffer, typeof( Type ) );
         Marshal.FreeHGlobal( buffer );
 
