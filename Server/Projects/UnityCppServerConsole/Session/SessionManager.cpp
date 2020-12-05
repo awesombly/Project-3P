@@ -25,7 +25,11 @@ Session* SessionManager::Find( const SOCKET& _socket ) const
 
 void SessionManager::Push( Session* _session )
 {
+<<<<<<< Updated upstream
 	Log::Instance().Push( ELogType::Log, LOGFUNC( "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() ) );
+=======
+	Log::Instance().Push( ELogType::Log, "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
+>>>>>>> Stashed changes
 	
 	cs.Lock();
 	sessions[_session->GetSocket()] = _session;
@@ -34,7 +38,11 @@ void SessionManager::Push( Session* _session )
 
 void SessionManager::Erase( Session* _session )
 {
+<<<<<<< Updated upstream
 	Log::Instance().Push( ELogType::Log, LOGFUNC( "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() ) );
+=======
+	Log::Instance().Push( ELogType::Log, "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() );
+>>>>>>> Stashed changes
 
 	SOCKET key = _session->GetSocket();
 	cs.Lock();

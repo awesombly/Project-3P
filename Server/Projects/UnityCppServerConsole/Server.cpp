@@ -33,6 +33,10 @@ void Server::Initialize( const int _port, const char* _address )
 
 	if ( ::WaitForSingleObject( killEvent, INFINITE ) == WAIT_FAILED )
 	{
+<<<<<<< Updated upstream
 		Log::Instance().Push( ELogType::Warning, LOGFUNC( "KillEvent Wait Fail"_s ) );
+=======
+		Log::Instance().Push( ELogType::Warning, "KillEvent Wait Failed" );
+>>>>>>> Stashed changes
 	}
 }

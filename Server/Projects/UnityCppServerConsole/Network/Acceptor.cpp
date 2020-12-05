@@ -4,7 +4,11 @@
 #include "../Standard/Log.h"
 
 
+<<<<<<< Updated upstream
 bool Acceptor::ListenStart() const
+=======
+const bool Acceptor::ListenStart() const
+>>>>>>> Stashed changes
 {
 	if ( !SetSocketOption()
 		 || ::bind( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR
@@ -39,7 +43,7 @@ void Acceptor::WaitForClients() const
 }
 
 // 家南 技何 汲沥
-bool Acceptor::SetSocketOption() const
+const bool Acceptor::SetSocketOption() const
 {
 	int optionValue = 1;
 	if ( ::setsockopt( socket, SOL_SOCKET, SO_REUSEADDR, ( char* )&optionValue, sizeof( optionValue ) ) == SOCKET_ERROR )

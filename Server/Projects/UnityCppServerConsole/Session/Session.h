@@ -1,6 +1,19 @@
 #pragma once
 #include "../Network/Network.h"
 #include "../Packet/StreamPacket.h"
+<<<<<<< Updated upstream
+=======
+
+struct SessionData
+{
+	unsigned int Key;
+	std::string NickName;
+	std::string Id;
+	std::string Pw;
+	std::string StartDate;
+	std::string LastConnectDate;
+};
+>>>>>>> Stashed changes
 
 class Session : public Network
 {

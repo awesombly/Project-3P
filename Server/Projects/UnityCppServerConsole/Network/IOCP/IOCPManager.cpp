@@ -2,7 +2,7 @@
 #include "../../Session/SessionManager.h"
 #include "../../Standard/Log.h"
 
-bool IOCPManager::Initialize()
+const bool IOCPManager::Initialize()
 {
 	iocpHandle = ::CreateIoCompletionPort( INVALID_HANDLE_VALUE, 0, 0, 3 );
 	for ( int count = 0; count < 3; ++count )

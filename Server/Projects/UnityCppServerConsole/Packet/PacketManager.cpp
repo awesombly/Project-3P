@@ -2,7 +2,7 @@
 #include "../Standard/Log.h"
 #include "../Session/SessionManager.h"
 
-bool PacketManager::Initialize()
+const bool PacketManager::Initialize()
 {
 	BindProtocols();
 

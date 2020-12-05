@@ -10,16 +10,24 @@ public:
 	virtual ~Network();
 
 public:
+<<<<<<< Updated upstream
 	bool Initialize( const int _port, const char* _ip );
 	bool Connect() const;
+=======
+	const bool Initialize( const int _port, const char* _ip );
+	const bool Connect() const;
+>>>>>>> Stashed changes
 
 	void Recieve();
 	void Send( const UPACKET& _packet ) const;
 
 public:
 	const SOCKET& GetSocket() const;
-	std::string GetAddressString() const;
-	std::string GetPortString() const;
+	const std::string GetAddressString() const;
+	const std::string GetPortString() const;
+
+protected:
+	const bool ClosedSocket() const;
 
 protected:
 	bool ClosedSocket() const;

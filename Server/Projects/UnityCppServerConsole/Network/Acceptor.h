@@ -8,9 +8,17 @@ public:
 	virtual ~Acceptor() = default;
 
 public:
+<<<<<<< Updated upstream
 	bool ListenStart() const;
 
 private:
 	void WaitForClients() const;
 	bool SetSocketOption() const;
+=======
+	const bool ListenStart() const;
+
+private:
+	void WaitForClients() const;
+	const bool SetSocketOption() const;
+>>>>>>> Stashed changes
 };

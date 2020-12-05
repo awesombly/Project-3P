@@ -8,7 +8,7 @@ public:
 	virtual ~IOCPManager() = default;
 
 public:
-	bool Initialize();
+	const bool Initialize();
 	void Bind( const HANDLE& _sock, const ULONG_PTR _key ) const;
 
 private:
