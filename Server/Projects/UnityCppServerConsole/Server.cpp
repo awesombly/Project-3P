@@ -20,8 +20,7 @@ void Server::Initialize( const int _port, const char* _address )
 		Log::Instance().Push( ELogType::Warning, LOGFUNC( "IOCPManager Initialize Fail"_s ) );
 	}
 
-	if ( !acceptor.Initialize( _port, _address ) ||
-		 !acceptor.ListenStart() )
+	if ( !acceptor.Initialize( _port, _address ) || !acceptor.ListenStart() )
 	{
 		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Client Lieten Fail"_s ) );
 	}

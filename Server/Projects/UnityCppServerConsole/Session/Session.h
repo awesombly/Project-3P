@@ -2,6 +2,11 @@
 #include "../Network/Network.h"
 #include "../Packet/StreamPacket.h"
 
+struct LogicData
+{
+	std::shared_ptr<ServerObject> Player;
+};
+
 class Session : public Network
 {
 public:
@@ -11,6 +16,9 @@ public:
 
 public:
 	void Dispatch( const LPOVERLAPPED& _ov );
+
+public:
+	LogicData logicData;
 
 private:
 	StreamPacket stream;

@@ -20,27 +20,25 @@ bool Network::Initialize( const int _port, const char* _ip )
 	{
 		switch ( errorCode )
 		{
-			// WSAStartup 함수는 오류 코드를 직접 반환합니다.
-			// WSAGetLastError에서 받을 수 없습니다.
 			case WSASYSNOTREADY:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( "네트워크 통신에 대한 준비가 되지 않았습니다."_s ) );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 네트워크 통신에 대한 준비가 되지 않았습니다."_s ) );
 			} break;
 			case WSAVERNOTSUPPORTED:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( "요청된 윈도우 소켓지원버전은 제공되지 않습니다."_s ) );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 요청된 윈도우소켓 지원버전은 제공되지 않습니다."_s ) );
 			} break;
 			case WSAEINPROGRESS:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( "차단 윈도우 소켓 1.1작업이 진행 중입니다."_s ) );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 윈도우소켓 1.1작업이 진행 중입니다."_s ) );
 			} break;
 			case WSAEPROCLIM:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( "윈도우 소켓 구현에서 지원하는 작업 수에 대한 제한에 도달했습니다."_s ) );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 윈도우소켓 구현에서 지원하는 작업 수가 제한에 도달했습니다."_s ) );
 			} break;
 			case WSAEFAULT:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( "WSAData가 유효한 포인터가 아닙니다."_s ) );
+				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : WSAData가 유효하지 않습니다."_s ) );
 			} break;
 			default:
 			{

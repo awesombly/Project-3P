@@ -18,6 +18,6 @@ namespace PATH
 namespace EXT
 {
 	static const std::string Text = ".txt";
-	static const std::string Exe = ".exe";
-	static const std::string Ini = ".ini";
+	static const std::string Exe  = ".exe";
+	static const std::string Ini  = ".ini";
 }

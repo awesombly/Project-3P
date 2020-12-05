@@ -21,8 +21,6 @@ bool Acceptor::ListenStart() const
 	return true;
 }
 
-
-
 void Acceptor::WaitForClients() const
 {
 	SOCKET clientsock;
@@ -30,7 +28,6 @@ void Acceptor::WaitForClients() const
 	int length = sizeof( client );
 	while ( true )
 	{
-		// 아직 처리되지않은 연결들이 대기하고 있는 큐에서 제일 처음 연결된 소켓을 가져온다.
 		clientsock = ::WSAAccept( socket, ( sockaddr* )&client, &length, NULL, NULL );
 		Session* session = new Session( clientsock, client );
 		SessionManager::Instance().Push( session );
@@ -56,7 +53,7 @@ bool Acceptor::SetSocketOption() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option : TCP NoDelay"_s ) );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option : TCP NoDelay" ) );
 
 	linger optLinger;
 	int size = sizeof( int );
@@ -86,8 +83,8 @@ bool Acceptor::SetSocketOption() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option RecvSize : "_s + std::to_string( recvSize ) ) );
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option SendSize : "_s + std::to_string( sendSize ) ) );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option RecvSize : " + std::to_string( recvSize ) ) );
+	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option SendSize : " + std::to_string( sendSize ) ) );
 	
 	return true;
 }

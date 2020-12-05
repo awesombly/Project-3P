@@ -51,7 +51,7 @@ void PacketManager::BindProtocols()
 
 void PacketManager::Broadcast( const PACKET& _packet )
 {
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Broadcast : " + _packet.packet.ToString() ) );
+	Log::Instance().Push( ELogType::Log, "Broadcast : " + _packet.packet.ToString() );
 	SessionManager::Instance().BroadCast( _packet.packet );
 }
 
@@ -60,7 +60,7 @@ void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
 	const Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null. socket = "_s + std::to_string( _packet.socket ) ) );
+		Log::Instance().Push( ELogType::Error, "Session is null. socket = " + _packet.socket );
 		return;
 	}
 
@@ -88,7 +88,7 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 	Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null. socket = "_s + std::to_string( _packet.socket ) ) );
+		Log::Instance().Push( ELogType::Error, "Session is null. socket = " + _packet.socket );
 		return;
 	}
 

@@ -36,10 +36,10 @@ void OStream::Write( const std::string& _data )
 {
 	if ( _data.empty() || !outStream.is_open() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Data is Empty or Logfile Open Failed"_s ) );
+		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Data is Empty or Logfile Open Failed" ) );
 	}
 
-	outStream << _data << std::endl;
+	outStream << _data << std::endl;;
 }
 
 bool OStream::IsOpen() const
