@@ -28,19 +28,19 @@ const bool Network::Initialize( const int _port, const char* _ip )
 			} break;
 			case WSAVERNOTSUPPORTED:
 			{
-				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : 요청된 윈도우 소켓지원버전은 제공되지 않습니다."_s );
+				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : 요청된 윈도우소켓 지원버전은 제공되지 않습니다."_s );
 			} break;
 			case WSAEINPROGRESS:
 			{
-				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : 차단 윈도우 소켓 1.1작업이 진행 중입니다."_s );
+				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : 윈도우소켓 1.1작업이 진행 중입니다."_s );
 			} break;
 			case WSAEPROCLIM:
 			{
-				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : 윈도우 소켓 구현에서 지원하는 작업 수에 대한 제한에 도달했습니다."_s );
+				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : 윈도우소켓 구현에서 지원하는 작업 수가 제한에 도달했습니다."_s );
 			} break;
 			case WSAEFAULT:
 			{
-				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : WSAData가 유효한 포인터가 아닙니다."_s );
+				Log::Instance().Push( ELogType::Error, std::to_string( errorCode ) + " : WSAData가 유효하지 않습니다."_s );
 			} break;
 			default:
 			{
