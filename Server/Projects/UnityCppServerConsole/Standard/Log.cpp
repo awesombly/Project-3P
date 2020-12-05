@@ -44,15 +44,57 @@ void Log::Push()
 
 void Log::Push( const int _errorCode )
 {
-	LPVOID message;
-	FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, _errorCode,
-				   MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), ( TCHAR* )&message, 0, NULL );
-	
-	std::unique_lock<std::mutex> lock( textsMutex );
-	texts.push( LogData( ELogType::Warning, ( CHAR* )&message ) );
-	lock.unlock();
-
-	::LocalFree( message );
+	switch ( _errorCode )
+	{
+		case WSANOTINITIALISED:
+		{
+			Push( ELogType::Error, "이 기능을 사용하기전에 WSAStartup을 호출해야 합니다."_s );
+		} break;
+		case WSAECONNRESET:
+		{
+			Push( ELogType::Error, "들어오는 연결이 수락하기전에 원격에 의해 종료되었습니다."_s );
+		} break;
+		case WSAEFAULT:
+		{
+			Push( ELogType::Error, "추가 매개변수가 적거나 사용자의 메모리 공간이 유효하지 않습니다."_s );
+		} break;
+		case WSAEINTR:
+		{
+			Push( ELogType::Error, "윈도우소켓 1.1은 WSACancelBlockingCall에 의해 취소되었습니다."_s );
+		} break;
+		case WSAEINVAL:
+		{
+			Push( ELogType::Error, "Listen함수는 수락되기 전에 호출되지 않았습니다."_s );
+		} break;
+		case WSAEINPROGRESS:
+		{
+			Push( ELogType::Error, "윈도우소켓 1.1 호출이 진행 중이거나 서비스 공급자가 콜백 기능을 처리하는 중입니다."_s );
+		} break;
+		case WSAEMFILE:
+		{
+			Push( ELogType::Error, "큐가 비어있지 않으며 사용할수있는 Descriptor가 없습니다."_s );
+		} break;
+		case WSAENETDOWN:
+		{
+			Push( ELogType::Error, "네트워크 하위 시스템이 실패했습니다."_s );
+		} break;
+		case WSAENOBUFS:
+		{
+			Push( ELogType::Error, "버퍼 공간을 사용할 수 없습니다."_s );
+		} break;
+		case WSAENOTSOCK:
+		{
+			Push( ELogType::Error, "Descriptor는 소켓이 아닙니다."_s );
+		} break;
+		case WSAEOPNOTSUPP:
+		{
+			Push( ELogType::Error, "참조된 소켓은 연결 서비스를 지원하는 형식이 아닙니다."_s );
+		} break;
+		case WSAEWOULDBLOCK:
+		{
+			Push( ELogType::Error, "소켓은 Non-Blocking이 아니며 연결이 허용되지 않습니다."_s );
+		} break;
+	}
 }
 
 void Log::Push( ELogType _type, const std::string& _data )

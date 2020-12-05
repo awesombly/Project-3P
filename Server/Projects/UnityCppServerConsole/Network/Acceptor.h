@@ -5,7 +5,7 @@ class Acceptor : public Network
 {
 public:
 	Acceptor() = default;
-	virtual ~Acceptor() = default;
+	virtual ~Acceptor();
 
 public:
 	bool ListenStart() const;

@@ -7,7 +7,7 @@ class Network
 public:
 	Network() = default;
 	Network( const SOCKET& _socket, const SOCKADDR_IN& _address );
-	virtual ~Network();
+	virtual ~Network() = default;
 
 public:
 	bool Initialize( const int _port, const char* _ip );
@@ -16,12 +16,13 @@ public:
 	void Recieve();
 	void Send( const UPACKET& _packet ) const;
 
+	void Release();
+
 public:
 	const SOCKET& GetSocket() const;
 	std::string GetAddressString() const;
 	std::string GetPortString() const;
 
-protected:
 	bool ClosedSocket() const;
 
 protected:

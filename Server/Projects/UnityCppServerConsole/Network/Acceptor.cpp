@@ -3,6 +3,10 @@
 #include "../Session/SessionManager.h"
 #include "../Standard/Log.h"
 
+Acceptor::~Acceptor()
+{
+	::WSACleanup();
+}
 
 bool Acceptor::ListenStart() const
 {
@@ -28,7 +32,8 @@ void Acceptor::WaitForClients() const
 	int length = sizeof( client );
 	while ( true )
 	{
-		clientsock = ::WSAAccept( socket, ( sockaddr* )&client, &length, NULL, NULL );
+		clientsock = ::accept( socket, ( sockaddr* )&client, &length );
+		Log::Instance().Push();
 		Session* session = new Session( clientsock, client );
 		SessionManager::Instance().Push( session );
 		IOCPManager::Instance().Bind( ( HANDLE )clientsock, ( ULONG_PTR )session );
