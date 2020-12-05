@@ -61,6 +61,11 @@ public class Network : Singleton<Network>
                 {
                     Debug.LogError( "Connect Failed. Ip = " + ipAddress + ", " + ex.Message );
                 }
+                catch ( System.ObjectDisposedException ex )
+                {
+                    Debug.Log( "Connect Ended. Ip = " + ipAddress + ", " + ex.Message );
+                    return;
+                }
             }
 
             OnConnect?.Invoke();
@@ -68,7 +73,14 @@ public class Network : Singleton<Network>
 
         while ( true )
         {
-            socket.Receive( buffer );
+            SocketError error;
+            socket.Receive( buffer, 0, buffer.Length, SocketFlags.None, out error );
+            if ( error != SocketError.Success )
+            {
+                Debug.LogError( "Socket receive failed. error = " + error.ToString() );
+                return;
+            }
+
             if ( !ReferenceEquals( buffer, null ) )
             {
                 UPACKET packet = Global.Deserialize<UPACKET>( buffer );
