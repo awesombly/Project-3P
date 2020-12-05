@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 1666492623}
   - component: {fileID: 1666492624}
   m_Layer: 0
-  m_Name: FirstPerson-AIO
+  m_Name: FirstPerson
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

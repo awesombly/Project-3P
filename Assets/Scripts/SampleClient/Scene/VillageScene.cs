@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class VillageScene : MonoBehaviour
 {
-    public GameObject playerPrefab;
+    public GameObject localPlayerPrefab;
+    public GameObject otherPlayerPrefab;
 
     private GameObject localPlayer;
     private List<GameObject> otherPlayers = new List<GameObject>();
+
+    [SerializeField]
+    private float syncDelay = 0.5f;
+    private float curSyncDelay = 0.0f;
 
     private void Awake()
     {
@@ -17,8 +22,10 @@ public class VillageScene : MonoBehaviour
 
     private void Update()
     {
-        if ( localPlayer != null )
+        curSyncDelay += Time.deltaTime;
+        if ( curSyncDelay >= syncDelay && localPlayer != null )
         {
+            curSyncDelay = 0.0f;
             /// 테스트용.
             Protocol.Both.SyncTransform protocol;
             protocol.Player.Name = localPlayer.name;
@@ -63,7 +70,7 @@ public class VillageScene : MonoBehaviour
         
         if ( player == null )
         {
-            Debug.LogWarning( "Player not Found. name = " + player.name );
+            Debug.LogWarning( "Player not Found. name = " + protocol.Player.Name );
             return;
         }
 
@@ -74,17 +81,24 @@ public class VillageScene : MonoBehaviour
     private void CreatePlayer( string _data )
     {
         Protocol.FromServer.CreatePlayer protocol = JsonUtility.FromJson<Protocol.FromServer.CreatePlayer>( _data );
-
-        GameObject player = Instantiate( playerPrefab, protocol.Player.Position, protocol.Player.Rotation );
-        player.name = protocol.Player.Name;
-
+        GameObject player = null;
+        
         if ( protocol.IsLocal )
         {
-            localPlayer = player;
+            localPlayer = player = Instantiate( localPlayerPrefab, protocol.Player.Position, protocol.Player.Rotation );
         }
         else
         {
+            player = Instantiate( otherPlayerPrefab, protocol.Player.Position, protocol.Player.Rotation );
             otherPlayers.Add( player );
         }
+
+        if ( player == null )
+        {
+            Debug.LogError( "CreatePlayer failed : " + protocol.ToString() );
+            return;
+        }
+
+        player.name = protocol.Player.Name;
     }
 }
