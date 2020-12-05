@@ -108,11 +108,13 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Logic\GameObject.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
     <ClCompile Include="DB\Database.cpp" />
     <ClCompile Include="IO\OStream.cpp" />
     <ClCompile Include="Packet\Packet.cpp" />
+    <ClCompile Include="Logic\Quaternion.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
     <ClCompile Include="Session\SessionManager.cpp" />
@@ -127,6 +129,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Logic\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Logic\GameObject.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="Network\Acceptor.h" />
     <ClInclude Include="DB\Database.h" />
@@ -134,6 +137,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="IO\OStream.h" />
     <ClInclude Include="Packet\Packet.h" />
+    <ClInclude Include="Logic\Quaternion.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />

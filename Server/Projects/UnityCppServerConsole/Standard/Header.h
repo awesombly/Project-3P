@@ -45,9 +45,6 @@
 #include "..\Global\GlobalFunc.hpp"
 #include "..\Global\GlobalVariable.h"
 
-// Logic
-#include "../Logic/Vector.h"
-
 // External Header
 #include "../../../ExternalLibraries/MySQL/Include/mysql.h"
 

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Header.h"
+#include "../Logic/GameObject.h"
 // 각 타입 serialize시 필요
 #include <cereal/types/array.hpp>
 #include <cereal/types/atomic.hpp>

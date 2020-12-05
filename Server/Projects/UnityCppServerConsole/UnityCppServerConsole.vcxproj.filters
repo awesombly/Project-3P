@@ -18,6 +18,8 @@
     <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
     <ClCompile Include="Logic\Vector.cpp" />
+    <ClCompile Include="Logic\GameObject.cpp" />
+    <ClCompile Include="Logic\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
@@ -40,5 +42,7 @@
     <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Network\Acceptor.h" />
     <ClInclude Include="Logic\Vector.h" />
+    <ClInclude Include="Logic\GameObject.h" />
+    <ClInclude Include="Logic\Quaternion.h" />
   </ItemGroup>
 </Project>
