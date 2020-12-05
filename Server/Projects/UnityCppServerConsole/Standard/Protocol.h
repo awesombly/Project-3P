@@ -99,17 +99,13 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			std::string Name;
-			Vector3 Position;
-			Vector3 Direction;
+			ServerObject Player;
 			bool IsLocal;
 			
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
-				ar( CEREAL_NVP( Name ) );
-				ar( CEREAL_NVP( Position ) );
-				ar( CEREAL_NVP( Direction ) );
+				ar( CEREAL_NVP( Player ) );
 				ar( CEREAL_NVP( IsLocal ) );
 			}
 		};

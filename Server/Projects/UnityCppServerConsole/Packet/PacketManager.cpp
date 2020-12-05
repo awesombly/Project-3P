@@ -85,25 +85,53 @@ void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
 
 void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 {
-	Protocol::FromServer::CreatePlayer createPlayer;
-	createPlayer.Position = { 1.0f, 30.0f, 2.0f };
-	createPlayer.Direction = { 0.1f, 0.2f, 0.3f };
-	createPlayer.IsLocal = true;
-	/// 테스트용 코드
-	static const std::vector<std::string> names( { "Junhwan", "Taehong", "Sungsu" } );
-	static int index = 0;
-	createPlayer.Name = names[ index % names.size() ];
-	++index;
-
-	UPACKET response;
-	response.SetData( createPlayer );
-
 	Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
 		Log::Instance().Push( ELogType::Error, "Session is null. socket = " + _packet.socket );
 		return;
 	}
+
+	// 기존 플레이어들 생성
+	{
+		const std::unordered_map<SOCKET, Session*> sessions = SessionManager::Instance().GetSessions();
+		for ( auto pair : sessions )
+		{
+			std::shared_ptr<ServerObject> player = pair.second->logicData.Player;
+			if ( player == nullptr || player == session->logicData.Player )
+			{
+				continue;
+			}
+
+			Protocol::FromServer::CreatePlayer createPlayer;
+			createPlayer.Player = *player;
+			createPlayer.IsLocal = false;
+			session->Send( createPlayer );
+		}
+	}
+
+	if ( session->logicData.Player == nullptr )
+	{
+		session->logicData.Player = std::make_shared<ServerObject>();
+	}
+
+	std::mt19937 rand( ( UINT )::time( nullptr ) );
+	session->logicData.Player->Position = { ( float )( rand() % 100 ), 30.0f, ( float )( rand() % 100 ) };
+	session->logicData.Player->Rotation = Quaternion::Identity;
+	/// 테스트용 코드
+	{
+		static const std::vector<std::string> names( { "Junhwan", "Taehong", "Sungsu" } );
+		static int index = 0;
+		session->logicData.Player->Name = names[ index % names.size() ];
+		++index;
+	}
+
+	Protocol::FromServer::CreatePlayer createPlayer;
+	createPlayer.Player = *session->logicData.Player;
+	createPlayer.IsLocal = true;
+
+	UPACKET response;
+	response.SetData( createPlayer );
 	session->Send( response );
 
 	// 직렬화 처리가 또 필요하다.. Id 같은거로 구분해야할듯

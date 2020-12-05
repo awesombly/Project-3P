@@ -21,9 +21,9 @@ public class VillageScene : MonoBehaviour
         {
             /// 테스트용.
             Protocol.Both.SyncTransform protocol;
-            protocol.Name = localPlayer.name;
-            protocol.Position = localPlayer.transform.position;
-            protocol.Rotation = localPlayer.transform.rotation;
+            protocol.Player.Name = localPlayer.name;
+            protocol.Player.Position = localPlayer.transform.position;
+            protocol.Player.Rotation = localPlayer.transform.rotation;
 
             Network.Instance.Send( protocol );
         }
@@ -52,13 +52,13 @@ public class VillageScene : MonoBehaviour
         Protocol.Both.SyncTransform protocol = JsonUtility.FromJson<Protocol.Both.SyncTransform>( _data );
 
         GameObject player = null;
-        if ( localPlayer != null && protocol.Name == localPlayer.name )
+        if ( localPlayer != null && protocol.Player.Name == localPlayer.name )
         {
             player = localPlayer;
         }
         else
         {
-            player = otherPlayers.Find( ( instance ) => { return instance.name == protocol.Name; } );
+            player = otherPlayers.Find( ( instance ) => { return instance.name == protocol.Player.Name; } );
         }
         
         if ( player == null )
@@ -67,16 +67,16 @@ public class VillageScene : MonoBehaviour
             return;
         }
 
-        player.transform.position = protocol.Position;
-        player.transform.rotation = protocol.Rotation;
+        player.transform.position = protocol.Player.Position;
+        player.transform.rotation = protocol.Player.Rotation;
     }
 
     private void CreatePlayer( string _data )
     {
         Protocol.FromServer.CreatePlayer protocol = JsonUtility.FromJson<Protocol.FromServer.CreatePlayer>( _data );
 
-        GameObject player = Instantiate( playerPrefab, protocol.Position, Quaternion.Euler( protocol.Direction ) );
-        player.name = protocol.Name;
+        GameObject player = Instantiate( playerPrefab, protocol.Player.Position, protocol.Player.Rotation );
+        player.name = protocol.Player.Name;
 
         if ( protocol.IsLocal )
         {

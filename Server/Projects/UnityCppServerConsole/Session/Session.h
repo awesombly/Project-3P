@@ -12,6 +12,11 @@ struct SessionData
 	std::string LastConnectDate;
 };
 
+struct LogicData
+{
+	std::shared_ptr<ServerObject> Player;
+};
+
 class Session : public Network
 {
 public:
@@ -24,6 +29,8 @@ public:
 
 public:
 	const SessionData& GetSessionData() const;
+
+	LogicData logicData;
 
 private:
 	StreamPacket stream;
