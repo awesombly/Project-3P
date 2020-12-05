@@ -4328,7 +4328,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76dddd7bed1b1544c9af0e0b9a543720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 1743903104223250, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
+  localPlayerPrefab: {fileID: 1743903104223250, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
+  otherPlayerPrefab: {fileID: 7405065635949591291, guid: 15a9533a8b8f76a46a32fee587eaa2cd, type: 3}
+  syncDelay: 0.3
 --- !u!1 &1938597296 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2461222688502274006, guid: a9b0a11f47693a94cb37b4987e523a4f, type: 3}
