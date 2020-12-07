@@ -7,7 +7,7 @@ public class Actor : MonoBehaviour
     [HideInInspector]
     public uint serial;
     [HideInInspector]
-    public bool isLocal = false;
+    public bool isLocal = true;
     [HideInInspector]
     public Vector3 syncVelocity;
 

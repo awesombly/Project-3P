@@ -422,6 +422,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf1a5ad4f9ffb154ca7813fdad11017a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serial: 0
+  isLocal: 0
+  syncVelocity: {x: 0, y: 0, z: 0}
+  rigidBody: {fileID: 0}
   controllerPauseState: 0
   enableCameraMovement: 1
   mouseInputInversion: 0
@@ -471,7 +475,6 @@ MonoBehaviour:
     changeTime: 0.75
     fovRef: 0
   isCrouching: 0
-  fps_Rigidbody: {fileID: 0}
   useHeadbob: 1
   head: {fileID: 4204582120663750}
   snapHeadjointToCapsul: 1
@@ -495,9 +498,11 @@ MonoBehaviour:
     metalAndGlassPhysMat: []
     grassPhysMat:
     - {fileID: 13400000, guid: ef5688da6163a454394699b8feb23d75, type: 2}
+    - {fileID: 13400000, guid: 66434ecc128b1dc418b50f5f10d1a477, type: 2}
     dirtAndGravelPhysMat: []
     rockAndConcretePhysMat:
     - {fileID: 13400000, guid: f1e72d6fcc7ae9342b782abdf443c946, type: 2}
+    - {fileID: 13400000, guid: 9cfc7c85e4e86f745b40a791a8085eee, type: 2}
     mudPhysMat: []
     customPhysMat:
     - {fileID: 13400000, guid: 0a947b9a4eeeeb34dbe274c5ee38fc62, type: 2}
