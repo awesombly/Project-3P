@@ -22,7 +22,7 @@ struct UPACKET
 	byte data[ DataMaxSize ];
 
 	template <class Type>
-	void SetData( const Type& _protocol )
+	void SetData( const Type& _protocol, bool useEncoding = false )
 	{
 		std::ostringstream stream;
 		{
@@ -36,7 +36,15 @@ struct UPACKET
 		// 앞, 뒤 잉여 문자들 제거
 		const size_t startPosition = jsonData.find( ':' ) + 1;
 		const size_t endPosition = jsonData.rfind( '}' ) - startPosition;
-		jsonData = jsonData.substr( startPosition, endPosition );
+		if ( useEncoding )
+		{
+			// 한글 입력시 유니티에서 깨져서 보임
+			jsonData = ToUFT8( jsonData.substr( startPosition, endPosition ).c_str() );
+		}
+		else
+		{
+			jsonData = jsonData.substr( startPosition, endPosition );
+		}
 
 		type = _protocol.PacketType;
 		length = ( u_short )jsonData.length();
