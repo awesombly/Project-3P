@@ -134,8 +134,6 @@ public class FirstPersonAIO : Actor
     float checkedSlope;
     bool isSprinting = false;
 
-    public Rigidbody fps_Rigidbody;
-
     #endregion
 
     #region Headbobbing Settings
@@ -231,9 +229,12 @@ public class FirstPersonAIO : Actor
         capsule = GetComponent<CapsuleCollider>();
         IsGrounded = true;
         isCrouching = false;
-        fps_Rigidbody = GetComponent<Rigidbody>();
-        fps_Rigidbody.interpolation = RigidbodyInterpolation.Extrapolate;
-        fps_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        if ( rigidBody == null )
+        {
+            rigidBody = GetComponent<Rigidbody>();
+        }
+        rigidBody.interpolation = RigidbodyInterpolation.Extrapolate;
+        rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         _crouchModifiers.colliderHeight = capsule.height;
         #endregion
 
@@ -306,7 +307,7 @@ public class FirstPersonAIO : Actor
         originalLocalPosition = snapHeadjointToCapsul ? new Vector3( head.localPosition.x, ( capsule.height / 2 ) * head.localScale.y, head.localPosition.z ) : head.localPosition;
         if ( GetComponent<AudioSource>() == null ) { gameObject.AddComponent<AudioSource>(); }
 
-        previousPosition = fps_Rigidbody.position;
+        previousPosition = rigidBody.position;
         audioSource = GetComponent<AudioSource>();
         #endregion
     }
@@ -382,7 +383,7 @@ public class FirstPersonAIO : Actor
 
         if ( useStamina )
         {
-            isSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > 0 && ( Mathf.Abs( fps_Rigidbody.velocity.x ) > 0.01f || Mathf.Abs( fps_Rigidbody.velocity.z ) > 0.01f );
+            isSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > 0 && ( Mathf.Abs( rigidBody.velocity.x ) > 0.01f || Mathf.Abs( rigidBody.velocity.z ) > 0.01f );
             if ( isSprinting )
             {
                 staminaInternal -= ( staminaDepletionSpeed * 2 ) * Time.deltaTime;
@@ -392,7 +393,7 @@ public class FirstPersonAIO : Actor
                     StaminaMeter.color = Vector4.MoveTowards( StaminaMeter.color, new Vector4( 1, 1, 1, 1 ), 0.15f );
                 }
             }
-            else if ( ( !Input.GetKey( sprintKey ) || Mathf.Abs( fps_Rigidbody.velocity.x ) < 0.01f || Mathf.Abs( fps_Rigidbody.velocity.z ) < 0.01f || isCrouching ) && staminaInternal < staminaLevel )
+            else if ( ( !Input.GetKey( sprintKey ) || Mathf.Abs( rigidBody.velocity.x ) < 0.01f || Mathf.Abs( rigidBody.velocity.z ) < 0.01f || isCrouching ) && staminaInternal < staminaLevel )
             {
                 staminaInternal += staminaDepletionSpeed * Time.deltaTime;
             }
@@ -420,18 +421,18 @@ public class FirstPersonAIO : Actor
             {
 
                 MoveDirection = ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal );
-                if ( !didJump ) { fps_Rigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation; }
+                if ( !didJump ) { rigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation; }
             }
             else if ( advanced.isTouchingUpright && !advanced.isTouchingWalkable )
             {
-                fps_Rigidbody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
+                rigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
             }
 
             else
             {
 
-                fps_Rigidbody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
-                MoveDirection = ( ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal ) * ( fps_Rigidbody.velocity.y > 0.01f ? SlopeCheck() : 0.8f ) );
+                rigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
+                MoveDirection = ( ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal ) * ( rigidBody.velocity.y > 0.01f ? SlopeCheck() : 0.8f ) );
             }
         }
         else
@@ -460,7 +461,7 @@ public class FirstPersonAIO : Actor
         if ( inputXY.magnitude > 1 ) { inputXY.Normalize(); }
 
         #region Jump
-        yVelocity = fps_Rigidbody.velocity.y;
+        yVelocity = rigidBody.velocity.y;
 
         if ( IsGrounded && jumpInput && jumpPowerInternal > 0 && !didJump )
         {
@@ -470,11 +471,11 @@ public class FirstPersonAIO : Actor
                 {
                     didJump = true;
                     jumpInput = false;
-                    yVelocity += fps_Rigidbody.velocity.y < 0.01f ? jumpPowerInternal : jumpPowerInternal / 3;
+                    yVelocity += rigidBody.velocity.y < 0.01f ? jumpPowerInternal : jumpPowerInternal / 3;
                     advanced.isTouchingWalkable = false;
                     advanced.isTouchingFlat = false;
                     advanced.isTouchingUpright = false;
-                    fps_Rigidbody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
+                    rigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
                 }
 
             }
@@ -505,10 +506,10 @@ public class FirstPersonAIO : Actor
 
         if ( playerCanMove && !controllerPauseState )
         {
-            fps_Rigidbody.velocity = MoveDirection + ( Vector3.up * yVelocity );
+            rigidBody.velocity = MoveDirection + ( Vector3.up * yVelocity );
 
         }
-        else { fps_Rigidbody.velocity = Vector3.zero; }
+        else { rigidBody.velocity = Vector3.zero; }
 
         if ( inputXY.magnitude > 0 || !IsGrounded )
         {
@@ -516,14 +517,14 @@ public class FirstPersonAIO : Actor
         }
         else { capsule.sharedMaterial = advanced.highFrictionMaterial; }
 
-        fps_Rigidbody.AddForce( Physics.gravity * ( advanced.gravityMultiplier - 1 ) );
+        rigidBody.AddForce( Physics.gravity * ( advanced.gravityMultiplier - 1 ) );
 
 
         if ( advanced.FOVKickAmount > 0 )
         {
             if ( isSprinting && !isCrouching && playerCamera.fieldOfView != ( baseCamFOV + ( advanced.FOVKickAmount * 2 ) - 0.01f ) )
             {
-                if ( Mathf.Abs( fps_Rigidbody.velocity.x ) > 0.5f || Mathf.Abs( fps_Rigidbody.velocity.z ) > 0.5f )
+                if ( Mathf.Abs( rigidBody.velocity.x ) > 0.5f || Mathf.Abs( rigidBody.velocity.z ) > 0.5f )
                 {
                     playerCamera.fieldOfView = Mathf.SmoothDamp( playerCamera.fieldOfView, baseCamFOV + ( advanced.FOVKickAmount * 2 ), ref advanced.fovRef, advanced.changeTime );
                 }
@@ -569,9 +570,9 @@ public class FirstPersonAIO : Actor
         //calculate headbob freq
         if ( useHeadbob == true || enableAudioSFX )
         {
-            Vector3 vel = ( fps_Rigidbody.position - previousPosition ) / Time.deltaTime;
+            Vector3 vel = ( rigidBody.position - previousPosition ) / Time.deltaTime;
             Vector3 velChange = vel - previousVelocity;
-            previousPosition = fps_Rigidbody.position;
+            previousPosition = rigidBody.position;
             previousVelocity = vel;
             springVelocity -= velChange.y;
             springVelocity -= springPosition * springElastic;
@@ -606,7 +607,7 @@ public class FirstPersonAIO : Actor
         //apply headbob position
         if ( useHeadbob == true )
         {
-            if ( fps_Rigidbody.velocity.magnitude > 0.1f )
+            if ( rigidBody.velocity.magnitude > 0.1f )
             {
                 head.localPosition = Vector3.MoveTowards( head.localPosition, snapHeadjointToCapsul ? ( new Vector3( originalLocalPosition.x, ( capsule.height / 2 ) * head.localScale.y, originalLocalPosition.z ) + new Vector3( xPos, yPos, 0 ) ) : originalLocalPosition + new Vector3( xPos, yPos, 0 ), 0.5f );
             }
@@ -760,20 +761,20 @@ public class FirstPersonAIO : Actor
         }
         #endregion
 
-        float velocityInterval = Vector3.Distance( fps_Rigidbody.velocity, syncMovement.PrevVelocity );
-        bool isStopped = ( fps_Rigidbody.velocity.sqrMagnitude < syncMovement.PrevSqrMagnitude && fps_Rigidbody.velocity.sqrMagnitude < float.Epsilon );
+        float velocityInterval = Vector3.Distance( rigidBody.velocity, syncMovement.PrevVelocity );
+        bool isStopped = ( rigidBody.velocity.sqrMagnitude < syncMovement.PrevSqrMagnitude && rigidBody.velocity.sqrMagnitude < float.Epsilon );
         if ( isStopped || velocityInterval > SyncMovement.NeedInterval )
         {
             Protocol.Both.SyncInterpolation protocol;
             protocol.Player.Serial = serial;
             protocol.Player.Position = transform.position;
             protocol.Player.Rotation = transform.rotation;
-            protocol.Velocity = fps_Rigidbody.velocity;
+            protocol.Velocity = rigidBody.velocity;
 
             Network.Instance.Send( protocol );
         }
-        syncMovement.PrevVelocity = fps_Rigidbody.velocity;
-        syncMovement.PrevSqrMagnitude = fps_Rigidbody.velocity.sqrMagnitude;
+        syncMovement.PrevVelocity = rigidBody.velocity;
+        syncMovement.PrevSqrMagnitude = rigidBody.velocity.sqrMagnitude;
     }
 
 
