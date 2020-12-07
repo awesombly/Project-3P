@@ -93,5 +93,10 @@ public class ChatMain : MonoBehaviour
         {
             chatPannel.SetActive( isVisible );
         }
+
+        if ( isVisible )
+        {
+            inputMessage.Select();
+        }
     }
 }
