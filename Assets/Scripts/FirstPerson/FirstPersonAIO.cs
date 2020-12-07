@@ -11,9 +11,15 @@ using System.Net;
 
 [RequireComponent( typeof( CapsuleCollider ) ), RequireComponent( typeof( Rigidbody ) ), AddComponentMenu( "First Person AIO" )]
 
-public class FirstPersonAIO : MonoBehaviour
+public class FirstPersonAIO : Actor
 {
-
+    private struct SyncMovement
+    {
+        public const float NeedInterval = 0.1f;
+        public Vector3 PrevVelocity;
+        public float PrevSqrMagnitude;
+    }
+    private SyncMovement syncMovement;
 
     #region Variables
 
@@ -209,8 +215,10 @@ public class FirstPersonAIO : MonoBehaviour
 
     #endregion
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
 
@@ -303,8 +311,9 @@ public class FirstPersonAIO : MonoBehaviour
         #endregion
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
 
         #region Look Settings - Update
 
@@ -365,7 +374,6 @@ public class FirstPersonAIO : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         #region Look Settings - FixedUpdate
 
         #endregion
@@ -751,6 +759,21 @@ public class FirstPersonAIO : MonoBehaviour
             advanced.isTouchingFlat = false;
         }
         #endregion
+
+        float velocityInterval = Vector3.Distance( fps_Rigidbody.velocity, syncMovement.PrevVelocity );
+        bool isStopped = ( fps_Rigidbody.velocity.sqrMagnitude < syncMovement.PrevSqrMagnitude && fps_Rigidbody.velocity.sqrMagnitude < float.Epsilon );
+        if ( isStopped || velocityInterval > SyncMovement.NeedInterval )
+        {
+            Protocol.Both.SyncInterpolation protocol;
+            protocol.Player.Serial = serial;
+            protocol.Player.Position = transform.position;
+            protocol.Player.Rotation = transform.rotation;
+            protocol.Velocity = fps_Rigidbody.velocity;
+
+            Network.Instance.Send( protocol );
+        }
+        syncMovement.PrevVelocity = fps_Rigidbody.velocity;
+        syncMovement.PrevSqrMagnitude = fps_Rigidbody.velocity.sqrMagnitude;
     }
 
 

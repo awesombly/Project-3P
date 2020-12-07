@@ -68,6 +68,18 @@ namespace Protocol
                 return PacketType;
             }
         }
+
+        public struct SyncInterpolation : IProtocol
+        {
+            public ServerObject Player;
+            public Vector3 Velocity;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
     
     namespace ToServer

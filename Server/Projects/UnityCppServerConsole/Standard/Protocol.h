@@ -50,6 +50,7 @@ namespace Protocol
 	{
 		SIMPLE_PROTOCOL( ChatMessage );
 		SIMPLE_PROTOCOL( SyncTransform );
+		SIMPLE_PROTOCOL( SyncInterpolation );
 
 		struct TestProtocol : public IProtocol
 		{

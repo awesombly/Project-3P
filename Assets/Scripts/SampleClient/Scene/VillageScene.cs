@@ -11,30 +11,10 @@ public class VillageScene : MonoBehaviour
     private List<Actor> otherPlayers = new List<Actor>();
     private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
 
-    [SerializeField]
-    private float syncDelay = 0.5f;
-    private float curSyncDelay = 0.0f;
-
     private void Awake()
     {
         Network.Instance.OnConnect += OnConnect;
         Network.Instance.OnBindProtocols += OnBindProtocols;
-    }
-
-    private void Update()
-    {
-        curSyncDelay += Time.deltaTime;
-        if ( curSyncDelay >= syncDelay && localPlayer != null )
-        {
-            curSyncDelay = 0.0f;
-            /// 테스트용.
-            Protocol.Both.SyncTransform protocol;
-            protocol.Player.Serial = localPlayer.serial;
-            protocol.Player.Position = localPlayer.transform.position;
-            protocol.Player.Rotation = localPlayer.transform.rotation;
-
-            Network.Instance.Send( protocol );
-        }
     }
 
     private void OnDestroy()
@@ -52,6 +32,7 @@ public class VillageScene : MonoBehaviour
     private void OnBindProtocols()
     {
         Network.Instance.AddBind( Protocol.Both.SyncTransform.PacketType, SyncTransform );
+        Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
     }
 
@@ -72,8 +53,30 @@ public class VillageScene : MonoBehaviour
             return;
         }
 
-        actor.transform.position = protocol.Player.Position;
-        actor.transform.rotation = protocol.Player.Rotation;
+        actor.rigidBody.position = protocol.Player.Position;
+        actor.rigidBody.rotation = protocol.Player.Rotation;
+    }
+
+    private void SyncInterpolation( string _data )
+    {
+        Protocol.Both.SyncInterpolation protocol = JsonUtility.FromJson<Protocol.Both.SyncInterpolation>( _data );
+
+        if ( !actors.ContainsKey( protocol.Player.Serial ) )
+        {
+            Debug.LogWarning( "actor not Found. Serial = " + protocol.Player.Serial );
+            return;
+        }
+
+        Actor actor = actors[ protocol.Player.Serial ];
+        if ( ReferenceEquals( actor, null ) )
+        {
+            Debug.LogError( "actor is null. Serial = " + protocol.Player.Serial );
+            return;
+        }
+
+        actor.rigidBody.MovePosition( protocol.Player.Position );
+        actor.rigidBody.MoveRotation( protocol.Player.Rotation );
+        actor.syncVelocity = protocol.Velocity;
     }
 
     private void CreatePlayer( string _data )
@@ -104,8 +107,9 @@ public class VillageScene : MonoBehaviour
         }
 
         player.serial = protocol.Player.Serial;
+        player.isLocal = protocol.IsLocal;
         actors.Add( player.serial, player );
-        if ( protocol.IsLocal )
+        if ( player.isLocal )
         {
             localPlayer = player;
         }
