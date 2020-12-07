@@ -22,7 +22,6 @@ namespace Protocol
 		return ( u_short )hash;
 	}
 
-	PROTOCOL_BODY( Both, TestProtocol );
 	PROTOCOL_BODY( ToServer, EnterStage );
 	PROTOCOL_BODY( FromServer, CreatePlayer );
 }

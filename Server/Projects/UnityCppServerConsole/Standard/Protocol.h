@@ -51,44 +51,6 @@ namespace Protocol
 		SIMPLE_PROTOCOL( ChatMessage );
 		SIMPLE_PROTOCOL( SyncTransform );
 		SIMPLE_PROTOCOL( SyncInterpolation );
-
-		struct TestProtocol : public IProtocol
-		{
-			PROTOCOL_HEADER();
-
-			int Level;
-			std::string Id;
-			//std::map< int/*SlotIndex*/, std::string/*EquipId*/ > Equipments;
-
-			struct Item
-			{
-				int Count;
-				std::string Id;
-
-				Item() = default;
-				Item( const std::string& _id, int _count )
-					: Id( _id )
-					, Count( _count )
-				{ }
-
-				template <class Archive>
-				void serialize( Archive& ar )
-				{
-					ar( CEREAL_NVP( Count ) );
-					ar( CEREAL_NVP( Id ) );
-				}
-			};
-			std::vector< Item > ItemList;
-
-			template <class Archive>
-			void serialize( Archive& ar )
-			{
-				ar( CEREAL_NVP( Level ) );
-				ar( CEREAL_NVP( Id ) );
-				//ar( CEREAL_NVP( Equipments ) );
-				ar( CEREAL_NVP( ItemList ) );
-			}
-		};
 	}
 
 	namespace ToServer

@@ -63,28 +63,6 @@ public class ChatMain : MonoBehaviour
         
         Network.Instance.Send( protocol );
         inputMessage.text = "";
-
-        SendTestProtocol();
-    }
-
-    public void SendTestProtocol()
-    {
-        Protocol.Both.TestProtocol protocol;
-        protocol.Level = 1234;
-        protocol.Id = "태홍준환성수";
-        protocol.ItemList = new List<Protocol.Both.TestProtocol.Item>();
-        {
-            Protocol.Both.TestProtocol.Item item;
-            item.Id = "Unity";
-            item.Count = 44;
-            protocol.ItemList.Add( item );
-
-            item.Id = "AllM";
-            item.Count = 2;
-            protocol.ItemList.Add( item );
-        }
-
-        Network.Instance.Send( protocol );
     }
 
     public void OnVisibleChatPannel( bool isVisible )

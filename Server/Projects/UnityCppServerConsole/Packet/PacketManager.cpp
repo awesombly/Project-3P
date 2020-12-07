@@ -45,7 +45,6 @@ void PacketManager::BindProtocols()
 	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::Broadcast;
 	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::BroadCastExceptSelf;
 	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::BroadCastExceptSelf;
-	protocols[ Protocol::Both::TestProtocol::PacketType ] = &PacketManager::ReceiveTestProtocol;
 
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::ReceiveEnterStage;
 }
@@ -66,22 +65,6 @@ void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
 	}
 
 	SessionManager::Instance().BroadCastExceptSelf( _packet.packet, session );
-}
-
-void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
-{
-	Protocol::Both::TestProtocol protocol = _packet.packet.GetParsedData<Protocol::Both::TestProtocol>();
-	Log::Instance().Push( ELogType::Log, protocol.PacketName + " : " + _packet.packet.ToString() );
-
-	{
-		protocol.Id = "ResponseTest";
-		protocol.ItemList.push_back( Protocol::Both::TestProtocol::Item( "Dildo", 69 ) );
-		protocol.ItemList.push_back( Protocol::Both::TestProtocol::Item( "Penis", 74 ) );
-
-		UPACKET response;
-		response.SetData( protocol );
-		SessionManager::Instance().BroadCast( response );
-	}
 }
 
 void PacketManager::ReceiveEnterStage( const PACKET& _packet )
