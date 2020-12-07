@@ -7,8 +7,9 @@ public class VillageScene : MonoBehaviour
     public GameObject localPlayerPrefab;
     public GameObject otherPlayerPrefab;
 
-    private GameObject localPlayer;
-    private List<GameObject> otherPlayers = new List<GameObject>();
+    private Actor localPlayer;
+    private List<Actor> otherPlayers = new List<Actor>();
+    private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
 
     [SerializeField]
     private float syncDelay = 0.5f;
@@ -28,7 +29,7 @@ public class VillageScene : MonoBehaviour
             curSyncDelay = 0.0f;
             /// 테스트용.
             Protocol.Both.SyncTransform protocol;
-            protocol.Player.Name = localPlayer.name;
+            protocol.Player.Serial = localPlayer.serial;
             protocol.Player.Position = localPlayer.transform.position;
             protocol.Player.Rotation = localPlayer.transform.rotation;
 
@@ -58,47 +59,59 @@ public class VillageScene : MonoBehaviour
     {
         Protocol.Both.SyncTransform protocol = JsonUtility.FromJson<Protocol.Both.SyncTransform>( _data );
 
-        GameObject player = null;
-        if ( localPlayer != null && protocol.Player.Name == localPlayer.name )
+        if ( !actors.ContainsKey( protocol.Player.Serial ) )
         {
-            player = localPlayer;
-        }
-        else
-        {
-            player = otherPlayers.Find( ( instance ) => { return instance.name == protocol.Player.Name; } );
-        }
-        
-        if ( player == null )
-        {
-            Debug.LogWarning( "Player not Found. name = " + protocol.Player.Name );
+            Debug.LogWarning( "actor not Found. Serial = " + protocol.Player.Serial );
             return;
         }
 
-        player.transform.position = protocol.Player.Position;
-        player.transform.rotation = protocol.Player.Rotation;
+        Actor actor = actors[ protocol.Player.Serial ];
+        if ( ReferenceEquals( actor, null ) )
+        {
+            Debug.LogError( "actor is null. Serial = " + protocol.Player.Serial );
+            return;
+        }
+
+        actor.transform.position = protocol.Player.Position;
+        actor.transform.rotation = protocol.Player.Rotation;
     }
 
     private void CreatePlayer( string _data )
     {
         Protocol.FromServer.CreatePlayer protocol = JsonUtility.FromJson<Protocol.FromServer.CreatePlayer>( _data );
-        GameObject player = null;
-        
+        GameObject instance = null;
+
         if ( protocol.IsLocal )
         {
-            localPlayer = player = Instantiate( localPlayerPrefab, protocol.Player.Position, protocol.Player.Rotation );
+            instance = Instantiate( localPlayerPrefab, protocol.Player.Position, protocol.Player.Rotation );
         }
         else
         {
-            player = Instantiate( otherPlayerPrefab, protocol.Player.Position, protocol.Player.Rotation );
-            otherPlayers.Add( player );
+            instance = Instantiate( otherPlayerPrefab, protocol.Player.Position, protocol.Player.Rotation );
         }
 
-        if ( player == null )
+        if ( instance == null )
         {
-            Debug.LogError( "CreatePlayer failed : " + protocol.ToString() );
+            Debug.LogError( "instance is null. : " + protocol.ToString() );
             return;
         }
 
-        player.name = protocol.Player.Name;
+        Actor player = instance.GetComponent<Actor>();
+        if ( ReferenceEquals( player, null ) )
+        {
+            Debug.LogError(  "is not player. Type = " + instance.GetType().Name );
+            return;
+        }
+
+        player.serial = protocol.Player.Serial;
+        actors.Add( player.serial, player );
+        if ( protocol.IsLocal )
+        {
+            localPlayer = player;
+        }
+        else
+        {
+            otherPlayers.Add( player );
+        }
     }
 }

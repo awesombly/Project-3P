@@ -3,6 +3,12 @@
 
 namespace Protocol
 {
+	u_int GetNewSerial()
+	{
+		static u_int serialIndex = 0;
+		return ++serialIndex;
+	}
+
 	u_short GetPacketType( const char* _name )
 	{
 		unsigned int hash = 0;

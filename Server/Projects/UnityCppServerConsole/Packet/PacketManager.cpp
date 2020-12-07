@@ -116,15 +116,9 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 	}
 
 	std::mt19937 rand( ( UINT )::time( nullptr ) );
+	session->logicData.Player->Serial = Protocol::GetNewSerial();
 	session->logicData.Player->Position = { ( float )( rand() % 100 ), 30.0f, ( float )( rand() % 100 ) };
 	session->logicData.Player->Rotation = Quaternion::Identity;
-	/// 테스트용 코드
-	{
-		static const std::vector<std::string> names( { "Junhwan", "Taehong", "Sungsu" } );
-		static int index = 0;
-		session->logicData.Player->Name = names[ index % names.size() ];
-		++index;
-	}
 
 	Protocol::FromServer::CreatePlayer createPlayer;
 	createPlayer.Player = *session->logicData.Player;

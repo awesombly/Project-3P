@@ -31,6 +31,8 @@
 
 namespace Protocol
 {
+	u_int GetNewSerial();
+
 	// 서버/클라 결과 동일해야함. (Sdbm Hash)
 	u_short GetPacketType( const char* _name );
 

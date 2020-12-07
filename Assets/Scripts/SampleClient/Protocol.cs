@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [Serializable]
 public struct ServerObject
 {
-    public string Name;
+    public uint Serial;
     public Vector3 Position;
     public Quaternion Rotation;
 }
