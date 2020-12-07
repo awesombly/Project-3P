@@ -93,7 +93,18 @@ namespace Protocol
 
 	namespace ToServer
 	{
-		SIMPLE_PROTOCOL( EnterStage );
+		struct EnterStage : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			Vector3 SpawnPosition;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( SpawnPosition ) );
+			}
+		};
 	}
 
 	namespace FromServer

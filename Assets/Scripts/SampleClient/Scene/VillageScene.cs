@@ -7,12 +7,18 @@ public class VillageScene : MonoBehaviour
     public GameObject localPlayerPrefab;
     public GameObject otherPlayerPrefab;
 
+    public Transform spawnTransform;
+    private Vector3 spawnPosition;
+
     private Actor localPlayer;
     private List<Actor> otherPlayers = new List<Actor>();
     private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
 
     private void Awake()
     {
+        // position 접근이 메인 쓰레드에서만 돼서 임시조치
+        spawnPosition = spawnTransform.position;
+
         Network.Instance.OnConnect += OnConnect;
         Network.Instance.OnBindProtocols += OnBindProtocols;
     }
@@ -26,6 +32,7 @@ public class VillageScene : MonoBehaviour
     private void OnConnect()
     {
         Protocol.ToServer.EnterStage protocol;
+        protocol.SpawnPosition = spawnPosition;
         Network.Instance.Send( protocol );
     }
 

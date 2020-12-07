@@ -86,6 +86,8 @@ namespace Protocol
     {
         public struct EnterStage : IProtocol
         {
+            public Vector3 SpawnPosition;
+
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
             {

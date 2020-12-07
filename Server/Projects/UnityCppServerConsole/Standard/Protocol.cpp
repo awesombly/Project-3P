@@ -23,5 +23,6 @@ namespace Protocol
 	}
 
 	PROTOCOL_BODY( Both, TestProtocol );
+	PROTOCOL_BODY( ToServer, EnterStage );
 	PROTOCOL_BODY( FromServer, CreatePlayer );
 }

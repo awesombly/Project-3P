@@ -86,6 +86,9 @@ void PacketManager::ReceiveTestProtocol( const PACKET& _packet )
 
 void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 {
+	Protocol::ToServer::EnterStage protocol = _packet.packet.GetParsedData<Protocol::ToServer::EnterStage>();
+	Log::Instance().Push( ELogType::Log, protocol.PacketName + " : " + _packet.packet.ToString() );
+
 	Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
@@ -118,7 +121,7 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 
 	std::mt19937 rand( ( UINT )::time( nullptr ) );
 	session->logicData.Player->Serial = Protocol::GetNewSerial();
-	session->logicData.Player->Position = { ( float )( rand() % 100 ), 30.0f, ( float )( rand() % 100 ) };
+	session->logicData.Player->Position = { protocol.SpawnPosition.x + ( float )( rand() % 8 ), protocol.SpawnPosition.y, protocol.SpawnPosition.z + ( float )( rand() % 8 ) };
 	session->logicData.Player->Rotation = Quaternion::Identity;
 
 	Protocol::FromServer::CreatePlayer createPlayer;
