@@ -4,11 +4,12 @@ public class Global
 {
     public static byte[] Serialize( object _obj )
     {
-        int size = Marshal.SizeOf( _obj );
-        byte[] data = new byte[size];
-        System.IntPtr buffer = Marshal.AllocHGlobal( size + 1 );
+        ushort copySize = ( _obj as UPACKET ).length;
+        int bufSize = Marshal.SizeOf( _obj );
+        byte[] data = new byte[copySize];
+        System.IntPtr buffer = Marshal.AllocHGlobal( bufSize + 1 );
         Marshal.StructureToPtr( _obj, buffer, false );
-        Marshal.Copy( buffer, data, 0, size );
+        Marshal.Copy( buffer, data, 0, copySize );
         Marshal.FreeHGlobal( buffer );
 
         return data;

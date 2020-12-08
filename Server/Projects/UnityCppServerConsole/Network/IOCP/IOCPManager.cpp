@@ -26,18 +26,18 @@ void IOCPManager::WaitCompletionStatus() const
 {
 	ULONG_PTR keyValue;
 	LPOVERLAPPED ov;
-	DWORD transfer;
+	DWORD transferred;
 
 	while ( true )
 	{
-		if ( ::GetQueuedCompletionStatus( iocpHandle, &transfer, &keyValue, &ov, INFINITE ) == TRUE )
+		if ( ::GetQueuedCompletionStatus( iocpHandle, &transferred, &keyValue, &ov, INFINITE ) == TRUE )
 		{
 			Session* session = ( Session* )keyValue;
-			if ( transfer != 0 )
+			if ( transferred != 0 )
 			{
 				if ( ov != NULL && session != nullptr )
 				{
-					session->Dispatch( ov );
+					session->Dispatch( ov, transferred );
 				}
 			}
 			else
@@ -50,7 +50,7 @@ void IOCPManager::WaitCompletionStatus() const
 			Session* session = ( Session* )keyValue;
 			if ( ::GetLastError() != ERROR_OPERATION_ABORTED )
 			{
-				if ( transfer == 0 && keyValue != NULL )
+				if ( transferred == 0 && keyValue != NULL )
 				{
 					SessionManager::Instance().Erase( session );
 					continue;

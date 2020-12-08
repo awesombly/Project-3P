@@ -15,7 +15,7 @@ public:
 	virtual ~Session();
 
 public:
-	void Dispatch( const LPOVERLAPPED& _ov );
+	void Dispatch( const LPOVERLAPPED& _ov, DWORD _byteSize );
 
 public:
 	LogicData logicData;

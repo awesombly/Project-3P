@@ -9,14 +9,13 @@ public:
 	virtual ~StreamPacket() = default;
 
 public:
-	void Truncate( const SOCKET& _socket, const WSABUF& _buf );
+	void Truncate( const SOCKET& _socket, const WSABUF& _buf, DWORD _recvSize );
 
 private:
-	std::queue<UPACKET> packets;
-	UPACKET* packet;
+	UPACKET* originPacket;
+	UPACKET packet;
 	byte recvBuffer[ RecvBufferMaxSize ];
-	u_int startPos;
 	u_int writePos;
-	u_int readPos;
+	u_int recvPos;
 };
 

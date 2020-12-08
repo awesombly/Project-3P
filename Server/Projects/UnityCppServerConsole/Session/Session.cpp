@@ -15,12 +15,12 @@ Session::~Session()
 	::closesocket( socket );
 }
 
-void Session::Dispatch( const LPOVERLAPPED& _ov )
+void Session::Dispatch( const LPOVERLAPPED& _ov, DWORD _byteSize )
 {
 	OVERLAPPEDEX* ovEx = ( OVERLAPPEDEX* )_ov;
 	if ( ovEx->flag == OVERLAPPEDEX::MODE_RECV )
 	{
-		stream.Truncate( GetSocket(), wsaBuffer );
+		stream.Truncate( GetSocket(), wsaBuffer, _byteSize );
 		ZeroMemory( &wsaBuffer, sizeof( WSABUF ) );
 	}
 
