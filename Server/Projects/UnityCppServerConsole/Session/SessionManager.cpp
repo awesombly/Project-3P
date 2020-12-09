@@ -51,7 +51,12 @@ void SessionManager::Erase( Session* _session )
 
 void SessionManager::BroadCast( const UPACKET& _packet ) const
 {
-	for ( const std::pair<SOCKET, Session*>& pair : sessions )
+	BroadCast( _packet, sessions );
+}
+
+void SessionManager::BroadCast( const UPACKET& _packet, const SessionContainer& _sessions ) const
+{
+	for ( const std::pair<SOCKET, Session*>& pair : _sessions )
 	{
 		Session* session = pair.second;
 		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
@@ -61,7 +66,12 @@ void SessionManager::BroadCast( const UPACKET& _packet ) const
 
 void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
 {
-	for ( const std::pair<SOCKET, Session*>& pair : sessions )
+	BroadCastExceptSelf( _packet, _session, sessions );
+}
+
+void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session, const SessionContainer& _sessions ) const
+{
+	for ( const std::pair<SOCKET, Session*>& pair : _sessions )
 	{
 		Session* session = pair.second;
 		if ( session == _session )

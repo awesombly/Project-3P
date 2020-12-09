@@ -1,7 +1,11 @@
 #pragma once
 #include "../Standard/Singleton.hpp"
 #include "../Synchronize/CriticalSection.h"
-#include "../Logic/Stage.h"
+#include "../Session/Session.h"
+
+using SessionContainer = std::unordered_map<SOCKET, Session*>;
+
+class Stage;
 
 class SessionManager : public Singleton<SessionManager>
 {
@@ -19,10 +23,12 @@ public:
 
 public:
 	void BroadCast( const UPACKET& _packet ) const;
+	void BroadCast( const UPACKET& _packet, const SessionContainer& _sessions ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
+	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session, const SessionContainer& _sessions ) const;
 
 private:
-	std::unordered_map<SOCKET, Session*> sessions;
+	SessionContainer sessions;
 	CriticalSection cs;
 	
 	std::unordered_map<std::string/*stageId*/, Stage*> stages;

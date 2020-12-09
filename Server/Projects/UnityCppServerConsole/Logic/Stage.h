@@ -1,8 +1,13 @@
 #pragma once
-#include "../Session/Session.h"
+#include "../Session/SessionManager.h"
 
 class Stage
 {
-	std::list<Session> Sessions;
-	std::unordered_map<SerialType, ServerObject*> Objects;
+public:
+	void BroadCast( const UPACKET& _packet ) const;
+	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
+
+private:
+	SessionContainer sessions;
+	std::unordered_map<SerialType, ServerObject*> objects;
 };
