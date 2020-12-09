@@ -3,13 +3,13 @@
 
 namespace Protocol
 {
-	u_int GetNewSerial()
+	SerialType GetNewSerial()
 	{
-		static u_int serialIndex = 0;
+		static SerialType serialIndex = 0;
 		return ++serialIndex;
 	}
 
-	u_short GetPacketType( const char* _name )
+	PacketType GetPacketType( const char* _name )
 	{
 		unsigned int hash = 0;
 
@@ -19,7 +19,7 @@ namespace Protocol
 			hash = _name[ count ] + ( hash << 6 ) + ( hash << 16 ) - hash;
 		}
 
-		return ( u_short )hash;
+		return ( PacketType )hash;
 	}
 
 	PROTOCOL_BODY( ToServer, EnterStage );

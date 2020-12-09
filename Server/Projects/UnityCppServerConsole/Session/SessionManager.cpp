@@ -1,9 +1,10 @@
 #include "SessionManager.h"
 #include "../Standard/Log.h"
+#include "../Logic/Stage.h"
 
 SessionManager::~SessionManager()
 {
-	std::unordered_map<SOCKET, Session*>::iterator pair( std::begin( sessions ) );
+	SessionContainer::iterator pair( std::begin( sessions ) );
 	while ( pair != std::end( sessions ) )
 	{
 		SafeDelete( pair->second );
@@ -23,7 +24,7 @@ Session* SessionManager::Find( const SOCKET& _socket ) const
 	return sessionIter->second;
 }
 
-std::unordered_map<SOCKET, Session*> SessionManager::GetSessions() const
+SessionContainer SessionManager::GetSessions() const
 {
 	return sessions;
 }
@@ -49,9 +50,9 @@ void SessionManager::Erase( Session* _session )
 	cs.UnLock();
 }
 
-void SessionManager::BroadCast( const UPACKET& _packet ) const
+void SessionManager::BroadCast( const UPACKET& _packet, const SessionContainer& _sessions )
 {
-	for ( const std::pair<SOCKET, Session*>& pair : sessions )
+	for ( const std::pair<SOCKET, Session*>& pair : _sessions )
 	{
 		Session* session = pair.second;
 		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
@@ -59,9 +60,9 @@ void SessionManager::BroadCast( const UPACKET& _packet ) const
 	}
 }
 
-void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
+void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session, const SessionContainer& _sessions )
 {
-	for ( const std::pair<SOCKET, Session*>& pair : sessions )
+	for ( const std::pair<SOCKET, Session*>& pair : _sessions )
 	{
 		Session* session = pair.second;
 		if ( session == _session )
@@ -72,4 +73,43 @@ void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session*
 		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
 		session->Send( _packet );
 	}
+}
+
+void SessionManager::BroadCast( const UPACKET& _packet ) const
+{
+	BroadCast( _packet, sessions );
+}
+
+void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
+{
+	BroadCastExceptSelf( _packet, _session, sessions );
+}
+
+void SessionManager::EnterStage( Session* _session, const std::string& _stageId )
+{
+	if ( _session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Log, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( _session->logicData.CurrentStage != nullptr )
+	{
+		_session->logicData.CurrentStage->Erase( _session );
+		_session->logicData.CurrentStage->Erase( _session->logicData.Player );
+	}
+
+	Stage* stage = stages[ _stageId ];
+	if ( stage == nullptr )
+	{
+		stage = stages[ _stageId ] = new Stage( _stageId );
+	}
+
+	stage->Push( _session );
+	if ( _session->logicData.Player != nullptr )
+	{
+		stage->Push( _session->logicData.Player );
+	}
+	
+	_session->logicData.CurrentStage = stage;
 }

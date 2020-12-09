@@ -1,6 +1,7 @@
 ﻿#include "PacketManager.h"
 #include "../Standard/Log.h"
 #include "../Session/SessionManager.h"
+#include "../Logic/Stage.h"
 
 bool PacketManager::Initialize()
 {
@@ -42,9 +43,9 @@ void PacketManager::Push( const PACKET& _packet )
 
 void PacketManager::BindProtocols()
 {
-	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::Broadcast;
-	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::BroadCastExceptSelf;
-	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::BroadCastExceptSelf;
+	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::BroadcastToStage;
+	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
+	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::ReceiveEnterStage;
 }
@@ -53,6 +54,26 @@ void PacketManager::Broadcast( const PACKET& _packet )
 {
 	Log::Instance().Push( ELogType::Log, "Broadcast : " + _packet.packet.ToString() );
 	SessionManager::Instance().BroadCast( _packet.packet );
+}
+
+void PacketManager::BroadcastToStage( const PACKET& _packet )
+{
+	Log::Instance().Push( ELogType::Log, "BroadcastToStage : " + _packet.packet.ToString() );
+
+	const Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		return;
+	}
+
+	session->logicData.CurrentStage->BroadCast( _packet.packet );
 }
 
 void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
@@ -67,6 +88,24 @@ void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
 	SessionManager::Instance().BroadCastExceptSelf( _packet.packet, session );
 }
 
+void PacketManager::BroadCastExceptSelfToStage( const PACKET& _packet )
+{
+	const Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		return;
+	}
+
+	session->logicData.CurrentStage->BroadCastExceptSelf( _packet.packet, session );
+}
+
 void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 {
 	Protocol::ToServer::EnterStage protocol = _packet.packet.GetParsedData<Protocol::ToServer::EnterStage>();
@@ -79,12 +118,19 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 		return;
 	}
 
+	SessionManager::Instance().EnterStage( session, protocol.StageId );
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, "CurrentStage is null. socket = " + _packet.socket );
+		return;
+	}
+
 	// 기존 플레이어들 생성
 	{
-		const std::unordered_map<SOCKET, Session*> sessions = SessionManager::Instance().GetSessions();
+		const SessionContainer sessions = session->logicData.CurrentStage->GetSessions();
 		for ( auto pair : sessions )
 		{
-			std::shared_ptr<ServerObject> player = pair.second->logicData.Player;
+			ServerObject* player = pair.second->logicData.Player;
 			if ( player == nullptr || player == session->logicData.Player )
 			{
 				continue;
@@ -99,7 +145,8 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 
 	if ( session->logicData.Player == nullptr )
 	{
-		session->logicData.Player = std::make_shared<ServerObject>();
+		session->logicData.Player = new ServerObject();
+		session->logicData.CurrentStage->Push( session->logicData.Player );
 	}
 
 	std::mt19937 rand( ( UINT )::time( nullptr ) );
@@ -118,5 +165,5 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 	// 직렬화 처리가 또 필요하다.. Id 같은거로 구분해야할듯
 	createPlayer.IsLocal = false;
 	response.SetData( createPlayer );
-	SessionManager::Instance().BroadCastExceptSelf( response, session );
+	session->logicData.CurrentStage->BroadCastExceptSelf( response, session );
 }

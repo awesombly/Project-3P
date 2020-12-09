@@ -19,7 +19,9 @@ private:
 	void BindProtocols();
 
 	static void Broadcast( const PACKET& _packet );
+	static void BroadcastToStage( const PACKET& _packet );
 	static void BroadCastExceptSelf( const PACKET& _packet );
+	static void BroadCastExceptSelfToStage( const PACKET& _packet );
 
 	static void ReceiveEnterStage( const PACKET& _packet );
 
@@ -28,5 +30,5 @@ private:
 	std::condition_variable cv;
 	std::mutex packetsMutex;
 
-	std::unordered_map<u_short/*packetType*/, std::function<void( const PACKET& )>> protocols;
+	std::unordered_map<PacketType, std::function<void( const PACKET& )>> protocols;
 };
