@@ -28,6 +28,8 @@ public:
 	void BroadCast( const UPACKET& _packet ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
 
+	void EnterStage( Session* _session, const std::string& _stageId );
+
 private:
 	SessionContainer sessions;
 	CriticalSection cs;

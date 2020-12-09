@@ -1,5 +1,6 @@
 #include "SessionManager.h"
 #include "../Standard/Log.h"
+#include "../Logic/Stage.h"
 
 SessionManager::~SessionManager()
 {
@@ -82,4 +83,27 @@ void SessionManager::BroadCast( const UPACKET& _packet ) const
 void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
 {
 	BroadCastExceptSelf( _packet, _session, sessions );
+}
+
+void SessionManager::EnterStage( Session* _session, const std::string& _stageId )
+{
+	if ( _session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Log, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( _session->logicData.CurrentStage != nullptr )
+	{
+		_session->logicData.CurrentStage->Erase( _session );
+	}
+
+	Stage* stage = stages[ _stageId ];
+	if ( stage == nullptr )
+	{
+		stage = stages[ _stageId ] = new Stage( _stageId );
+	}
+
+	stage->Push( _session );
+	_session->logicData.CurrentStage = stage;
 }

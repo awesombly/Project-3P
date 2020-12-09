@@ -1,6 +1,11 @@
 #include "Stage.h"
 #include "../Standard/Log.h"
 
+Stage::Stage( const std::string& _stageId )
+	: id( _stageId )
+{
+}
+
 void Stage::Push( Session* _session )
 {
 	if ( _session == nullptr )
@@ -53,4 +58,9 @@ void Stage::BroadCast( const UPACKET& _packet ) const
 void Stage::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
 {
 	SessionManager::BroadCastExceptSelf( _packet, _session, sessions );
+}
+
+const std::string& Stage::GetId() const
+{
+	return id;
 }
