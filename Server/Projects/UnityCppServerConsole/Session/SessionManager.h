@@ -22,10 +22,11 @@ public:
 	void Erase( Session* _session );
 
 public:
+	static void BroadCast( const UPACKET& _packet, const SessionContainer& _sessions );
+	static void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session, const SessionContainer& _sessions );
+
 	void BroadCast( const UPACKET& _packet ) const;
-	void BroadCast( const UPACKET& _packet, const SessionContainer& _sessions ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
-	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session, const SessionContainer& _sessions ) const;
 
 private:
 	SessionContainer sessions;

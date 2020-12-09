@@ -49,12 +49,7 @@ void SessionManager::Erase( Session* _session )
 	cs.UnLock();
 }
 
-void SessionManager::BroadCast( const UPACKET& _packet ) const
-{
-	BroadCast( _packet, sessions );
-}
-
-void SessionManager::BroadCast( const UPACKET& _packet, const SessionContainer& _sessions ) const
+void SessionManager::BroadCast( const UPACKET& _packet, const SessionContainer& _sessions )
 {
 	for ( const std::pair<SOCKET, Session*>& pair : _sessions )
 	{
@@ -64,12 +59,7 @@ void SessionManager::BroadCast( const UPACKET& _packet, const SessionContainer& 
 	}
 }
 
-void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
-{
-	BroadCastExceptSelf( _packet, _session, sessions );
-}
-
-void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session, const SessionContainer& _sessions ) const
+void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session, const SessionContainer& _sessions )
 {
 	for ( const std::pair<SOCKET, Session*>& pair : _sessions )
 	{
@@ -82,4 +72,14 @@ void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session*
 		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
 		session->Send( _packet );
 	}
+}
+
+void SessionManager::BroadCast( const UPACKET& _packet ) const
+{
+	BroadCast( _packet, sessions );
+}
+
+void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
+{
+	BroadCastExceptSelf( _packet, _session, sessions );
 }
