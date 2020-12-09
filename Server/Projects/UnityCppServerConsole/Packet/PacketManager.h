@@ -19,7 +19,9 @@ private:
 	void BindProtocols();
 
 	static void Broadcast( const PACKET& _packet );
+	static void BroadcastToStage( const PACKET& _packet );
 	static void BroadCastExceptSelf( const PACKET& _packet );
+	static void BroadCastExceptSelfToStage( const PACKET& _packet );
 
 	static void ReceiveEnterStage( const PACKET& _packet );
 

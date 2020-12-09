@@ -1,6 +1,7 @@
 ﻿#include "PacketManager.h"
 #include "../Standard/Log.h"
 #include "../Session/SessionManager.h"
+#include "../Logic/Stage.h"
 
 bool PacketManager::Initialize()
 {
@@ -55,6 +56,26 @@ void PacketManager::Broadcast( const PACKET& _packet )
 	SessionManager::Instance().BroadCast( _packet.packet );
 }
 
+void PacketManager::BroadcastToStage( const PACKET& _packet )
+{
+	Log::Instance().Push( ELogType::Log, "BroadcastToStage : " + _packet.packet.ToString() );
+
+	const Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		return;
+	}
+
+	session->logicData.CurrentStage->BroadCast( _packet.packet );
+}
+
 void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
 {
 	const Session* session = SessionManager::Instance().Find( _packet.socket );
@@ -65,6 +86,24 @@ void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
 	}
 
 	SessionManager::Instance().BroadCastExceptSelf( _packet.packet, session );
+}
+
+void PacketManager::BroadCastExceptSelfToStage( const PACKET& _packet )
+{
+	const Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		return;
+	}
+
+	session->logicData.CurrentStage->BroadCastExceptSelf( _packet.packet, session );
 }
 
 void PacketManager::ReceiveEnterStage( const PACKET& _packet )
