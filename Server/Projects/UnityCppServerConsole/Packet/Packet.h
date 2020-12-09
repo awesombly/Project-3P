@@ -18,7 +18,7 @@ struct UPACKET
 	}
 
 	u_short length;
-	u_short type;
+	PacketType type;
 	byte data[ DataMaxSize ];
 
 	template <class Type>

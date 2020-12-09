@@ -28,5 +28,5 @@ private:
 	std::condition_variable cv;
 	std::mutex packetsMutex;
 
-	std::unordered_map<u_short/*packetType*/, std::function<void( const PACKET& )>> protocols;
+	std::unordered_map<PacketType, std::function<void( const PACKET& )>> protocols;
 };

@@ -4,5 +4,5 @@
 class Stage
 {
 	std::list<Session> Sessions;
-	std::unordered_map<u_int/*serial*/, ServerObject*> Objects;
+	std::unordered_map<SerialType, ServerObject*> Objects;
 };

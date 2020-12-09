@@ -4,17 +4,19 @@
 #include "Quaternion.h"
 #include <cereal/cereal.hpp>
 
+using SerialType = u_int;
+
 struct ServerObject
 {
 public:
-	u_int Serial;
+	SerialType Serial;
 	Vector3 Position;
 	Quaternion Rotation;
 
 public:
 	ServerObject() = default;
-	ServerObject( u_int _serial );
-	ServerObject( u_int _serial, Vector3 _position, Quaternion _rotation );
+	ServerObject( SerialType _serial );
+	ServerObject( SerialType _serial, Vector3 _position, Quaternion _rotation );
 
 public:
 	template <class Archive>
