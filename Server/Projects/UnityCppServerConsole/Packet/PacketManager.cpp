@@ -84,7 +84,7 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 		const std::unordered_map<SOCKET, Session*> sessions = SessionManager::Instance().GetSessions();
 		for ( auto pair : sessions )
 		{
-			std::shared_ptr<ServerObject> player = pair.second->logicData.Player;
+			ServerObject* player = pair.second->logicData.Player;
 			if ( player == nullptr || player == session->logicData.Player )
 			{
 				continue;
@@ -99,7 +99,7 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 
 	if ( session->logicData.Player == nullptr )
 	{
-		session->logicData.Player = std::make_shared<ServerObject>();
+		session->logicData.Player = new ServerObject();
 	}
 
 	std::mt19937 rand( ( UINT )::time( nullptr ) );

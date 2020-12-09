@@ -6,7 +6,7 @@ class Stage;
 
 struct LogicData
 {
-	std::shared_ptr<ServerObject> Player;
+	ServerObject* Player;
 	Stage* CurrentStage;
 };
 
