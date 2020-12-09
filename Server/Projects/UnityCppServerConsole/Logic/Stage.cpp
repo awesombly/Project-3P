@@ -21,7 +21,7 @@ void Stage::Erase( const Session* _session )
 {
 	if ( _session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Session is null." ) );
 		return;
 	}
 
@@ -43,7 +43,7 @@ void Stage::Erase( const ServerObject* _object )
 {
 	if ( _object == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object is null." ) );
+		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Object is null." ) );
 		return;
 	}
 

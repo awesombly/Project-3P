@@ -96,6 +96,7 @@ void SessionManager::EnterStage( Session* _session, const std::string& _stageId 
 	if ( _session->logicData.CurrentStage != nullptr )
 	{
 		_session->logicData.CurrentStage->Erase( _session );
+		_session->logicData.CurrentStage->Erase( _session->logicData.Player );
 	}
 
 	Stage* stage = stages[ _stageId ];
@@ -105,5 +106,10 @@ void SessionManager::EnterStage( Session* _session, const std::string& _stageId 
 	}
 
 	stage->Push( _session );
+	if ( _session->logicData.Player != nullptr )
+	{
+		stage->Push( _session->logicData.Player );
+	}
+	
 	_session->logicData.CurrentStage = stage;
 }

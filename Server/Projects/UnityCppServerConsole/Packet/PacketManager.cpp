@@ -146,6 +146,7 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 	if ( session->logicData.Player == nullptr )
 	{
 		session->logicData.Player = new ServerObject();
+		session->logicData.CurrentStage->Push( session->logicData.Player );
 	}
 
 	std::mt19937 rand( ( UINT )::time( nullptr ) );
