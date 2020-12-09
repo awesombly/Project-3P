@@ -2,9 +2,12 @@
 #include "../Network/Network.h"
 #include "../Packet/StreamPacket.h"
 
+class Stage;
+
 struct LogicData
 {
 	std::shared_ptr<ServerObject> Player;
+	Stage* CurrentStage;
 };
 
 class Session : public Network

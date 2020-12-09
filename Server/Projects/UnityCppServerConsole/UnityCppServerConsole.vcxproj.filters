@@ -19,6 +19,7 @@
     <ClCompile Include="Logic\Vector.cpp" />
     <ClCompile Include="Logic\Quaternion.cpp" />
     <ClCompile Include="Logic\ServerObject.cpp" />
+    <ClCompile Include="Logic\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
@@ -42,5 +43,6 @@
     <ClInclude Include="Logic\Vector.h" />
     <ClInclude Include="Logic\Quaternion.h" />
     <ClInclude Include="Logic\ServerObject.h" />
+    <ClInclude Include="Logic\Stage.h" />
   </ItemGroup>
 </Project>

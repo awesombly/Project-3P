@@ -115,6 +115,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Packet\Packet.cpp" />
     <ClCompile Include="Logic\Quaternion.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Logic\Stage.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
     <ClCompile Include="Session\SessionManager.cpp" />
     <ClCompile Include="Standard\Protocol.cpp" />
@@ -137,6 +138,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClInclude Include="Packet\Packet.h" />
     <ClInclude Include="Logic\Quaternion.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Logic\Stage.h" />
     <ClInclude Include="Standard\Log.h" />
     <ClInclude Include="Session\SessionManager.h" />
     <ClInclude Include="Packet\StreamPacket.h" />

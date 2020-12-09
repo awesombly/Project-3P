@@ -59,11 +59,13 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
+			std::string StageId;
 			Vector3 SpawnPosition;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
+				ar( CEREAL_NVP( StageId ) );
 				ar( CEREAL_NVP( SpawnPosition ) );
 			}
 		};

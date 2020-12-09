@@ -32,6 +32,7 @@ public class VillageScene : MonoBehaviour
     private void OnConnect()
     {
         Protocol.ToServer.EnterStage protocol;
+        protocol.StageId = gameObject.name;
         protocol.SpawnPosition = spawnPosition;
         Network.Instance.Send( protocol );
     }

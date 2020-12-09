@@ -1,7 +1,7 @@
 #pragma once
 #include "../Standard/Singleton.hpp"
 #include "../Synchronize/CriticalSection.h"
-#include "Session.h"
+#include "../Logic/Stage.h"
 
 class SessionManager : public Singleton<SessionManager>
 {
@@ -24,4 +24,6 @@ public:
 private:
 	std::unordered_map<SOCKET, Session*> sessions;
 	CriticalSection cs;
+	
+	std::unordered_map<std::string/*stageId*/, Stage*> stages;
 };
