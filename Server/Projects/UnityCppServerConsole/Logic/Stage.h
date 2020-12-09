@@ -18,6 +18,7 @@ public:
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
 
 	const std::string& GetId() const;
+	SessionContainer GetSessions() const;
 
 private:
 	std::string id;

@@ -4,7 +4,7 @@
 
 SessionManager::~SessionManager()
 {
-	std::unordered_map<SOCKET, Session*>::iterator pair( std::begin( sessions ) );
+	SessionContainer::iterator pair( std::begin( sessions ) );
 	while ( pair != std::end( sessions ) )
 	{
 		SafeDelete( pair->second );
@@ -24,7 +24,7 @@ Session* SessionManager::Find( const SOCKET& _socket ) const
 	return sessionIter->second;
 }
 
-std::unordered_map<SOCKET, Session*> SessionManager::GetSessions() const
+SessionContainer SessionManager::GetSessions() const
 {
 	return sessions;
 }

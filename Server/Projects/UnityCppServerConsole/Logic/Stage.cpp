@@ -64,3 +64,8 @@ const std::string& Stage::GetId() const
 {
 	return id;
 }
+
+SessionContainer Stage::GetSessions() const
+{
+	return sessions;
+}

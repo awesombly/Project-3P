@@ -43,9 +43,9 @@ void PacketManager::Push( const PACKET& _packet )
 
 void PacketManager::BindProtocols()
 {
-	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::Broadcast;
-	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::BroadCastExceptSelf;
-	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::BroadCastExceptSelf;
+	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::BroadcastToStage;
+	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
+	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::ReceiveEnterStage;
 }
@@ -118,9 +118,16 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 		return;
 	}
 
+	SessionManager::Instance().EnterStage( session, protocol.StageId );
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, "CurrentStage is null. socket = " + _packet.socket );
+		return;
+	}
+
 	// 기존 플레이어들 생성
 	{
-		const std::unordered_map<SOCKET, Session*> sessions = SessionManager::Instance().GetSessions();
+		const SessionContainer sessions = session->logicData.CurrentStage->GetSessions();
 		for ( auto pair : sessions )
 		{
 			ServerObject* player = pair.second->logicData.Player;
@@ -157,5 +164,5 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 	// 직렬화 처리가 또 필요하다.. Id 같은거로 구분해야할듯
 	createPlayer.IsLocal = false;
 	response.SetData( createPlayer );
-	SessionManager::Instance().BroadCastExceptSelf( response, session );
+	session->logicData.CurrentStage->BroadCastExceptSelf( response, session );
 }
