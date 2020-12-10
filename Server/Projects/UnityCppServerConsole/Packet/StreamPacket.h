@@ -13,7 +13,6 @@ public:
 
 private:
 	UPACKET* originPacket;
-	UPACKET packet;
 	byte recvBuffer[ RecvBufferMaxSize ];
 	u_int writePos;
 	u_int recvPos;
