@@ -17,6 +17,8 @@ public:
 	void BroadCast( const UPACKET& _packet ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
 
+	ServerObject* Find( SerialType serial ) const;
+
 	const std::string& GetId() const;
 	SessionContainer GetSessions() const;
 

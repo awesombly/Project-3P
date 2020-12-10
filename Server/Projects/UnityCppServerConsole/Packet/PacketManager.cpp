@@ -44,10 +44,10 @@ void PacketManager::Push( const PACKET& _packet )
 void PacketManager::BindProtocols()
 {
 	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::BroadcastToStage;
-	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
-	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
+	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::SyncTransform;
+	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::SyncInterpolation;
 
-	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::ReceiveEnterStage;
+	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::EnterStage;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -106,7 +106,63 @@ void PacketManager::BroadCastExceptSelfToStage( const PACKET& _packet )
 	session->logicData.CurrentStage->BroadCastExceptSelf( _packet.packet, session );
 }
 
-void PacketManager::ReceiveEnterStage( const PACKET& _packet )
+void PacketManager::SyncTransform( const PACKET& _packet )
+{
+	const Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		return;
+	}
+
+	Protocol::Both::SyncTransform protocol = _packet.packet.GetParsedData<Protocol::Both::SyncTransform>();
+	ServerObject* object = session->logicData.CurrentStage->Find( protocol.Player.Serial );
+	if ( object == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object is null." ) );
+		return;
+	}
+	object->Position = protocol.Player.Position;
+	object->Rotation = protocol.Player.Rotation;
+
+	session->logicData.CurrentStage->BroadCastExceptSelf( _packet.packet, session );
+}
+
+void PacketManager::SyncInterpolation( const PACKET& _packet )
+{
+	const Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		return;
+	}
+
+	if ( session->logicData.CurrentStage == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		return;
+	}
+
+	Protocol::Both::SyncInterpolation protocol = _packet.packet.GetParsedData<Protocol::Both::SyncInterpolation>();
+	ServerObject* object = session->logicData.CurrentStage->Find( protocol.Player.Serial );
+	if ( object == nullptr )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object is null." ) );
+		return;
+	}
+	object->Position = protocol.Player.Position;
+	object->Rotation = protocol.Player.Rotation;
+
+	session->logicData.CurrentStage->BroadCastExceptSelf( _packet.packet, session );
+}
+
+void PacketManager::EnterStage( const PACKET& _packet )
 {
 	Protocol::ToServer::EnterStage protocol = _packet.packet.GetParsedData<Protocol::ToServer::EnterStage>();
 	Log::Instance().Push( ELogType::Log, protocol.PacketName + " : " + _packet.packet.ToString() );
@@ -145,12 +201,11 @@ void PacketManager::ReceiveEnterStage( const PACKET& _packet )
 
 	if ( session->logicData.Player == nullptr )
 	{
-		session->logicData.Player = new ServerObject();
+		session->logicData.Player = new ServerObject( Protocol::GetNewSerial() );
 		session->logicData.CurrentStage->Push( session->logicData.Player );
 	}
 
 	std::mt19937 rand( ( UINT )::time( nullptr ) );
-	session->logicData.Player->Serial = Protocol::GetNewSerial();
 	session->logicData.Player->Position = { protocol.SpawnPosition.x + ( float )( rand() % 8 ), protocol.SpawnPosition.y, protocol.SpawnPosition.z + ( float )( rand() % 8 ) };
 	session->logicData.Player->Rotation = Quaternion::Identity;
 

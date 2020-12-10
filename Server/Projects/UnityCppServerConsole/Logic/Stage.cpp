@@ -60,6 +60,18 @@ void Stage::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session
 	SessionManager::BroadCastExceptSelf( _packet, _session, sessions );
 }
 
+ServerObject* Stage::Find( SerialType serial ) const
+{
+	auto findItr = objects.find( serial );
+	if ( findItr == objects.cend() )
+	{
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object not found." ) );
+		return nullptr;
+	}
+
+	return findItr->second;
+}
+
 const std::string& Stage::GetId() const
 {
 	return id;

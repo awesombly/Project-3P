@@ -23,7 +23,10 @@ private:
 	static void BroadCastExceptSelf( const PACKET& _packet );
 	static void BroadCastExceptSelfToStage( const PACKET& _packet );
 
-	static void ReceiveEnterStage( const PACKET& _packet );
+	/// 프로토콜 처리 부분은 별도로 분리하는게 좋을듯
+	static void SyncTransform( const PACKET& _packet );
+	static void SyncInterpolation( const PACKET& _packet );
+	static void EnterStage( const PACKET& _packet );
 
 private:
 	std::queue<PACKET> packets;

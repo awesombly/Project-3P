@@ -51,8 +51,34 @@ namespace Protocol
 	namespace Both
 	{
 		SIMPLE_PROTOCOL( ChatMessage );
-		SIMPLE_PROTOCOL( SyncTransform );
-		SIMPLE_PROTOCOL( SyncInterpolation );
+
+		struct SyncTransform : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			ServerObject Player;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Player ) );
+			}
+		};
+
+		struct SyncInterpolation : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			ServerObject Player;
+			Vector3 Velocity;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Player ) );
+				ar( CEREAL_NVP( Velocity ) );
+			}
+		};
 	}
 
 	namespace ToServer

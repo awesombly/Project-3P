@@ -22,6 +22,8 @@ namespace Protocol
 		return ( PacketType )hash;
 	}
 
+	PROTOCOL_BODY( Both, SyncTransform );
+	PROTOCOL_BODY( Both, SyncInterpolation );
 	PROTOCOL_BODY( ToServer, EnterStage );
 	PROTOCOL_BODY( FromServer, CreatePlayer );
 }
