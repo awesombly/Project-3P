@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VillageScene : MonoBehaviour
+public class SceneBase : MonoBehaviour
 {
     public GameObject localPlayerPrefab;
     public GameObject otherPlayerPrefab;
@@ -16,7 +16,7 @@ public class VillageScene : MonoBehaviour
 
     private string stageId;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         // position 접근이 메인 쓰레드에서만 돼서 임시조치
         spawnPosition = spawnTransform.position;
@@ -26,13 +26,13 @@ public class VillageScene : MonoBehaviour
         Network.Instance.OnBindProtocols += OnBindProtocols;
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         Network.Instance.OnConnect -= OnConnect;
         Network.Instance.OnBindProtocols -= OnBindProtocols;
     }
 
-    private void OnConnect()
+    protected virtual void OnConnect()
     {
         Protocol.ToServer.EnterStage protocol;
         protocol.StageId = stageId;
@@ -40,7 +40,7 @@ public class VillageScene : MonoBehaviour
         Network.Instance.Send( protocol );
     }
 
-    private void OnBindProtocols()
+    protected virtual void OnBindProtocols()
     {
         Network.Instance.AddBind( Protocol.Both.SyncTransform.PacketType, SyncTransform );
         Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
@@ -113,7 +113,7 @@ public class VillageScene : MonoBehaviour
         Actor player = instance.GetComponent<Actor>();
         if ( ReferenceEquals( player, null ) )
         {
-            Debug.LogError(  "is not player. Type = " + instance.GetType().Name );
+            Debug.LogError( "is not player. Type = " + instance.GetType().Name );
             return;
         }
 
