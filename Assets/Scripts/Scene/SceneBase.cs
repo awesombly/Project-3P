@@ -45,6 +45,7 @@ public class SceneBase : MonoBehaviour
         Network.Instance.AddBind( Protocol.Both.SyncTransform.PacketType, SyncTransform );
         Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
+        Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
     }
 
     private void SyncTransform( string _data )
@@ -128,5 +129,21 @@ public class SceneBase : MonoBehaviour
         {
             otherPlayers.Add( player );
         }
+    }
+
+    private void DestroyActor( string _data )
+    {
+        Protocol.FromServer.DestroyActor protocol = JsonUtility.FromJson<Protocol.FromServer.DestroyActor>( _data );
+        if ( !actors.ContainsKey( protocol.Serial ) )
+        {
+            Debug.LogError( "Actor not found. Serial = " + protocol.Serial );
+            return;
+        }
+
+        Actor actor = actors[ protocol.Serial ];
+        otherPlayers.Remove( actor );
+        actors.Remove( protocol.Serial );
+
+        Destroy( actor.gameObject );
     }
 }

@@ -115,5 +115,18 @@ namespace Protocol
 				ar( CEREAL_NVP( IsLocal ) );
 			}
 		};
+
+		struct DestroyActor : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			SerialType Serial;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Serial ) );
+			}
+		};
 	}
 }
