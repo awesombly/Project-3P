@@ -51,7 +51,7 @@ public class CFX_Demo_New : MonoBehaviour
 		defaultCamPosition = Camera.main.transform.position;
 		defaultCamRotation = Camera.main.transform.rotation;
 		
-		StartCoroutine("CheckForDeletedParticles");
+		StartCoroutine( CheckForDeletedParticles() );
 		
 		UpdateUI();
 	}
