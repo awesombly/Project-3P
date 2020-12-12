@@ -11,13 +11,13 @@ public:
 	void Push( Session* _session );
 	void Erase( const Session* _session );
 
-	void Push( ServerObject* _object );
-	void Erase( const ServerObject* _object );
+	void Push( ServerActor* _actor );
+	void Erase( const ServerActor* _actor );
 
 	void BroadCast( const UPACKET& _packet ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
 
-	ServerObject* Find( SerialType serial ) const;
+	ServerActor* Find( SerialType serial ) const;
 
 	const std::string& GetId() const;
 	SessionContainer GetSessions() const;
@@ -26,5 +26,5 @@ private:
 	std::string id;
 
 	SessionContainer sessions;
-	std::unordered_map<SerialType, ServerObject*> objects;
+	std::unordered_map<SerialType, ServerActor*> actors;
 };

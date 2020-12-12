@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 // 서버/클라 통신용
 [Serializable]
-public struct ServerObject
+public struct ServerActor
 {
     public uint Serial;
     public Vector3 Position;
@@ -36,7 +36,7 @@ namespace Protocol
 
         public struct SyncTransform : IProtocol
         {
-            public ServerObject Player;
+            public ServerActor Actor;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
@@ -47,7 +47,7 @@ namespace Protocol
 
         public struct SyncInterpolation : IProtocol
         {
-            public ServerObject Player;
+            public ServerActor Actor;
             public Vector3 Velocity;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
@@ -77,7 +77,7 @@ namespace Protocol
     {
         public struct CreatePlayer : IProtocol
         {
-            public ServerObject Player;
+            public ServerActor Player;
             public bool IsLocal;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );

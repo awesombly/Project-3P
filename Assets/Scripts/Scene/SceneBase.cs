@@ -52,42 +52,42 @@ public class SceneBase : MonoBehaviour
     {
         Protocol.Both.SyncTransform protocol = JsonUtility.FromJson<Protocol.Both.SyncTransform>( _data );
 
-        if ( !actors.ContainsKey( protocol.Player.Serial ) )
+        if ( !actors.ContainsKey( protocol.Actor.Serial ) )
         {
-            Debug.LogWarning( "actor not Found. Serial = " + protocol.Player.Serial );
+            Debug.LogWarning( "actor not Found. Serial = " + protocol.Actor.Serial );
             return;
         }
 
-        Actor actor = actors[ protocol.Player.Serial ];
+        Actor actor = actors[ protocol.Actor.Serial ];
         if ( ReferenceEquals( actor, null ) )
         {
-            Debug.LogError( "actor is null. Serial = " + protocol.Player.Serial );
+            Debug.LogError( "actor is null. Serial = " + protocol.Actor.Serial );
             return;
         }
 
-        actor.rigidBody.position = protocol.Player.Position;
-        actor.rigidBody.rotation = protocol.Player.Rotation;
+        actor.rigidBody.position = protocol.Actor.Position;
+        actor.rigidBody.rotation = protocol.Actor.Rotation;
     }
 
     private void SyncInterpolation( string _data )
     {
         Protocol.Both.SyncInterpolation protocol = JsonUtility.FromJson<Protocol.Both.SyncInterpolation>( _data );
 
-        if ( !actors.ContainsKey( protocol.Player.Serial ) )
+        if ( !actors.ContainsKey( protocol.Actor.Serial ) )
         {
-            Debug.LogWarning( "actor not Found. Serial = " + protocol.Player.Serial );
+            Debug.LogWarning( "actor not Found. Serial = " + protocol.Actor.Serial );
             return;
         }
 
-        Actor actor = actors[ protocol.Player.Serial ];
+        Actor actor = actors[ protocol.Actor.Serial ];
         if ( ReferenceEquals( actor, null ) )
         {
-            Debug.LogError( "actor is null. Serial = " + protocol.Player.Serial );
+            Debug.LogError( "actor is null. Serial = " + protocol.Actor.Serial );
             return;
         }
 
-        actor.rigidBody.MovePosition( protocol.Player.Position );
-        actor.rigidBody.MoveRotation( protocol.Player.Rotation );
+        actor.rigidBody.MovePosition( protocol.Actor.Position );
+        actor.rigidBody.MoveRotation( protocol.Actor.Rotation );
         actor.syncVelocity = protocol.Velocity;
     }
 

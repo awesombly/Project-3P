@@ -6,7 +6,7 @@
 
 using SerialType = u_int;
 
-struct ServerObject
+struct ServerActor
 {
 public:
 	SerialType Serial;
@@ -14,9 +14,9 @@ public:
 	Quaternion Rotation;
 
 public:
-	ServerObject() = default;
-	ServerObject( SerialType _serial );
-	ServerObject( SerialType _serial, Vector3 _position, Quaternion _rotation );
+	ServerActor() = default;
+	ServerActor( SerialType _serial );
+	ServerActor( SerialType _serial, Vector3 _position, Quaternion _rotation );
 
 public:
 	template <class Archive>

@@ -766,9 +766,9 @@ public class FirstPersonAIO : Actor
         if ( isStopped || velocityInterval > SyncMovement.NeedInterval )
         {
             Protocol.Both.SyncInterpolation protocol;
-            protocol.Player.Serial = serial;
-            protocol.Player.Position = transform.position;
-            protocol.Player.Rotation = transform.rotation;
+            protocol.Actor.Serial = serial;
+            protocol.Actor.Position = transform.position;
+            protocol.Actor.Rotation = transform.rotation;
             protocol.Velocity = rigidBody.velocity;
 
             Network.Instance.Send( protocol );

@@ -122,14 +122,14 @@ void PacketManager::SyncTransform( const PACKET& _packet )
 	}
 
 	Protocol::Both::SyncTransform protocol = _packet.packet.GetParsedData<Protocol::Both::SyncTransform>();
-	ServerObject* object = session->logicData.CurrentStage->Find( protocol.Player.Serial );
-	if ( object == nullptr )
+	ServerActor* actor = session->logicData.CurrentStage->Find( protocol.Actor.Serial );
+	if ( actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object is null." ) );
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor is null." ) );
 		return;
 	}
-	object->Position = protocol.Player.Position;
-	object->Rotation = protocol.Player.Rotation;
+	actor->Position = protocol.Actor.Position;
+	actor->Rotation = protocol.Actor.Rotation;
 
 	session->logicData.CurrentStage->BroadCastExceptSelf( _packet.packet, session );
 }
@@ -150,14 +150,14 @@ void PacketManager::SyncInterpolation( const PACKET& _packet )
 	}
 
 	Protocol::Both::SyncInterpolation protocol = _packet.packet.GetParsedData<Protocol::Both::SyncInterpolation>();
-	ServerObject* object = session->logicData.CurrentStage->Find( protocol.Player.Serial );
-	if ( object == nullptr )
+	ServerActor* actor = session->logicData.CurrentStage->Find( protocol.Actor.Serial );
+	if ( actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object is null." ) );
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor is null." ) );
 		return;
 	}
-	object->Position = protocol.Player.Position;
-	object->Rotation = protocol.Player.Rotation;
+	actor->Position = protocol.Actor.Position;
+	actor->Rotation = protocol.Actor.Rotation;
 
 	session->logicData.CurrentStage->BroadCastExceptSelf( _packet.packet, session );
 }
@@ -186,7 +186,7 @@ void PacketManager::EnterStage( const PACKET& _packet )
 		const SessionContainer sessions = session->logicData.CurrentStage->GetSessions();
 		for ( auto pair : sessions )
 		{
-			ServerObject* player = pair.second->logicData.Player;
+			ServerActor* player = pair.second->logicData.Player;
 			if ( player == nullptr || player == session->logicData.Player )
 			{
 				continue;
@@ -201,7 +201,7 @@ void PacketManager::EnterStage( const PACKET& _packet )
 
 	if ( session->logicData.Player == nullptr )
 	{
-		session->logicData.Player = new ServerObject( Protocol::GetNewSerial() );
+		session->logicData.Player = new ServerActor( Protocol::GetNewSerial() );
 		session->logicData.CurrentStage->Push( session->logicData.Player );
 	}
 

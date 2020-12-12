@@ -28,26 +28,26 @@ void Stage::Erase( const Session* _session )
 	sessions.erase( _session->GetSocket() );
 }
 
-void Stage::Push( ServerObject* _object )
+void Stage::Push( ServerActor* _actor )
 {
-	if ( _object == nullptr )
+	if ( _actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object is null." ) );
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor is null." ) );
 		return;
 	}
 
-	objects[ _object->Serial ] = _object;
+	actors[ _actor->Serial ] = _actor;
 }
 
-void Stage::Erase( const ServerObject* _object )
+void Stage::Erase( const ServerActor* _actor )
 {
-	if ( _object == nullptr )
+	if ( _actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Object is null." ) );
+		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Actor is null." ) );
 		return;
 	}
 
-	objects.erase( _object->Serial );
+	actors.erase( _actor->Serial );
 }
 
 void Stage::BroadCast( const UPACKET& _packet ) const
@@ -60,12 +60,12 @@ void Stage::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session
 	SessionManager::BroadCastExceptSelf( _packet, _session, sessions );
 }
 
-ServerObject* Stage::Find( SerialType serial ) const
+ServerActor* Stage::Find( SerialType serial ) const
 {
-	auto findItr = objects.find( serial );
-	if ( findItr == objects.cend() )
+	auto findItr = actors.find( serial );
+	if ( findItr == actors.cend() )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Object not found." ) );
+		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor not found." ) );
 		return nullptr;
 	}
 

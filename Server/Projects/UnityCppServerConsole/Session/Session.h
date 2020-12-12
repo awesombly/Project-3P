@@ -6,7 +6,7 @@ class Stage;
 
 struct LogicData
 {
-	ServerObject* Player;
+	ServerActor* Player;
 	Stage* CurrentStage;
 };
 

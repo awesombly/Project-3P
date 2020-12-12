@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Header.h"
-#include "../Logic/ServerObject.h"
+#include "../Logic/ServerActor.h"
 // 각 타입 serialize시 필요
 #include <cereal/types/array.hpp>
 #include <cereal/types/atomic.hpp>
@@ -56,12 +56,12 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			ServerObject Player;
+			ServerActor Actor;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
-				ar( CEREAL_NVP( Player ) );
+				ar( CEREAL_NVP( Actor ) );
 			}
 		};
 
@@ -69,13 +69,13 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			ServerObject Player;
+			ServerActor Actor;
 			Vector3 Velocity;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
-				ar( CEREAL_NVP( Player ) );
+				ar( CEREAL_NVP( Actor ) );
 				ar( CEREAL_NVP( Velocity ) );
 			}
 		};
@@ -105,7 +105,7 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			ServerObject Player;
+			ServerActor Player;
 			bool IsLocal;
 			
 			template <class Archive>
