@@ -15,6 +15,7 @@ enum class ELogType : char
 	Warning = 1,
 	Error = 2,
 	Exception = 3,
+	EndLine = '\n',
 };
 
 class Log : public Singleton<Log>
@@ -25,9 +26,18 @@ public:
 
 public:
 	bool Initialize();
+
 	void Push();
 	void Push( const int _errorCode );
 	void Push( ELogType _type, const std::string& _data );
+
+	// Ex) Log::Instance() << ELogType::Log << "some logs" << ELogType::EndLine;
+	// 한 문장을 입력하고 EndLine을 꼭 붙여주세요.
+	const Log& operator << ( ELogType _type );
+	const Log& operator << ( const std::string& _data );
+	const Log& operator << ( const char* _data );
+
+	static const std::string& GetType( ELogType _type );
 
 private:
 	void PrintText();
@@ -45,7 +55,7 @@ private:
 
 private:
 	OStream file;
-	std::queue<LogData> texts;
+	std::queue<std::string> texts;
 	std::condition_variable cv;
 	std::mutex textsMutex;
 	std::map<ELogType, std::string> types;

@@ -1,5 +1,6 @@
 #include "OStream.h"
 #include "../Standard/Log.h"
+#include "../Time/Timer.h"
 
 OStream::~OStream()
 {
@@ -39,7 +40,39 @@ void OStream::Write( const std::string& _data )
 		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Data is Empty or Logfile Open Failed" ) );
 	}
 
-	outStream << _data << std::endl;;
+	if ( _data.compare( Log::GetType( ELogType::EndLine ) ) )
+	{
+		datas.push( _data );
+
+		if ( !( _data.back() == '\n' ) )
+		{
+			return;
+		}
+	}
+
+	if ( datas.empty() )
+	{
+		return;
+	}
+
+	std::string streamData;
+	std::string pushData = datas.front();
+	while ( pushData.compare( Log::GetType( ELogType::EndLine ) ) )
+	{
+		streamData += pushData;
+		datas.pop();
+
+		if ( datas.empty() )
+		{
+			break;
+		}
+
+		pushData = datas.front();
+	}
+
+	const std::string& date = Timer::Instance().GetCurrentDateString();
+
+	outStream << date << streamData;
 }
 
 bool OStream::IsOpen() const

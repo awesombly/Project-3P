@@ -17,4 +17,5 @@ public:
 
 private:
 	std::ofstream outStream;
+	std::queue<std::string> datas;
 };

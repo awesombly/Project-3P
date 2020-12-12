@@ -9,32 +9,13 @@ Log::Log()
 	types.insert( std::make_pair( ELogType::Log, std::string( "[Log]" ) ) );
 	types.insert( std::make_pair( ELogType::Warning, std::string( "[Warning]" ) ) );
 	types.insert( std::make_pair( ELogType::Error, std::string( "[Error]" ) ) );
-	types.insert( std::make_pair( ELogType::Error, std::string( "[Exception]" ) ) );
+	types.insert( std::make_pair( ELogType::Exception, std::string( "[Exception]" ) ) );
+	types.insert( std::make_pair( ELogType::EndLine, std::string( "\n" ) ) );
 }
 
 bool Log::Initialize()
 {
 	return file.Open( PATH::LogPath + Timer::Instance().GetCurrentDateString( true ).c_str() + EXT::Text );
-}
-
-void Log::PrintText()
-{
-	while ( true )
-	{
-		std::unique_lock<std::mutex> lock( textsMutex );
-		cv.wait( lock, [&] () { return !texts.empty(); } );
-
-		LogData& data = texts.front();
-		const std::string& date = Timer::Instance().GetCurrentDateString();
-		std::cout << data.text.c_str() << std::endl;
-		if ( file.IsOpen() )
-		{
-			file.Write( types[data.type] + date + data.text );
-		}
-
-		texts.pop();
-		::Sleep( 1 );
-	}
 }
 
 void Log::Push()
@@ -100,8 +81,65 @@ void Log::Push( const int _errorCode )
 void Log::Push( ELogType _type, const std::string& _data )
 {
 	std::unique_lock<std::mutex> lock( textsMutex );
-	texts.push( LogData( _type, _data ) );
+	texts.push( types[_type] );
+	texts.push( _data + "\n"_s );
 	lock.unlock();
 
 	cv.notify_one();
+}
+
+const Log& Log::operator << ( ELogType _type )
+{
+	std::unique_lock<std::mutex> lock( textsMutex );
+	texts.push( types[_type] );
+	lock.unlock();
+
+	if ( _type == ELogType::EndLine )
+	{
+		cv.notify_one();
+	}
+
+	return *this;
+}
+
+const Log& Log::operator << ( const std::string& _data )
+{
+	std::unique_lock<std::mutex> lock( textsMutex );
+	texts.push( _data );
+	lock.unlock();
+
+	return *this;
+}
+
+const Log& Log::operator << ( const char* _data )
+{
+	std::unique_lock<std::mutex> lock( textsMutex );
+	texts.push( _data );
+	lock.unlock();
+
+	return *this;
+}
+
+const std::string& Log::GetType( ELogType _type )
+{
+	return Log::Instance().types[_type];
+}
+
+void Log::PrintText()
+{
+	while ( true )
+	{
+		std::unique_lock<std::mutex> lock( textsMutex );
+		cv.wait( lock, [&] () { return !texts.empty(); } );
+
+		std::string& data = texts.front();
+		std::cout << data.c_str();
+		if ( file.IsOpen() )
+		{
+			file.Write( data );
+		}
+
+		texts.pop();
+		::Sleep( 1 );
+	}
 }
