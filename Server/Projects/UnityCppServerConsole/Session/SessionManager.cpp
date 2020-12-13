@@ -55,7 +55,6 @@ void SessionManager::BroadCast( const UPACKET& _packet, const SessionContainer& 
 	for ( const std::pair<SOCKET, Session*>& pair : _sessions )
 	{
 		Session* session = pair.second;
-		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
 		session->Send( _packet );
 	}
 }
@@ -70,7 +69,6 @@ void SessionManager::BroadCastExceptSelf( const UPACKET& _packet, const Session*
 			continue;
 		}
 
-		Log::Instance().Push( ELogType::Log, LOGFUNC( "Send From Session : "_s + session->GetAddressString() + " : " + session->GetPortString() ) );
 		session->Send( _packet );
 	}
 }
