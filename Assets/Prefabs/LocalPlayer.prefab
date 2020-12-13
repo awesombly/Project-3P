@@ -260,8 +260,9 @@ GameObject:
   - component: {fileID: 54587624234064098}
   - component: {fileID: 136239539305442568}
   - component: {fileID: 114051214696948948}
+  - component: {fileID: -3782142987958112316}
   m_Layer: 0
-  m_Name: FirstPerson
+  m_Name: LocalPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -421,10 +422,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf1a5ad4f9ffb154ca7813fdad11017a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serial: 0
-  isLocal: 0
-  syncVelocity: {x: 0, y: 0, z: 0}
-  rigidBody: {fileID: 0}
   controllerPauseState: 0
   enableCameraMovement: 1
   mouseInputInversion: 0
@@ -553,6 +550,22 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f998ace3fc86c2c4488fcaf52fed8fe4, type: 3}
     - {fileID: 8300000, guid: 6f68bc2e1807ff0478d37ee6f1c6c29c, type: 3}
     - {fileID: 8300000, guid: f268cfd457dd6124c87c112ab143aa1f, type: 3}
+--- !u!114 &-3782142987958112316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743903104223250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6bf797ff084979428a4af1cf1125d7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serial: 0
+  isLocal: 0
+  syncVelocity: {x: 0, y: 0, z: 0}
+  rigidBody: {fileID: 0}
 --- !u!1001 &1194495763047191971
 PrefabInstance:
   m_ObjectHideFlags: 0

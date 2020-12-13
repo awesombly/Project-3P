@@ -11,16 +11,8 @@ using System.Net;
 
 [RequireComponent( typeof( CapsuleCollider ) ), RequireComponent( typeof( Rigidbody ) ), AddComponentMenu( "First Person AIO" )]
 
-public class FirstPersonAIO : Actor
+public class FirstPersonAIO : MonoBehaviour
 {
-    private struct SyncMovement
-    {
-        public const float NeedInterval = 0.1f;
-        public Vector3 PrevVelocity;
-        public float PrevSqrMagnitude;
-    }
-    private SyncMovement syncMovement;
-
     #region Variables
 
     #region Input Settings
@@ -211,12 +203,12 @@ public class FirstPersonAIO : Actor
 
     #endregion
 
+    private Rigidbody rigidBody;
+
     #endregion
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
 
@@ -312,10 +304,8 @@ public class FirstPersonAIO : Actor
         #endregion
     }
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
-
         #region Look Settings - Update
 
         if ( enableCameraMovement && !controllerPauseState )
@@ -760,21 +750,6 @@ public class FirstPersonAIO : Actor
             advanced.isTouchingFlat = false;
         }
         #endregion
-
-        float velocityInterval = Vector3.Distance( rigidBody.velocity, syncMovement.PrevVelocity );
-        bool isStopped = ( rigidBody.velocity.sqrMagnitude < syncMovement.PrevSqrMagnitude && rigidBody.velocity.sqrMagnitude < float.Epsilon );
-        if ( isStopped || velocityInterval > SyncMovement.NeedInterval )
-        {
-            Protocol.Both.SyncInterpolation protocol;
-            protocol.Actor.Serial = serial;
-            protocol.Actor.Position = transform.position;
-            protocol.Actor.Rotation = transform.rotation;
-            protocol.Velocity = rigidBody.velocity;
-
-            Network.Instance.Send( protocol );
-        }
-        syncMovement.PrevVelocity = rigidBody.velocity;
-        syncMovement.PrevSqrMagnitude = rigidBody.velocity.sqrMagnitude;
     }
 
 

@@ -16,11 +16,11 @@ public class Actor : MonoBehaviour
 
     protected virtual void Awake()
     {
-        isLocal = true;
+        isLocal = true; // 테스트용
         rigidBody = GetComponent<Rigidbody>();
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         if ( !isLocal )
         {
