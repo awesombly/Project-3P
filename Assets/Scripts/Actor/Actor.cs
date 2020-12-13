@@ -7,7 +7,7 @@ public class Actor : MonoBehaviour
     [HideInInspector]
     public uint serial;
     [HideInInspector]
-    public bool isLocal = true;
+    public bool isLocal;
     [HideInInspector]
     public Vector3 syncVelocity;
 
@@ -16,6 +16,7 @@ public class Actor : MonoBehaviour
 
     protected virtual void Awake()
     {
+        isLocal = true;
         rigidBody = GetComponent<Rigidbody>();
     }
 
