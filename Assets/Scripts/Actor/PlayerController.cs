@@ -39,8 +39,7 @@ public class PlayerController : Actor
         }
 
         float velocityInterval = Vector3.Distance( rigidBody.velocity, syncMovement.PrevVelocity );
-        bool isStopped = ( rigidBody.velocity.sqrMagnitude < syncMovement.PrevSqrMagnitude && rigidBody.velocity.sqrMagnitude < float.Epsilon );
-        if ( isStopped || velocityInterval > SyncMovement.NeedInterval )
+        if ( velocityInterval > SyncMovement.NeedInterval )
         {
             Protocol.Both.SyncInterpolation protocol;
             protocol.Actor.Serial = serial;
@@ -52,6 +51,8 @@ public class PlayerController : Actor
         }
         syncMovement.PrevVelocity = rigidBody.velocity;
         syncMovement.PrevSqrMagnitude = rigidBody.velocity.sqrMagnitude;
+
+        /// TODO : 정지중일때 방향전환시 동기화
     }
 
     private void UpdateInputParameters()
