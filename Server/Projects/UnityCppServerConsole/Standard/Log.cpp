@@ -121,9 +121,22 @@ Log& Log::operator << ( ELogType _type )
 
 	if ( _type == ELogType::EndLine )
 	{
-		std::lock_guard<std::mutex> lock( textsMutex );
-		texts.emplace( logData.substr( 0, curLogPos ) );
+		size_t writePos = 0;
+		if ( file.IsOpen() && logData[ 0 ] == '#' )
+		{
+			file.Write( std::move( logData.substr( 0, curLogPos ) ) );
+			writePos = logData.find_first_of( '#', 1 ) + ( size_t )1;
+			if ( writePos == std::string::npos )
+			{
+				curLogPos = 0;
+				return *this;
+			}
+		}
 
+		{
+			std::lock_guard<std::mutex> lock( textsMutex );
+			texts.emplace( logData.substr( writePos, curLogPos ) );
+		}
 		curLogPos = 0;
 		cv.notify_one();
 	}
@@ -173,10 +186,10 @@ void Log::PrintText()
 
 		std::string& data = texts.front();
 		logStream << data.c_str();
-		if ( file.IsOpen() )
-		{
-			file.Write( data );
-		}
+		//if ( file.IsOpen() )
+		//{
+		//	file.Write( data );
+		//}
 
 		texts.pop();
 		::Sleep( 1 );

@@ -4,7 +4,7 @@
 class OStream
 {
 public:
-	OStream() = default;
+	OStream();
 	virtual ~OStream();
 
 public:
@@ -17,5 +17,6 @@ public:
 
 private:
 	std::ofstream outStream;
-	std::queue<std::string> datas;
+	std::string writeData;
+	size_t writePos;
 };

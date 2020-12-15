@@ -2,6 +2,11 @@
 #include "../Standard/Log.h"
 #include "../Time/Timer.h"
 
+OStream::OStream() : writePos( 0 )
+{
+	writeData.resize( LogDataMaxSize );
+}
+
 OStream::~OStream()
 {
 	Close();
@@ -40,39 +45,20 @@ void OStream::Write( const std::string& _data )
 		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Data is Empty or Logfile Open Failed" ) );
 	}
 
-	if ( _data.compare( Log::GetType( ELogType::EndLine ) ) )
+	std::string date = Timer::Instance().GetCurrentDateString();
+	if ( LogDataMaxSize - writePos < date.size() + _data.size() )
 	{
-		datas.push( _data );
-
-		if ( !( _data.back() == '\n' ) )
-		{
-			return;
-		}
+		// 자르기 작업
 	}
 
-	if ( datas.empty() )
-	{
-		return;
-	}
+	std::copy( std::begin( date ), std::end( date ), &writeData[ writePos ] );
+	writePos += date.size();
 
-	std::string streamData;
-	std::string pushData = datas.front();
-	while ( pushData.compare( Log::GetType( ELogType::EndLine ) ) )
-	{
-		streamData += pushData;
-		datas.pop();
+	std::copy( std::begin( _data ), std::end( _data ), &writeData[ writePos ] );
+	writePos += _data.size();
 
-		if ( datas.empty() )
-		{
-			break;
-		}
-
-		pushData = datas.front();
-	}
-
-	const std::string& date = Timer::Instance().GetCurrentDateString();
-
-	outStream << date << streamData;
+	outStream << writeData;
+	writePos = 0;
 }
 
 bool OStream::IsOpen() const

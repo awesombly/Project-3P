@@ -43,6 +43,8 @@ void Acceptor::WaitForClients() const
 // 家南 技何 汲沥
 bool Acceptor::SetSocketOption() const
 {
+	LOG << "Socket Option : TCP NoDelay" << ELogType::EndLine;
+
 	int optionValue = 1;
 	if ( ::setsockopt( socket, SOL_SOCKET, SO_REUSEADDR, ( char* )&optionValue, sizeof( optionValue ) ) == SOCKET_ERROR )
 	{

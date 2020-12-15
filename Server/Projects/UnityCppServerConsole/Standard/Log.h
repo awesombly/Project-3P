@@ -4,11 +4,10 @@
 
 #define LOGFUNC( _log ) __FUNCTION__ + " : "_s + _log
 
-#define LOG       Log::Instance()
-#define LOGEX     Log::Instance() << ELogType::Log       << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
-#define WARNING   Log::Instance() << ELogType::Warning   << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
-#define ERROR     Log::Instance() << ELogType::Error     << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
-#define EXCEPTION Log::Instance() << ELogType::Exception << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
+#define LOG			  Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Log      
+#define LOG_WARNING   Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Warning  
+#define LOG_ERROR     Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Error    
+#define LOG_EXCEPTION Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Exception
 
 // 로그 단계
 // Log : 대부분의 로그
