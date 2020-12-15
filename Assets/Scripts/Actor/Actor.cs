@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour
 {
-    [HideInInspector]
-    public uint serial;
-    [HideInInspector]
-    public bool isLocal;
-    [HideInInspector]
-    public Vector3 syncVelocity;
+    internal uint serial;
+    internal bool isLocal;
+    internal Vector3 syncVelocity;
 
-    [HideInInspector]
-    public Rigidbody rigidBody;
+    internal Rigidbody rigidBody;
 
     protected virtual void Awake()
     {

@@ -12,10 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c13c4e94bd290f4fadf647b00854af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serial: 0
-  isLocal: 0
-  syncVelocity: {x: 0, y: 0, z: 0}
-  rigidBody: {fileID: 0}
 --- !u!1001 &7404518001631228649
 PrefabInstance:
   m_ObjectHideFlags: 0
