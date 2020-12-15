@@ -4,11 +4,17 @@
 
 #define LOGFUNC( _log ) __FUNCTION__ + " : "_s + _log
 
+#define LOG       Log::Instance()
+#define LOGEX     Log::Instance() << ELogType::Log       << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
+#define WARNING   Log::Instance() << ELogType::Warning   << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
+#define ERROR     Log::Instance() << ELogType::Error     << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
+#define EXCEPTION Log::Instance() << ELogType::Exception << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " ) "
+
 // 로그 단계
-// Log : 대부분 생각하는 로그
-// Error : 로직상 발생하면 안되지만 진행시키는 것 ( outofrange, null ... )
+// Log : 대부분의 로그
 // Warning : 바꾸면 좋은 것
-// exception : 서버의 기능을 못할 정도의 에러
+// Error : 로직상 발생하면 안되지만 진행시키는 것 ( outofrange, null ... )
+// Exception : 서버의 기능을 못할 정도의 에러
 enum class ELogType : char
 {
 	Log = 0,
