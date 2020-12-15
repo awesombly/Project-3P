@@ -22,7 +22,7 @@ bool OStream::Open( const std::string& _path )
 	outStream.open( _path, std::ios::out | std::ios::trunc );
 	if ( !outStream.is_open() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Failed To Open Logfile"_s ) );
+		LOG_WARNING << "Failed To Open Logfile" << ELogType::EndLine;
 
 		return false;
 	}
@@ -42,7 +42,7 @@ void OStream::Write( const std::string& _data )
 {
 	if ( _data.empty() || !outStream.is_open() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Data is Empty or Logfile Open Failed" ) );
+		LOG_WARNING << "Data is Empty or Logfile Open Failed" << ELogType::EndLine;
 	}
 
 	std::string date = Timer::Instance().GetCurrentDateString();

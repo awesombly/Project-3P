@@ -24,7 +24,7 @@ void PacketManager::WorkPacket()
 		auto findItr = protocols.find( packet->packet.type );
 		if ( findItr == protocols.cend() || findItr->second == nullptr )
 		{
-			Log::Instance().Push( ELogType::Warning, LOGFUNC( "Packet Not Bind : " + ToAnsi( ( char* )packet->packet.data ) ) );
+			LOG_WARNING << "Packet Not Bind : " << ToAnsi( ( char* )packet->packet.data ) << ELogType::EndLine;
 			packets.pop();
 			continue;
 		}
@@ -52,24 +52,24 @@ void PacketManager::BindProtocols()
 
 void PacketManager::Broadcast( const PACKET& _packet )
 {
-	Log::Instance().Push( ELogType::Log, "Broadcast : " + _packet.packet.ToString() );
+	LOG << "Broadcast : " << _packet.packet.ToString() << ELogType::EndLine;
 	SessionManager::Instance().BroadCast( _packet.packet );
 }
 
 void PacketManager::BroadcastToStage( const PACKET& _packet )
 {
-	Log::Instance().Push( ELogType::Log, "BroadcastToStage : " + _packet.packet.ToString() );
+	LOG <<"BroadcastToStage : " << _packet.packet.ToString() << ELogType::EndLine;
 
 	const Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		LOG_ERROR << "Session is null." << ELogType::EndLine;
 		return;
 	}
 
 	if ( session->logicData.CurrentStage == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		LOG_ERROR << "Stage is null." << ELogType::EndLine;
 		return;
 	}
 
@@ -81,7 +81,7 @@ void PacketManager::BroadCastExceptSelf( const PACKET& _packet )
 	const Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, "Session is null. socket = " + _packet.socket );
+		LOG_ERROR << "Session is null. socket = " << _packet.socket << ELogType::EndLine;
 		return;
 	}
 
@@ -93,13 +93,13 @@ void PacketManager::BroadCastExceptSelfToStage( const PACKET& _packet )
 	const Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		LOG_ERROR << "Session is null" << ELogType::EndLine;
 		return;
 	}
 
 	if ( session->logicData.CurrentStage == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		LOG_ERROR << "Stage is null" << ELogType::EndLine;
 		return;
 	}
 
@@ -111,13 +111,13 @@ void PacketManager::SyncTransform( const PACKET& _packet )
 	const Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		LOG_ERROR << "Session is null" << ELogType::EndLine;
 		return;
 	}
 
 	if ( session->logicData.CurrentStage == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		LOG_ERROR << "Stage is null" << ELogType::EndLine;
 		return;
 	}
 
@@ -125,7 +125,7 @@ void PacketManager::SyncTransform( const PACKET& _packet )
 	ServerActor* actor = session->logicData.CurrentStage->Find( protocol.Actor.Serial );
 	if ( actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor is null." ) );
+		LOG_ERROR << "Actor is null" << ELogType::EndLine;
 		return;
 	}
 	actor->Position = protocol.Actor.Position;
@@ -139,13 +139,13 @@ void PacketManager::SyncInterpolation( const PACKET& _packet )
 	const Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		LOG_ERROR << "Session is null" << ELogType::EndLine;
 		return;
 	}
 
 	if ( session->logicData.CurrentStage == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Stage is null." ) );
+		LOG_ERROR << "Stage is null" << ELogType::EndLine;
 		return;
 	}
 
@@ -153,7 +153,7 @@ void PacketManager::SyncInterpolation( const PACKET& _packet )
 	ServerActor* actor = session->logicData.CurrentStage->Find( protocol.Actor.Serial );
 	if ( actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor is null." ) );
+		LOG_ERROR << "Actor is null" << ELogType::EndLine;
 		return;
 	}
 	actor->Position = protocol.Actor.Position;
@@ -165,19 +165,19 @@ void PacketManager::SyncInterpolation( const PACKET& _packet )
 void PacketManager::EnterStage( const PACKET& _packet )
 {
 	Protocol::ToServer::EnterStage protocol = _packet.packet.GetParsedData<Protocol::ToServer::EnterStage>();
-	Log::Instance().Push( ELogType::Log, protocol.PacketName + " : " + _packet.packet.ToString() );
+	LOG << protocol.PacketName << " : " << _packet.packet.ToString() << ELogType::EndLine;
 
 	Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, "Session is null. socket = " + _packet.socket );
+		LOG_ERROR << "Session is null. socket = "<< _packet.socket << ELogType::EndLine;
 		return;
 	}
 
 	SessionManager::Instance().EnterStage( session, protocol.StageId );
 	if ( session->logicData.CurrentStage == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, "CurrentStage is null. socket = " + _packet.socket );
+		LOG_ERROR << "CurrentStage is null. socket = " << _packet.socket << ELogType::EndLine;
 		return;
 	}
 

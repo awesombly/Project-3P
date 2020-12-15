@@ -31,7 +31,7 @@ SessionContainer SessionManager::GetSessions() const
 
 void SessionManager::Push( Session* _session )
 {
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Enter Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() ) );
+	LOG << "Enter Session IP( Port ) : " << _session->GetAddressString() << "( " << _session->GetPortString() << " )" << ELogType::EndLine;
 	
 	cs.Lock();
 	sessions[_session->GetSocket()] = _session;
@@ -40,7 +40,7 @@ void SessionManager::Push( Session* _session )
 
 void SessionManager::Erase( Session* _session )
 {
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Leave Session : "_s + _session->GetAddressString() + " : "_s + _session->GetPortString() ) );
+	LOG << "Leave Session IP( Port ) : " << _session->GetAddressString() << "( " << _session->GetPortString() << " )" << ELogType::EndLine;
 
 	SOCKET key = _session->GetSocket();
 	cs.Lock();
@@ -87,7 +87,7 @@ void SessionManager::EnterStage( Session* _session, const std::string& _stageId 
 {
 	if ( _session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Log, LOGFUNC( "Session is null." ) );
+		LOG_ERROR << "Session is null." << ELogType::EndLine;
 		return;
 	}
 

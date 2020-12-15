@@ -17,29 +17,29 @@ bool Network::Initialize( const int _port, const char* _ip )
 		{
 			case WSASYSNOTREADY:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 네트워크 통신에 대한 준비가 되지 않았습니다."_s ) );
+				LOG_EXCEPTION << errorCode << " : 네트워크 통신에 대한 준비가 되지 않았습니다." << ELogType::EndLine;
 			} break;
 			case WSAVERNOTSUPPORTED:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 요청된 윈도우소켓 지원버전은 제공되지 않습니다."_s ) );
+				LOG_EXCEPTION << errorCode << " : 요청된 윈도우소켓 지원버전은 제공되지 않습니다." << ELogType::EndLine;
 			} break;
 			case WSAEINPROGRESS:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 윈도우소켓 1.1작업이 진행 중입니다."_s ) );
+				LOG_EXCEPTION << errorCode << " : 윈도우소켓 1.1작업이 진행 중입니다." << ELogType::EndLine;
 			} break;
 			case WSAEPROCLIM:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : 윈도우소켓 구현에서 지원하는 작업 수가 제한에 도달했습니다."_s ) );
+				LOG_EXCEPTION << errorCode << " : 윈도우소켓 구현에서 지원하는 작업 수가 제한에 도달했습니다." << ELogType::EndLine;
 			} break;
 			case WSAEFAULT:
 			{
-				Log::Instance().Push( ELogType::Error, LOGFUNC( std::to_string( errorCode ) + " : WSAData가 유효하지 않습니다."_s ) );
+				LOG_EXCEPTION << errorCode << " : WSAData가 유효하지 않습니다." << ELogType::EndLine;
 			} break;
 		}
 	}
 
 	socket = ::socket( AF_INET, SOCK_STREAM, 0 );
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Generation Success" ) );
+	LOG << "Socket Generation Success" << ELogType::EndLine;
 
 	ZeroMemory( &address, sizeof( address ) );
 	address.sin_family = AF_INET;
@@ -60,12 +60,11 @@ bool Network::Connect() const
 {
 	if ( ::connect( socket, ( sockaddr* )&address, sizeof( address ) ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
+		LOG_WSAERROR;
 		ClosedSocket();
-
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Connect Success : "_s + ::inet_ntoa( address.sin_addr ) + " : "_s + std::to_string( ::ntohs( address.sin_port ) ) ) );
+	LOG <<  "Connect Success IP( Port ) : " << ::inet_ntoa( address.sin_addr ) << "( " << ::ntohs( address.sin_port ) << " )" << ELogType::EndLine;
 
 	return true;
 }
@@ -81,7 +80,7 @@ void Network::Recieve()
 	{
 		if ( ::WSAGetLastError() != WSA_IO_PENDING )
 		{
-			Log::Instance().Push();
+			LOG_WSAERROR;
 		}
 	}
 }
@@ -90,7 +89,7 @@ void Network::Send( const UPACKET& _packet ) const
 {
 	if ( ::send( socket, ( char* )&_packet, _packet.length, 0 ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
+		LOG_WSAERROR;
 	}
 }
 
@@ -113,8 +112,7 @@ bool Network::ClosedSocket() const
 {
 	if ( ::closesocket( socket ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
-
+		LOG_WSAERROR;
 		return false;
 	}
 

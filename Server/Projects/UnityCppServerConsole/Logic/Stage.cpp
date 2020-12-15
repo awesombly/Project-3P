@@ -10,7 +10,7 @@ void Stage::Push( Session* _session )
 {
 	if ( _session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Session is null." ) );
+		LOG_ERROR << "Session is null" << ELogType::EndLine;
 		return;
 	}
 
@@ -21,7 +21,7 @@ void Stage::Erase( const Session* _session )
 {
 	if ( _session == nullptr )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Session is null." ) );
+		LOG_ERROR << "Session is null" << ELogType::EndLine;
 		return;
 	}
 
@@ -32,7 +32,7 @@ void Stage::Push( ServerActor* _actor )
 {
 	if ( _actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor is null." ) );
+		LOG_ERROR << "Actor is null." << ELogType::EndLine;
 		return;
 	}
 
@@ -43,7 +43,7 @@ void Stage::Erase( const ServerActor* _actor )
 {
 	if ( _actor == nullptr )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Actor is null." ) );
+		LOG_ERROR << "Actor is null." << ELogType::EndLine;
 		return;
 	}
 
@@ -65,7 +65,7 @@ ServerActor* Stage::Find( SerialType serial ) const
 	auto findItr = actors.find( serial );
 	if ( findItr == actors.cend() )
 	{
-		Log::Instance().Push( ELogType::Error, LOGFUNC( "Actor not found." ) );
+		LOG_ERROR << "Actor not found." << ELogType::EndLine;
 		return nullptr;
 	}
 

@@ -135,7 +135,7 @@ Log& Log::operator << ( ELogType _type )
 
 		{
 			std::lock_guard<std::mutex> lock( textsMutex );
-			texts.emplace( logData.substr( writePos, curLogPos ) );
+			texts.emplace( logData.substr( writePos, curLogPos - writePos ) );
 		}
 		curLogPos = 0;
 		cv.notify_one();
@@ -172,6 +172,36 @@ Log& Log::operator << ( const char* _data )
 	return *this;
 }
 
+Log& Log::operator << ( int _data )
+{
+	std::string data = std::to_string( _data );
+	size_t paramSize = data.size();
+	if ( LogDataMaxSize - curLogPos < paramSize )
+	{
+		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
+	}
+
+	std::copy( &data[ 0 ], &data[ paramSize ], &logData[ curLogPos ] );
+	curLogPos += paramSize;
+
+	return *this;
+}
+
+Log& Log::operator << ( unsigned __int64 _data )
+{
+	std::string data = std::to_string( _data );
+	size_t paramSize = data.size();
+	if ( LogDataMaxSize - curLogPos < paramSize )
+	{
+		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
+	}
+
+	std::copy( &data[ 0 ], &data[ paramSize ], &logData[ curLogPos ] );
+	curLogPos += paramSize;
+
+	return *this;
+}
+
 const std::string& Log::GetType( ELogType _type )
 {
 	return Log::Instance().types[_type];
@@ -186,10 +216,6 @@ void Log::PrintText()
 
 		std::string& data = texts.front();
 		logStream << data.c_str();
-		//if ( file.IsOpen() )
-		//{
-		//	file.Write( data );
-		//}
 
 		texts.pop();
 		::Sleep( 1 );

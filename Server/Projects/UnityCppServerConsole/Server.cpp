@@ -12,26 +12,26 @@ void Server::Initialize( const int _port, const char* _address )
 {
 	if ( !Log::Instance().Initialize() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Log Initialize Fail"_s ) );
+		LOG_WARNING << "Log Initialize Fail" << ELogType::EndLine;
 	}
 
 	if ( !IOCPManager::Instance().Initialize() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "IOCPManager Initialize Fail"_s ) );
+		LOG_WARNING << "IOCPManager Initialize Fail" << ELogType::EndLine;
 	}
 
 	if ( !acceptor.Initialize( _port, _address ) || !acceptor.ListenStart() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "Client Lieten Fail"_s ) );
+		LOG_WARNING << "Client Lieten Fail" << ELogType::EndLine;
 	}
 
 	if ( !PacketManager::Instance().Initialize() )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "PacketManager Initialize Fail"_s ) );
+		LOG_WARNING << "PacketManager Initialize Fail" << ELogType::EndLine;
 	}
 
 	if ( ::WaitForSingleObject( killEvent, INFINITE ) == WAIT_FAILED )
 	{
-		Log::Instance().Push( ELogType::Warning, LOGFUNC( "KillEvent Wait Failed" ) );
+		LOG_WARNING << "KillEvent Wait Failed" << ELogType::EndLine;
 	}
 }

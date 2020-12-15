@@ -2,12 +2,12 @@
 #include "Singleton.hpp"
 #include "../IO/OStream.h"
 
-#define LOGFUNC( _log ) __FUNCTION__ + " : "_s + _log
-
 #define LOG			  Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Log      
 #define LOG_WARNING   Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Warning  
 #define LOG_ERROR     Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Error    
 #define LOG_EXCEPTION Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Exception
+#define LOG_WSAERROR  Log::Instance().Push()
+#define LOG_END       ELogType::EndLine
 
 // 로그 단계
 // Log : 대부분의 로그
@@ -33,18 +33,21 @@ public:
 	bool Initialize();
 
 	void Push();
-	void Push( const int _errorCode );
-	void Push( ELogType _type, const std::string& _data );
 
 	// Ex) Log::Instance() << ELogType::Log << "some logs" << ELogType::EndLine;
 	// 한 문장을 입력하고 EndLine을 꼭 붙여주세요.
 	Log& operator << ( ELogType _type );
 	Log& operator << ( const std::string& _data );
 	Log& operator << ( const char* _data );
+	Log& operator << ( int _data );
+	Log& operator << ( unsigned __int64 _data );
 
 	static const std::string& GetType( ELogType _type );
 
 private:
+	void Push( const int _errorCode );
+	void Push( ELogType _type, const std::string& _data );
+
 	void PrintText();
 
 private:

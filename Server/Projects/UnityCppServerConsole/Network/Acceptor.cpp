@@ -33,7 +33,7 @@ void Acceptor::WaitForClients() const
 	while ( true )
 	{
 		clientsock = ::accept( socket, ( sockaddr* )&client, &length );
-		Log::Instance().Push();
+		LOG_WSAERROR;
 		Session* session = new Session( clientsock, client );
 		SessionManager::Instance().Push( session );
 		IOCPManager::Instance().Bind( ( HANDLE )clientsock, ( ULONG_PTR )session );
@@ -43,32 +43,26 @@ void Acceptor::WaitForClients() const
 // 家南 技何 汲沥
 bool Acceptor::SetSocketOption() const
 {
-	LOG << "Socket Option : TCP NoDelay" << ELogType::EndLine;
-
 	int optionValue = 1;
 	if ( ::setsockopt( socket, SOL_SOCKET, SO_REUSEADDR, ( char* )&optionValue, sizeof( optionValue ) ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
-
+		LOG_WSAERROR;
 		return false;
 	}
 
 	char flag = 1;
 	if ( ::setsockopt( socket, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof( char ) ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
-
+		LOG_WSAERROR;
 		return false;
 	}
-	// Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option : TCP NoDelay" ) );
-	Log::Instance() << ELogType::Log << "Socket Option : TCP NoDelay" << ELogType::EndLine;
+	LOG << "Socket Option : TCP NoDelay" << ELogType::EndLine;
 
 	linger optLinger;
 	int size = sizeof( int );
 	if ( ::getsockopt( socket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, &size ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
-
+		LOG_WSAERROR;
 		return false;
 	}
 
@@ -76,8 +70,7 @@ bool Acceptor::SetSocketOption() const
 	optLinger.l_onoff = 1;
 	if ( ::setsockopt( socket, SOL_SOCKET, SO_LINGER, ( char* )&optLinger, sizeof( linger ) ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
-
+		LOG_WSAERROR;
 		return false;
 	}
 
@@ -87,12 +80,11 @@ bool Acceptor::SetSocketOption() const
 	if ( ::getsockopt( socket, SOL_SOCKET, SO_RCVBUF, ( char* )&recvSize, &size ) == SOCKET_ERROR ||
 		 ::getsockopt( socket, SOL_SOCKET, SO_SNDBUF, ( char* )&sendSize, &size ) == SOCKET_ERROR )
 	{
-		Log::Instance().Push();
-
+		LOG_WSAERROR;
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option RecvSize : " + std::to_string( recvSize ) ) );
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option SendSize : " + std::to_string( sendSize ) ) );
+	LOG << "Socket Option RecvSize : " << recvSize << ELogType::EndLine;
+	LOG << "Socket Option SendSize : " << sendSize << ELogType::EndLine;
 	
 	return true;
 }

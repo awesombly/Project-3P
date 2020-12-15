@@ -56,7 +56,7 @@ void IOCPManager::WaitCompletionStatus() const
 					continue;
 				}
 			}
-			Log::Instance().Push();
+			LOG_WSAERROR;
 		}
 	}
 }
