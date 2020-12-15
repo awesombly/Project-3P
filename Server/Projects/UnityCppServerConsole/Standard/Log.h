@@ -33,9 +33,9 @@ public:
 
 	// Ex) Log::Instance() << ELogType::Log << "some logs" << ELogType::EndLine;
 	// 한 문장을 입력하고 EndLine을 꼭 붙여주세요.
-	const Log& operator << ( ELogType _type );
-	const Log& operator << ( const std::string& _data );
-	const Log& operator << ( const char* _data );
+	Log& operator << ( ELogType _type );
+	Log& operator << ( const std::string& _data );
+	Log& operator << ( const char* _data );
 
 	static const std::string& GetType( ELogType _type );
 
@@ -56,6 +56,9 @@ private:
 private:
 	OStream file;
 	std::ostream& logStream;
+
+	std::string logData;
+	size_t curLogPos;
 
 	std::queue<std::string> texts;
 	std::condition_variable cv;

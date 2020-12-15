@@ -58,7 +58,8 @@ bool Acceptor::SetSocketOption() const
 
 		return false;
 	}
-	Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option : TCP NoDelay" ) );
+	// Log::Instance().Push( ELogType::Log, LOGFUNC( "Socket Option : TCP NoDelay" ) );
+	Log::Instance() << ELogType::Log << "Socket Option : TCP NoDelay" << ELogType::EndLine;
 
 	linger optLinger;
 	int size = sizeof( int );

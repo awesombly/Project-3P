@@ -1,7 +1,7 @@
 #include "Log.h"
 #include "../Time/Timer.h"
 
-Log::Log() : logStream( std::cout )
+Log::Log() : logStream( std::cout ), curLogPos( 0 )
 {
 	std::thread th( [&] () { Log::PrintText(); } );
 	th.detach();
@@ -12,6 +12,7 @@ Log::Log() : logStream( std::cout )
 	types.insert( std::make_pair( ELogType::Exception, std::string( "[Exception]" ) ) );
 	types.insert( std::make_pair( ELogType::EndLine, std::string( "\n" ) ) );
 
+	logData.resize( LogDataMaxSize );
 }
 
 bool Log::Initialize()
@@ -81,42 +82,79 @@ void Log::Push( const int _errorCode )
 
 void Log::Push( ELogType _type, const std::string& _data )
 {
-	std::unique_lock<std::mutex> lock( textsMutex );
-	texts.push( types[_type] );
-	texts.push( _data + "\n"_s );
-	lock.unlock();
+	size_t paramSize = types[ _type ].size() + _data.size() + 1;
+	if ( LogDataMaxSize - curLogPos < paramSize )
+	{
+		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
+	}
 
-	cv.notify_one();
+	size_t typeSize = types[ _type ].size();
+	std::copy( std::begin( types[ _type ] ), std::end( types[ _type ] ), &logData[ curLogPos ] );
+	curLogPos += typeSize;
+
+	size_t dataSize = _data.size();
+	std::copy( std::begin( _data ), std::end( _data ), &logData[ curLogPos ] );
+	curLogPos += dataSize;
+
+	logData[ curLogPos ] = '\n';
+	++curLogPos;
+
+	{
+		std::lock_guard<std::mutex> lock( textsMutex );
+		texts.emplace( logData.substr( 0, curLogPos ) );
+
+		curLogPos = 0;
+		cv.notify_one();
+	}
 }
 
-const Log& Log::operator << ( ELogType _type )
+Log& Log::operator << ( ELogType _type )
 {
-	std::unique_lock<std::mutex> lock( textsMutex );
-	texts.push( types[_type] );
-	lock.unlock();
+	size_t paramSize = types[ _type ].size();
+	if ( LogDataMaxSize - curLogPos < paramSize )
+	{
+		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
+	}
+
+	std::copy( std::begin( types[ _type ] ), std::end( types[ _type ] ), &logData[ curLogPos ] );
+	curLogPos += paramSize;
 
 	if ( _type == ELogType::EndLine )
 	{
+		std::lock_guard<std::mutex> lock( textsMutex );
+		texts.emplace( logData.substr( 0, curLogPos ) );
+
+		curLogPos = 0;
 		cv.notify_one();
 	}
 
 	return *this;
 }
 
-const Log& Log::operator << ( const std::string& _data )
+Log& Log::operator << ( const std::string& _data )
 {
-	std::unique_lock<std::mutex> lock( textsMutex );
-	texts.push( _data );
-	lock.unlock();
+	size_t paramSize = _data.size();
+	if ( LogDataMaxSize - curLogPos < paramSize )
+	{
+		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
+	}
+
+	std::copy( std::begin( _data ), std::end( _data ), &logData[ curLogPos ] );
+	curLogPos += paramSize;
 
 	return *this;
 }
 
-const Log& Log::operator << ( const char* _data )
+Log& Log::operator << ( const char* _data )
 {
-	std::unique_lock<std::mutex> lock( textsMutex );
-	texts.push( _data );
-	lock.unlock();
+	size_t paramSize = ::strlen( _data );
+	if ( LogDataMaxSize - curLogPos < paramSize )
+	{
+		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
+	}
+
+	std::copy( &_data[ 0 ], &_data[ paramSize ], &logData[ curLogPos ] );
+	curLogPos += paramSize;
 
 	return *this;
 }
