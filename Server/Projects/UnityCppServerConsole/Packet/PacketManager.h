@@ -14,7 +14,7 @@ public:
 	void Push( const PACKET& _packet );
 
 private:
-	void WorkPacket();
+	void PacketProcess();
 
 	void BindProtocols();
 

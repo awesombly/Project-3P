@@ -6,7 +6,7 @@
 #define LOG_WARNING   Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Warning  
 #define LOG_ERROR     Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Error    
 #define LOG_EXCEPTION Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Exception
-#define LOG_WSAERROR  Log::Instance().Push()
+#define LOG_WSAERROR  Log::Instance().WSAError()
 #define LOG_END       ELogType::EndLine
 
 // 로그 단계
@@ -32,7 +32,7 @@ public:
 public:
 	bool Initialize();
 
-	void Push();
+	void WSAError();
 
 	// Ex) Log::Instance() << ELogType::Log << "some logs" << ELogType::EndLine;
 	// 한 문장을 입력하고 EndLine을 꼭 붙여주세요.
@@ -45,10 +45,10 @@ public:
 	static const std::string& GetType( ELogType _type );
 
 private:
-	void Push( const int _errorCode );
-	void Push( ELogType _type, const std::string& _data );
+	void WSAErrorToString( const int _errorCode );
+	void PushLog( ELogType _type, const std::string& _data );
 
-	void PrintText();
+	void LogProcess();
 
 private:
 	struct LogData

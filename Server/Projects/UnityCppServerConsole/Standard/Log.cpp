@@ -3,7 +3,7 @@
 
 Log::Log() : logStream( std::cout ), curLogPos( 0 )
 {
-	std::thread th( [&] () { Log::PrintText(); } );
+	std::thread th( [&] () { Log::LogProcess(); } );
 	th.detach();
 
 	types.insert( std::make_pair( ELogType::Log, std::string( "[Log]" ) ) );
@@ -20,92 +20,9 @@ bool Log::Initialize()
 	return file.Open( PATH::LogPath + Timer::Instance().GetCurrentDateString( true ).c_str() + EXT::Text );
 }
 
-void Log::Push()
+void Log::WSAError()
 {
-	Push( ::WSAGetLastError() );
-}
-
-void Log::Push( const int _errorCode )
-{
-	switch ( _errorCode )
-	{
-		case WSANOTINITIALISED:
-		{
-			Push( ELogType::Error, "이 기능을 사용하기전에 WSAStartup을 호출해야 합니다."_s );
-		} break;
-		case WSAECONNRESET:
-		{
-			Push( ELogType::Error, "들어오는 연결이 수락하기전에 원격에 의해 종료되었습니다."_s );
-		} break;
-		case WSAEFAULT:
-		{
-			Push( ELogType::Error, "추가 매개변수가 적거나 사용자의 메모리 공간이 유효하지 않습니다."_s );
-		} break;
-		case WSAEINTR:
-		{
-			Push( ELogType::Error, "윈도우소켓 1.1은 WSACancelBlockingCall에 의해 취소되었습니다."_s );
-		} break;
-		case WSAEINVAL:
-		{
-			Push( ELogType::Error, "Listen함수는 수락되기 전에 호출되지 않았습니다."_s );
-		} break;
-		case WSAEINPROGRESS:
-		{
-			Push( ELogType::Error, "윈도우소켓 1.1 호출이 진행 중이거나 서비스 공급자가 콜백 기능을 처리하는 중입니다."_s );
-		} break;
-		case WSAEMFILE:
-		{
-			Push( ELogType::Error, "큐가 비어있지 않으며 사용할수있는 Descriptor가 없습니다."_s );
-		} break;
-		case WSAENETDOWN:
-		{
-			Push( ELogType::Error, "네트워크 하위 시스템이 실패했습니다."_s );
-		} break;
-		case WSAENOBUFS:
-		{
-			Push( ELogType::Error, "버퍼 공간을 사용할 수 없습니다."_s );
-		} break;
-		case WSAENOTSOCK:
-		{
-			Push( ELogType::Error, "Descriptor는 소켓이 아닙니다."_s );
-		} break;
-		case WSAEOPNOTSUPP:
-		{
-			Push( ELogType::Error, "참조된 소켓은 연결 서비스를 지원하는 형식이 아닙니다."_s );
-		} break;
-		case WSAEWOULDBLOCK:
-		{
-			Push( ELogType::Error, "소켓은 Non-Blocking이 아니며 연결이 허용되지 않습니다."_s );
-		} break;
-	}
-}
-
-void Log::Push( ELogType _type, const std::string& _data )
-{
-	size_t paramSize = types[ _type ].size() + _data.size() + 1;
-	if ( LogDataMaxSize - curLogPos < paramSize )
-	{
-		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
-	}
-
-	size_t typeSize = types[ _type ].size();
-	std::copy( std::begin( types[ _type ] ), std::end( types[ _type ] ), &logData[ curLogPos ] );
-	curLogPos += typeSize;
-
-	size_t dataSize = _data.size();
-	std::copy( std::begin( _data ), std::end( _data ), &logData[ curLogPos ] );
-	curLogPos += dataSize;
-
-	logData[ curLogPos ] = '\n';
-	++curLogPos;
-
-	{
-		std::lock_guard<std::mutex> lock( textsMutex );
-		texts.emplace( logData.substr( 0, curLogPos ) );
-
-		curLogPos = 0;
-		cv.notify_one();
-	}
+	WSAErrorToString( ::WSAGetLastError() );
 }
 
 Log& Log::operator << ( ELogType _type )
@@ -207,7 +124,90 @@ const std::string& Log::GetType( ELogType _type )
 	return Log::Instance().types[_type];
 }
 
-void Log::PrintText()
+void Log::WSAErrorToString( const int _errorCode )
+{
+	switch ( _errorCode )
+	{
+		case WSANOTINITIALISED:
+		{
+			PushLog( ELogType::Error, "이 기능을 사용하기전에 WSAStartup을 호출해야 합니다."_s );
+		} break;
+		case WSAECONNRESET:
+		{
+			PushLog( ELogType::Error, "들어오는 연결이 수락하기전에 원격에 의해 종료되었습니다."_s );
+		} break;
+		case WSAEFAULT:
+		{
+			PushLog( ELogType::Error, "추가 매개변수가 적거나 사용자의 메모리 공간이 유효하지 않습니다."_s );
+		} break;
+		case WSAEINTR:
+		{
+			PushLog( ELogType::Error, "윈도우소켓 1.1은 WSACancelBlockingCall에 의해 취소되었습니다."_s );
+		} break;
+		case WSAEINVAL:
+		{
+			PushLog( ELogType::Error, "Listen함수는 수락되기 전에 호출되지 않았습니다."_s );
+		} break;
+		case WSAEINPROGRESS:
+		{
+			PushLog( ELogType::Error, "윈도우소켓 1.1 호출이 진행 중이거나 서비스 공급자가 콜백 기능을 처리하는 중입니다."_s );
+		} break;
+		case WSAEMFILE:
+		{
+			PushLog( ELogType::Error, "큐가 비어있지 않으며 사용할수있는 Descriptor가 없습니다."_s );
+		} break;
+		case WSAENETDOWN:
+		{
+			PushLog( ELogType::Error, "네트워크 하위 시스템이 실패했습니다."_s );
+		} break;
+		case WSAENOBUFS:
+		{
+			PushLog( ELogType::Error, "버퍼 공간을 사용할 수 없습니다."_s );
+		} break;
+		case WSAENOTSOCK:
+		{
+			PushLog( ELogType::Error, "Descriptor는 소켓이 아닙니다."_s );
+		} break;
+		case WSAEOPNOTSUPP:
+		{
+			PushLog( ELogType::Error, "참조된 소켓은 연결 서비스를 지원하는 형식이 아닙니다."_s );
+		} break;
+		case WSAEWOULDBLOCK:
+		{
+			PushLog( ELogType::Error, "소켓은 Non-Blocking이 아니며 연결이 허용되지 않습니다."_s );
+		} break;
+	}
+}
+
+void Log::PushLog( ELogType _type, const std::string& _data )
+{
+	size_t paramSize = types[ _type ].size() + _data.size() + 1;
+	if ( LogDataMaxSize - curLogPos < paramSize )
+	{
+		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
+	}
+
+	size_t typeSize = types[ _type ].size();
+	std::copy( std::begin( types[ _type ] ), std::end( types[ _type ] ), &logData[ curLogPos ] );
+	curLogPos += typeSize;
+
+	size_t dataSize = _data.size();
+	std::copy( std::begin( _data ), std::end( _data ), &logData[ curLogPos ] );
+	curLogPos += dataSize;
+
+	logData[ curLogPos ] = '\n';
+	++curLogPos;
+
+	{
+		std::lock_guard<std::mutex> lock( textsMutex );
+		texts.emplace( logData.substr( 0, curLogPos ) );
+
+		curLogPos = 0;
+		cv.notify_one();
+	}
+}
+
+void Log::LogProcess()
 {
 	while ( true )
 	{

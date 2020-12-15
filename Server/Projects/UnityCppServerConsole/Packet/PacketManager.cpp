@@ -7,13 +7,13 @@ bool PacketManager::Initialize()
 {
 	BindProtocols();
 
-	std::thread th( [&] () { PacketManager::WorkPacket(); } );
+	std::thread th( [&] () { PacketManager::PacketProcess(); } );
 	th.detach();
 
 	return true;
 }
 
-void PacketManager::WorkPacket()
+void PacketManager::PacketProcess()
 {
 	while ( true )
 	{
