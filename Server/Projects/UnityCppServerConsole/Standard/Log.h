@@ -55,6 +55,8 @@ private:
 
 private:
 	OStream file;
+	std::ostream& logStream;
+
 	std::queue<std::string> texts;
 	std::condition_variable cv;
 	std::mutex textsMutex;

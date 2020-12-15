@@ -1,7 +1,7 @@
 #include "Log.h"
 #include "../Time/Timer.h"
 
-Log::Log()
+Log::Log() : logStream( std::cout )
 {
 	std::thread th( [&] () { Log::PrintText(); } );
 	th.detach();
@@ -11,6 +11,7 @@ Log::Log()
 	types.insert( std::make_pair( ELogType::Error, std::string( "[Error]" ) ) );
 	types.insert( std::make_pair( ELogType::Exception, std::string( "[Exception]" ) ) );
 	types.insert( std::make_pair( ELogType::EndLine, std::string( "\n" ) ) );
+
 }
 
 bool Log::Initialize()
@@ -133,7 +134,7 @@ void Log::PrintText()
 		cv.wait( lock, [&] () { return !texts.empty(); } );
 
 		std::string& data = texts.front();
-		std::cout << data.c_str();
+		logStream << data.c_str();
 		if ( file.IsOpen() )
 		{
 			file.Write( data );
