@@ -13,6 +13,8 @@ using System.Net;
 
 public class FirstPersonAIO : MonoBehaviour
 {
+    private Actor myActor;
+
     #region Variables
 
     #region Input Settings
@@ -120,12 +122,20 @@ public class FirstPersonAIO : MonoBehaviour
     }
     public AdvancedSettings advanced = new AdvancedSettings();
     private CapsuleCollider capsule;
-    public bool IsGrounded { get; private set; }
+    private bool IsGrounded
+    {
+        get { return myActor.isGrounded; }
+        set { myActor.isGrounded = value; }
+    }
     internal Vector2 inputXY;
     public bool isCrouching;
     float yVelocity;
     float checkedSlope;
-    internal bool isSprinting = false;
+    private bool IsSprinting
+    {
+        get { return myActor.isSprinting; }
+        set { myActor.isSprinting = value; }
+    }
 
     #endregion
 
@@ -210,6 +220,12 @@ public class FirstPersonAIO : MonoBehaviour
 
     private void Awake()
     {
+        myActor = GetComponent<Actor>();
+        if ( myActor == null )
+        {
+            Debug.LogError( "Actor not found." );
+        }
+
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
 
@@ -220,7 +236,6 @@ public class FirstPersonAIO : MonoBehaviour
         sprintSpeedInternal = sprintSpeed;
         jumpPowerInternal = jumpPower;
         capsule = GetComponent<CapsuleCollider>();
-        IsGrounded = true;
         isCrouching = false;
         if ( rigidBody == null )
         {
@@ -374,8 +389,8 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( useStamina )
         {
-            isSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > 0 && ( Mathf.Abs( rigidBody.velocity.x ) > 0.01f || Mathf.Abs( rigidBody.velocity.z ) > 0.01f );
-            if ( isSprinting )
+            IsSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > 0 && ( Mathf.Abs( rigidBody.velocity.x ) > 0.01f || Mathf.Abs( rigidBody.velocity.z ) > 0.01f );
+            if ( IsSprinting )
             {
                 staminaInternal -= ( staminaDepletionSpeed * 2 ) * Time.deltaTime;
                 if ( drawStaminaMeter )
@@ -400,10 +415,10 @@ public class FirstPersonAIO : MonoBehaviour
             }
             staminaInternal = Mathf.Clamp( staminaInternal, 0, staminaLevel );
         }
-        else { isSprinting = Input.GetKey( sprintKey ); }
+        else { IsSprinting = Input.GetKey( sprintKey ); }
 
         moveDirection = Vector3.zero;
-        speed = walkByDefault ? isCrouching ? walkSpeedInternal : ( isSprinting ? sprintSpeedInternal : walkSpeedInternal ) : ( isSprinting ? walkSpeedInternal : sprintSpeedInternal );
+        speed = walkByDefault ? isCrouching ? walkSpeedInternal : ( IsSprinting ? sprintSpeedInternal : walkSpeedInternal ) : ( IsSprinting ? walkSpeedInternal : sprintSpeedInternal );
 
 
         if ( advanced.maxSlopeAngle > 0 )
@@ -513,7 +528,7 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( advanced.FOVKickAmount > 0 )
         {
-            if ( isSprinting && !isCrouching && playerCamera.fieldOfView != ( baseCamFOV + ( advanced.FOVKickAmount * 2 ) - 0.01f ) )
+            if ( IsSprinting && !isCrouching && playerCamera.fieldOfView != ( baseCamFOV + ( advanced.FOVKickAmount * 2 ) - 0.01f ) )
             {
                 if ( Mathf.Abs( rigidBody.velocity.x ) > 0.5f || Mathf.Abs( rigidBody.velocity.z ) > 0.5f )
                 {

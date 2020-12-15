@@ -12,7 +12,6 @@ public class PlayerController : Actor
     }
     private SyncMovement syncMovement;
 
-    private FirstPersonAIO firstPerson;
     private Animator animator;
 
     private const float AnimationSmooth = 0.2f;
@@ -24,29 +23,16 @@ public class PlayerController : Actor
     {
         base.Awake();
 
-        firstPerson = GetComponent<FirstPersonAIO>();
         animator = GetComponentInChildren<Animator>();
-    }
-
-    protected void Update()
-    {
-        UpdateInputParameters();
-
-        //animator.SetFloat( AnimatorParameters.GroundDistance, groundDistance );
-        animator.SetBool( AnimatorParameters.IsGrounded, firstPerson.IsGrounded );
-        animator.SetBool( AnimatorParameters.IsStrafing, true );
-        animator.SetBool( AnimatorParameters.IsSprinting, firstPerson.isSprinting );
-
-        bool isStop = rigidBody.velocity.magnitude < float.Epsilon;
-        animator.SetFloat( AnimatorParameters.InputHorizontal, isStop ? 0.0f : inputHorizontal, AnimationSmooth, Time.deltaTime );
-        animator.SetFloat( AnimatorParameters.InputVertical, isStop ? 0.0f : inputVertical, AnimationSmooth, Time.deltaTime );
-        animator.SetFloat( AnimatorParameters.InputMagnitude, isStop ? 0.0f : inputMagnitude, AnimationSmooth, Time.deltaTime );
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        
+
+        UpdateInputParameters();
+        UpdateAnimatorParameters();
+
         if ( !isLocal )
         {
             return;
@@ -68,15 +54,27 @@ public class PlayerController : Actor
         syncMovement.PrevSqrMagnitude = rigidBody.velocity.sqrMagnitude;
     }
 
-    public virtual void UpdateInputParameters()
+    private void UpdateInputParameters()
     {
-        float sprintingRate = ( firstPerson.isSprinting ? 1.5f : 1.0f );
+        float sprintingRate = ( isSprinting ? 1.5f : 1.0f );
 
         Vector3 relativeInput = transform.InverseTransformDirection( rigidBody.velocity );
         inputVertical = Mathf.Clamp( relativeInput.z, -1.0f, 1.0f ) * sprintingRate;
         inputHorizontal = Mathf.Clamp( relativeInput.x, -1.0f, 1.0f ) * sprintingRate;
 
         inputMagnitude = relativeInput.normalized.magnitude;
+    }
+
+    private void UpdateAnimatorParameters()
+    {
+        animator.SetBool( AnimatorParameters.IsGrounded, isGrounded );
+        animator.SetBool( AnimatorParameters.IsStrafing, true );
+        animator.SetBool( AnimatorParameters.IsSprinting, isSprinting );
+
+        bool isStop = rigidBody.velocity.magnitude < float.Epsilon;
+        animator.SetFloat( AnimatorParameters.InputHorizontal, isStop ? 0.0f : inputHorizontal, AnimationSmooth, Time.deltaTime );
+        animator.SetFloat( AnimatorParameters.InputVertical, isStop ? 0.0f : inputVertical, AnimationSmooth, Time.deltaTime );
+        animator.SetFloat( AnimatorParameters.InputMagnitude, isStop ? 0.0f : inputMagnitude, AnimationSmooth, Time.deltaTime );
     }
 
     private static class AnimatorParameters

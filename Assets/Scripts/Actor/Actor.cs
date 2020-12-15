@@ -5,14 +5,16 @@ using UnityEngine;
 public class Actor : MonoBehaviour
 {
     internal uint serial;
-    internal bool isLocal;
+    internal bool isLocal = true;
     internal Vector3 syncVelocity;
+
+    internal bool isGrounded = true;
+    internal bool isSprinting = false;
 
     internal Rigidbody rigidBody;
 
     protected virtual void Awake()
     {
-        isLocal = true; // 테스트용
         rigidBody = GetComponent<Rigidbody>();
     }
 

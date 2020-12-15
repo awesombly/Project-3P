@@ -1,17 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4257137820608017015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7405065635949591291}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c13c4e94bd290f4fadf647b00854af9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7404518001631228649
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45,15 +33,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4448068258976056, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.0000001872535
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4448068258976056, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4448068258976056, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4448068258976056, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
       propertyPath: m_LocalRotation.z
@@ -65,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4448068258976056, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -180.00002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4448068258976056, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -95,8 +83,3 @@ PrefabInstance:
     - {fileID: 82712217391461128, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
     - {fileID: 114051214696948948, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
---- !u!1 &7405065635949591291 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1743903104223250, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
-  m_PrefabInstance: {fileID: 7404518001631228649}
-  m_PrefabAsset: {fileID: 0}
