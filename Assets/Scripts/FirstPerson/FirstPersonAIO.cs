@@ -80,6 +80,7 @@ public class FirstPersonAIO : MonoBehaviour
     internal float walkSpeedInternal;
     internal float sprintSpeedInternal;
     internal float jumpPowerInternal;
+    internal Vector3 moveDirection;
 
     [System.Serializable]
     public class CrouchModifiers
@@ -120,11 +121,11 @@ public class FirstPersonAIO : MonoBehaviour
     public AdvancedSettings advanced = new AdvancedSettings();
     private CapsuleCollider capsule;
     public bool IsGrounded { get; private set; }
-    Vector2 inputXY;
+    internal Vector2 inputXY;
     public bool isCrouching;
     float yVelocity;
     float checkedSlope;
-    bool isSprinting = false;
+    internal bool isSprinting = false;
 
     #endregion
 
@@ -401,7 +402,7 @@ public class FirstPersonAIO : MonoBehaviour
         }
         else { isSprinting = Input.GetKey( sprintKey ); }
 
-        Vector3 MoveDirection = Vector3.zero;
+        moveDirection = Vector3.zero;
         speed = walkByDefault ? isCrouching ? walkSpeedInternal : ( isSprinting ? sprintSpeedInternal : walkSpeedInternal ) : ( isSprinting ? walkSpeedInternal : sprintSpeedInternal );
 
 
@@ -410,7 +411,7 @@ public class FirstPersonAIO : MonoBehaviour
             if ( advanced.isTouchingUpright && advanced.isTouchingWalkable )
             {
 
-                MoveDirection = ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal );
+                moveDirection = ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal );
                 if ( !didJump ) { rigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation; }
             }
             else if ( advanced.isTouchingUpright && !advanced.isTouchingWalkable )
@@ -422,27 +423,27 @@ public class FirstPersonAIO : MonoBehaviour
             {
 
                 rigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
-                MoveDirection = ( ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal ) * ( rigidBody.velocity.y > 0.01f ? SlopeCheck() : 0.8f ) );
+                moveDirection = ( ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal ) * ( rigidBody.velocity.y > 0.01f ? SlopeCheck() : 0.8f ) );
             }
         }
         else
         {
-            MoveDirection = ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal );
+            moveDirection = ( transform.forward * inputXY.y * speed + transform.right * inputXY.x * walkSpeedInternal );
         }
 
 
         #region step logic
         RaycastHit WT;
-        if ( advanced.maxStepHeight > 0 && Physics.Raycast( transform.position - new Vector3( 0, ( ( capsule.height / 2 ) * transform.localScale.y ) - 0.01f, 0 ), MoveDirection, out WT, capsule.radius + 0.15f, Physics.AllLayers, QueryTriggerInteraction.Ignore ) && Vector3.Angle( WT.normal, Vector3.up ) > 88 )
+        if ( advanced.maxStepHeight > 0 && Physics.Raycast( transform.position - new Vector3( 0, ( ( capsule.height / 2 ) * transform.localScale.y ) - 0.01f, 0 ), moveDirection, out WT, capsule.radius + 0.15f, Physics.AllLayers, QueryTriggerInteraction.Ignore ) && Vector3.Angle( WT.normal, Vector3.up ) > 88 )
         {
             RaycastHit ST;
-            if ( !Physics.Raycast( transform.position - new Vector3( 0, ( ( capsule.height / 2 ) * transform.localScale.y ) - ( advanced.maxStepHeight ), 0 ), MoveDirection, out ST, capsule.radius + 0.25f, Physics.AllLayers, QueryTriggerInteraction.Ignore ) )
+            if ( !Physics.Raycast( transform.position - new Vector3( 0, ( ( capsule.height / 2 ) * transform.localScale.y ) - ( advanced.maxStepHeight ), 0 ), moveDirection, out ST, capsule.radius + 0.25f, Physics.AllLayers, QueryTriggerInteraction.Ignore ) )
             {
                 advanced.stairMiniHop = true;
                 transform.position += new Vector3( 0, advanced.maxStepHeight * 1.2f, 0 );
             }
         }
-        Debug.DrawRay( transform.position, MoveDirection, Color.red, 0, false );
+        Debug.DrawRay( transform.position, moveDirection, Color.red, 0, false );
         #endregion
 
         float horizontalInput = Input.GetAxis( "Horizontal" );
@@ -496,7 +497,7 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( playerCanMove && !controllerPauseState )
         {
-            rigidBody.velocity = MoveDirection + ( Vector3.up * yVelocity );
+            rigidBody.velocity = moveDirection + ( Vector3.up * yVelocity );
 
         }
         else { rigidBody.velocity = Vector3.zero; }
