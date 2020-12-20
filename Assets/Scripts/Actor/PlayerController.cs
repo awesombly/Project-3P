@@ -76,6 +76,7 @@ public class PlayerController : Actor
         animator.SetFloat( AnimatorParameters.InputHorizontal, isStop ? 0.0f : inputHorizontal, AnimationSmooth, Time.deltaTime );
         animator.SetFloat( AnimatorParameters.InputVertical, isStop ? 0.0f : inputVertical, AnimationSmooth, Time.deltaTime );
         animator.SetFloat( AnimatorParameters.InputMagnitude, isStop ? 0.0f : inputMagnitude, AnimationSmooth, Time.deltaTime );
+        animator.SetFloat( AnimatorParameters.VelocityY, rigidBody.velocity.y );
     }
 
     private static class AnimatorParameters
@@ -83,6 +84,7 @@ public class PlayerController : Actor
         public static int InputHorizontal = Animator.StringToHash( "InputHorizontal" );
         public static int InputVertical = Animator.StringToHash( "InputVertical" );
         public static int InputMagnitude = Animator.StringToHash( "InputMagnitude" );
+        public static int VelocityY = Animator.StringToHash( "VelocityY" );
         public static int GroundDistance = Animator.StringToHash( "GroundDistance" );
         public static int IsGrounded = Animator.StringToHash( "IsGrounded" );
         public static int IsStrafing = Animator.StringToHash( "IsStrafing" );
