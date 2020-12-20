@@ -8,7 +8,7 @@ static const u_short WorkerThreadCount = 6;
 static const u_short OneLineOfText = 256;
 static const u_short DataMaxSize = 2048;
 static const u_short RecvBufferMaxSize = 10000;
-static const u_short LogDataMaxSize = 4;
+static const u_short LogDataMaxSize = 1024;
 
 namespace DB
 {

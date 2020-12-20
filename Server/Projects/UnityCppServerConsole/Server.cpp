@@ -2,6 +2,7 @@
 #include "Standard/Log.h"
 #include "Packet/PacketManager.h"
 #include "Network/IOCP/IOCPManager.h"
+#include "DB/Database.h"
 
 Server::Server() 
 {
@@ -14,6 +15,12 @@ void Server::Initialize( const int _port, const char* _address )
 	{
 		LOG_WARNING << "Log Initialize Fail" << ELogType::EndLine;
 	}
+
+	//if ( !Database::Instance().Initialize() )
+	//{
+	//	LOG_WARNING << "Database Initialize Fail" << ELogType::EndLine;
+	//}
+	//Infomation info = Database::Instance().GetUserInfomation( 7 );
 
 	if ( !IOCPManager::Instance().Initialize() )
 	{

@@ -1,6 +1,16 @@
 #pragma once
 #include "../Standard/Singleton.hpp"
 
+struct Infomation
+{
+	int uid;
+	std::string name;
+	std::string id;
+	std::string pw;
+	std::string startDate;
+	std::string lastConnectDate;
+};
+
 class Database : public Singleton<Database>
 {
 public:
@@ -8,22 +18,9 @@ public:
 	virtual ~Database();
 
 public:
-	const bool Initialize();
-	const bool SafeQuery( const std::string& _query );
-	const bool CompareID( const std::string& _id );
-	const bool ComparePW( const std::string& _pw );
-	const static std::string ToSQLString( const std::string& _data );
-
-private:
-	enum EDBIndexType : short
-	{
-		Key = 0,
-		NickName,
-		ID,
-		PW,
-		StartDate,
-		LastConnect
-	};
+	bool Initialize();
+	bool SafeQuery( const std::string& _query );
+	Infomation GetUserInfomation( int _uid );
 
 private:
 	MYSQL initConnection;
