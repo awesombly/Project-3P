@@ -9,9 +9,6 @@ public class Actor : MonoBehaviour
     internal Vector3 syncVelocity;
     internal Vector3 localVelocity;
 
-    internal bool isGrounded = true;
-    internal bool isSprinting = false;
-
     internal Rigidbody rigidBody;
 
     protected virtual void Awake()

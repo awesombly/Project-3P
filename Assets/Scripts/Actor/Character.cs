@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : Actor
+public class Character : Actor
 {
+    internal bool isGrounded = true;
+    internal bool isSprinting = false;
+
     private struct SyncMovement
     {
         public const float NeedInterval = 0.1f;
@@ -14,7 +17,7 @@ public class PlayerController : Actor
 
     private Animator animator;
 
-    private const float AnimationSmooth = 0.2f;
+    private const float AnimationDampTime = 0.2f;
     private float inputVertical;
     private float inputHorizontal;
     private float inputMagnitude;
@@ -22,7 +25,7 @@ public class PlayerController : Actor
     protected override void Awake()
     {
         base.Awake();
-
+        
         animator = GetComponentInChildren<Animator>();
     }
 
@@ -70,10 +73,10 @@ public class PlayerController : Actor
         animator.SetBool( AnimatorParameters.IsStrafing, true );
         animator.SetBool( AnimatorParameters.IsSprinting, isSprinting );
 
-        bool isStop = rigidBody.velocity.magnitude < float.Epsilon;
-        animator.SetFloat( AnimatorParameters.InputHorizontal, isStop ? 0.0f : inputHorizontal, AnimationSmooth, Time.deltaTime );
-        animator.SetFloat( AnimatorParameters.InputVertical, isStop ? 0.0f : inputVertical, AnimationSmooth, Time.deltaTime );
-        animator.SetFloat( AnimatorParameters.InputMagnitude, isStop ? 0.0f : inputMagnitude, AnimationSmooth, Time.deltaTime );
+        bool isStop = rigidBody.velocity.sqrMagnitude < float.Epsilon;
+        animator.SetFloat( AnimatorParameters.InputHorizontal, isStop ? 0.0f : inputHorizontal, AnimationDampTime, Time.deltaTime );
+        animator.SetFloat( AnimatorParameters.InputVertical, isStop ? 0.0f : inputVertical, AnimationDampTime, Time.deltaTime );
+        animator.SetFloat( AnimatorParameters.InputMagnitude, isStop ? 0.0f : inputMagnitude, AnimationDampTime, Time.deltaTime );
         animator.SetFloat( AnimatorParameters.VelocityY, rigidBody.velocity.y );
     }
 

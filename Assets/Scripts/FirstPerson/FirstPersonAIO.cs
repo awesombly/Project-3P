@@ -13,7 +13,7 @@ using System.Net;
 
 public class FirstPersonAIO : MonoBehaviour
 {
-    private Actor myActor;
+    private Character myPlayer;
 
     #region Variables
 
@@ -124,8 +124,8 @@ public class FirstPersonAIO : MonoBehaviour
     private CapsuleCollider capsule;
     private bool IsGrounded
     {
-        get { return myActor.isGrounded; }
-        set { myActor.isGrounded = value; }
+        get { return myPlayer.isGrounded; }
+        set { myPlayer.isGrounded = value; }
     }
     internal Vector2 inputXY;
     public bool isCrouching;
@@ -133,8 +133,8 @@ public class FirstPersonAIO : MonoBehaviour
     float checkedSlope;
     private bool IsSprinting
     {
-        get { return myActor.isSprinting; }
-        set { myActor.isSprinting = value; }
+        get { return myPlayer.isSprinting; }
+        set { myPlayer.isSprinting = value; }
     }
 
     #endregion
@@ -220,8 +220,8 @@ public class FirstPersonAIO : MonoBehaviour
 
     private void Awake()
     {
-        myActor = GetComponent<Actor>();
-        if ( myActor == null )
+        myPlayer = GetComponent<Character>();
+        if ( myPlayer == null )
         {
             Debug.LogError( "Actor not found." );
         }
@@ -372,7 +372,7 @@ public class FirstPersonAIO : MonoBehaviour
         if ( useStamina )
         {
             float needStamina = ( staminaDepletionSpeed * 2.0f ) * Time.deltaTime;
-            IsSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > needStamina && ( myActor.localVelocity.z > 0.01f );
+            IsSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > needStamina && ( myPlayer.localVelocity.z > 0.01f );
             if ( IsSprinting )
             {
                 staminaInternal -= needStamina;
