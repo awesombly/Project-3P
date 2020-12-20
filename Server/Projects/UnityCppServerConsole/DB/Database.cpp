@@ -67,12 +67,14 @@ Infomation Database::GetUserInfomation( int _uid )
 		return info;
 	}
 	MYSQL_ROW row = ::mysql_fetch_row( data );
-	info.uid = std::atoi( row[ 0 ] );
-	info.name = row[ 1 ];
-	info.id = row[ 2 ];
-	info.pw = row[ 3 ];
-	info.startDate = row[ 4 ];
-	info.lastConnectDate = row[ 5 ];
+
+	info.uid             = std::atoi( row[ 0 ] );
+	info.name            = row[ 1 ];
+	info.id              = row[ 2 ];
+	info.pw              = row[ 3 ];
+	info.money           = std::atoi( row[ 4 ] );
+	info.startDate       = row[ 5 ];
+	info.lastConnectDate = row[ 6 ];
 
 	return info;
 }

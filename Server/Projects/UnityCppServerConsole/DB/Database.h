@@ -7,6 +7,7 @@ struct Infomation
 	std::string name;
 	std::string id;
 	std::string pw;
+	int money;
 	std::string startDate;
 	std::string lastConnectDate;
 };
