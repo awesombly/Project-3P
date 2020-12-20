@@ -108,6 +108,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DB\Database.cpp" />
     <ClCompile Include="Logic\ServerActor.cpp" />
     <ClCompile Include="Network\Network.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
@@ -129,6 +130,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Logic\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DB\Database.h" />
     <ClInclude Include="Logic\ServerActor.h" />
     <ClInclude Include="Network\Network.h" />
     <ClInclude Include="Network\Acceptor.h" />

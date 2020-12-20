@@ -28,11 +28,6 @@ void Log::WSAError()
 Log& Log::operator << ( ELogType _type )
 {
 	size_t paramSize = types[ _type ].size();
-	if ( LogDataMaxSize - curLogPos < paramSize )
-	{
-		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
-	}
-
 	std::copy( std::begin( types[ _type ] ), std::end( types[ _type ] ), &logData[ curLogPos ] );
 	curLogPos += paramSize;
 
@@ -64,11 +59,6 @@ Log& Log::operator << ( ELogType _type )
 Log& Log::operator << ( const std::string& _data )
 {
 	size_t paramSize = _data.size();
-	if ( LogDataMaxSize - curLogPos < paramSize )
-	{
-		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
-	}
-
 	std::copy( std::begin( _data ), std::end( _data ), &logData[ curLogPos ] );
 	curLogPos += paramSize;
 
@@ -78,11 +68,6 @@ Log& Log::operator << ( const std::string& _data )
 Log& Log::operator << ( const char* _data )
 {
 	size_t paramSize = ::strlen( _data );
-	if ( LogDataMaxSize - curLogPos < paramSize )
-	{
-		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
-	}
-
 	std::copy( &_data[ 0 ], &_data[ paramSize ], &logData[ curLogPos ] );
 	curLogPos += paramSize;
 
@@ -93,11 +78,6 @@ Log& Log::operator << ( int _data )
 {
 	std::string data = std::to_string( _data );
 	size_t paramSize = data.size();
-	if ( LogDataMaxSize - curLogPos < paramSize )
-	{
-		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
-	}
-
 	std::copy( &data[ 0 ], &data[ paramSize ], &logData[ curLogPos ] );
 	curLogPos += paramSize;
 
@@ -108,11 +88,6 @@ Log& Log::operator << ( unsigned __int64 _data )
 {
 	std::string data = std::to_string( _data );
 	size_t paramSize = data.size();
-	if ( LogDataMaxSize - curLogPos < paramSize )
-	{
-		// 사이즈만큼 넣고 0으로만든다음에 다시 출력
-	}
-
 	std::copy( &data[ 0 ], &data[ paramSize ], &logData[ curLogPos ] );
 	curLogPos += paramSize;
 

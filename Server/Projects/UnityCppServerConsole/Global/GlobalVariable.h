@@ -8,7 +8,27 @@ static const u_short WorkerThreadCount = 6;
 static const u_short OneLineOfText = 256;
 static const u_short DataMaxSize = 2048;
 static const u_short RecvBufferMaxSize = 10000;
-static const u_short LogDataMaxSize = 1024;
+static const u_short LogDataMaxSize = 4;
+
+namespace DB
+{
+	namespace CONFIG
+	{
+		const static char* Host = "localhost";
+		const static char* User = "root";
+		const static char* PW = "wnsrudtj2629";
+		const static char* DBName = "project3p";
+		const static unsigned int Port = 3306;
+	}
+
+	namespace ColName
+	{
+		const static char* Key = "key";
+		const static char* NickName = "nickname";
+		const static char* ID = "id";
+		const static char* PW = "pw";
+	}
+}
 
 namespace PATH
 {

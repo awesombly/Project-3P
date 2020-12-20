@@ -20,6 +20,7 @@
     <ClCompile Include="Logic\Quaternion.cpp" />
     <ClCompile Include="Logic\Stage.cpp" />
     <ClCompile Include="Logic\ServerActor.cpp" />
+    <ClCompile Include="DB\Database.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
@@ -44,5 +45,6 @@
     <ClInclude Include="Logic\Quaternion.h" />
     <ClInclude Include="Logic\Stage.h" />
     <ClInclude Include="Logic\ServerActor.h" />
+    <ClInclude Include="DB\Database.h" />
   </ItemGroup>
 </Project>
