@@ -58,12 +58,10 @@ public class PlayerController : Actor
     private void UpdateInputParameters()
     {
         float sprintingRate = ( isSprinting ? 1.5f : 1.0f );
+        inputVertical = Mathf.Clamp( localVelocity.z, -1.0f, 1.0f ) * sprintingRate;
+        inputHorizontal = Mathf.Clamp( localVelocity.x, -1.0f, 1.0f ) * sprintingRate;
 
-        Vector3 relativeInput = transform.InverseTransformDirection( rigidBody.velocity );
-        inputVertical = Mathf.Clamp( relativeInput.z, -1.0f, 1.0f ) * sprintingRate;
-        inputHorizontal = Mathf.Clamp( relativeInput.x, -1.0f, 1.0f ) * sprintingRate;
-
-        inputMagnitude = relativeInput.normalized.magnitude;
+        inputMagnitude = localVelocity.normalized.magnitude;
     }
 
     private void UpdateAnimatorParameters()

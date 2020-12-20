@@ -245,11 +245,6 @@ public class FirstPersonAIO : MonoBehaviour
         rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         _crouchModifiers.colliderHeight = capsule.height;
         #endregion
-
-        #region Headbobbing Settings - Awake
-
-        #endregion
-
     }
 
     private void Start()
@@ -368,54 +363,47 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( Input.GetButtonDown( "Cancel" ) ) { ControllerPause(); }
         #endregion
-
-        #region Movement Settings - Update
-
-        #endregion
-
-        #region Headbobbing Settings - Update
-
-        #endregion
-
     }
 
     private void FixedUpdate()
     {
-        #region Look Settings - FixedUpdate
-
-        #endregion
-
         #region Movement Settings - FixedUpdate
 
         if ( useStamina )
         {
-            IsSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > 0 && ( Mathf.Abs( rigidBody.velocity.x ) > 0.01f || Mathf.Abs( rigidBody.velocity.z ) > 0.01f );
+            float needStamina = ( staminaDepletionSpeed * 2.0f ) * Time.deltaTime;
+            IsSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > needStamina && ( myActor.localVelocity.z > 0.01f );
             if ( IsSprinting )
             {
-                staminaInternal -= ( staminaDepletionSpeed * 2 ) * Time.deltaTime;
+                staminaInternal -= needStamina;
                 if ( drawStaminaMeter )
                 {
                     StaminaMeterBG.color = Vector4.MoveTowards( StaminaMeterBG.color, new Vector4( 0, 0, 0, 0.5f ), 0.15f );
-                    StaminaMeter.color = Vector4.MoveTowards( StaminaMeter.color, new Vector4( 1, 1, 1, 1 ), 0.15f );
+                    StaminaMeter.color = Vector4.MoveTowards( StaminaMeter.color, Vector4.one, 0.15f );
                 }
             }
-            else if ( ( !Input.GetKey( sprintKey ) || Mathf.Abs( rigidBody.velocity.x ) < 0.01f || Mathf.Abs( rigidBody.velocity.z ) < 0.01f || isCrouching ) && staminaInternal < staminaLevel )
+            else
             {
                 staminaInternal += staminaDepletionSpeed * Time.deltaTime;
             }
+
             if ( drawStaminaMeter )
             {
                 if ( staminaInternal == staminaLevel )
                 {
-                    StaminaMeterBG.color = Vector4.MoveTowards( StaminaMeterBG.color, new Vector4( 0, 0, 0, 0 ), 0.15f );
+                    StaminaMeterBG.color = Vector4.MoveTowards( StaminaMeterBG.color, Vector4.zero, 0.15f );
                     StaminaMeter.color = Vector4.MoveTowards( StaminaMeter.color, new Vector4( 1, 1, 1, 0 ), 0.15f );
                 }
                 float x = Mathf.Clamp( Mathf.SmoothDamp( StaminaMeter.transform.localScale.x, ( staminaInternal / staminaLevel ) * StaminaMeterBG.transform.localScale.x, ref smoothRef, ( 1 ) * Time.deltaTime, 1 ), 0.001f, StaminaMeterBG.transform.localScale.x );
                 StaminaMeter.transform.localScale = new Vector3( x, 1, 1 );
             }
+
             staminaInternal = Mathf.Clamp( staminaInternal, 0, staminaLevel );
         }
-        else { IsSprinting = Input.GetKey( sprintKey ); }
+        else
+        {
+            IsSprinting = Input.GetKey( sprintKey );
+        }
 
         moveDirection = Vector3.zero;
         speed = walkByDefault ? isCrouching ? walkSpeedInternal : ( IsSprinting ? sprintSpeedInternal : walkSpeedInternal ) : ( IsSprinting ? walkSpeedInternal : sprintSpeedInternal );
@@ -558,9 +546,6 @@ public class FirstPersonAIO : MonoBehaviour
                 jumpPowerInternal = jumpPower;
             }
         }
-
-
-
 
         #endregion
 

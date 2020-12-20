@@ -7,6 +7,7 @@ public class Actor : MonoBehaviour
     internal uint serial;
     internal bool isLocal = true;
     internal Vector3 syncVelocity;
+    internal Vector3 localVelocity;
 
     internal bool isGrounded = true;
     internal bool isSprinting = false;
@@ -20,6 +21,8 @@ public class Actor : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        localVelocity = transform.InverseTransformDirection( rigidBody.velocity );
+
         if ( !isLocal )
         {
             rigidBody.velocity = syncVelocity;
