@@ -122,19 +122,27 @@ public class FirstPersonAIO : MonoBehaviour
     }
     public AdvancedSettings advanced = new AdvancedSettings();
     private CapsuleCollider capsule;
+
+    internal Vector2 inputXY;
+    float yVelocity;
+    float checkedSlope;
+
     private bool IsGrounded
     {
         get { return myPlayer.isGrounded; }
         set { myPlayer.isGrounded = value; }
     }
-    internal Vector2 inputXY;
-    public bool isCrouching;
-    float yVelocity;
-    float checkedSlope;
+
     private bool IsSprinting
     {
         get { return myPlayer.isSprinting; }
         set { myPlayer.isSprinting = value; }
+    }
+
+    private bool IsCrouching
+    {
+        get { return myPlayer.isCrouching; }
+        set { myPlayer.isCrouching = value; }
     }
 
     #endregion
@@ -236,7 +244,7 @@ public class FirstPersonAIO : MonoBehaviour
         sprintSpeedInternal = sprintSpeed;
         jumpPowerInternal = jumpPower;
         capsule = GetComponent<CapsuleCollider>();
-        isCrouching = false;
+        IsCrouching = false;
         if ( rigidBody == null )
         {
             rigidBody = GetComponent<Rigidbody>();
@@ -357,8 +365,8 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( _crouchModifiers.useCrouch )
         {
-            if ( !_crouchModifiers.toggleCrouch ) { isCrouching = _crouchModifiers.crouchOverride || Input.GetKey( _crouchModifiers.crouchKey ); }
-            else if ( Input.GetKeyDown( _crouchModifiers.crouchKey ) ) { isCrouching = !isCrouching || _crouchModifiers.crouchOverride; }
+            if ( !_crouchModifiers.toggleCrouch ) { IsCrouching = _crouchModifiers.crouchOverride || Input.GetKey( _crouchModifiers.crouchKey ); }
+            else if ( Input.GetKeyDown( _crouchModifiers.crouchKey ) ) { IsCrouching = !IsCrouching || _crouchModifiers.crouchOverride; }
         }
 
         if ( Input.GetButtonDown( "Cancel" ) ) { ControllerPause(); }
@@ -372,7 +380,7 @@ public class FirstPersonAIO : MonoBehaviour
         if ( useStamina )
         {
             float needStamina = ( staminaDepletionSpeed * 2.0f ) * Time.deltaTime;
-            IsSprinting = Input.GetKey( sprintKey ) && !isCrouching && staminaInternal > needStamina && ( myPlayer.localVelocity.z > 0.01f );
+            IsSprinting = Input.GetKey( sprintKey ) && !IsCrouching && staminaInternal > needStamina && ( myPlayer.localVelocity.z > 0.01f );
             if ( IsSprinting )
             {
                 staminaInternal -= needStamina;
@@ -406,7 +414,7 @@ public class FirstPersonAIO : MonoBehaviour
         }
 
         moveDirection = Vector3.zero;
-        speed = walkByDefault ? isCrouching ? walkSpeedInternal : ( IsSprinting ? sprintSpeedInternal : walkSpeedInternal ) : ( IsSprinting ? walkSpeedInternal : sprintSpeedInternal );
+        speed = walkByDefault ? IsCrouching ? walkSpeedInternal : ( IsSprinting ? sprintSpeedInternal : walkSpeedInternal ) : ( IsSprinting ? walkSpeedInternal : sprintSpeedInternal );
 
 
         if ( advanced.maxSlopeAngle > 0 )
@@ -516,7 +524,7 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( advanced.FOVKickAmount > 0 )
         {
-            if ( IsSprinting && !isCrouching && playerCamera.fieldOfView != ( baseCamFOV + ( advanced.FOVKickAmount * 2 ) - 0.01f ) )
+            if ( IsSprinting && !IsCrouching && playerCamera.fieldOfView != ( baseCamFOV + ( advanced.FOVKickAmount * 2 ) - 0.01f ) )
             {
                 if ( Mathf.Abs( rigidBody.velocity.x ) > 0.5f || Mathf.Abs( rigidBody.velocity.z ) > 0.5f )
                 {
@@ -531,7 +539,7 @@ public class FirstPersonAIO : MonoBehaviour
         if ( _crouchModifiers.useCrouch )
         {
 
-            if ( isCrouching )
+            if ( IsCrouching )
             {
                 capsule.height = Mathf.MoveTowards( capsule.height, _crouchModifiers.colliderHeight / 1.5f, 5 * Time.deltaTime );
                 walkSpeedInternal = walkSpeed * _crouchModifiers.crouchWalkSpeedMultiplier;

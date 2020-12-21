@@ -6,6 +6,7 @@ public class Character : Actor
 {
     internal bool isGrounded = true;
     internal bool isSprinting = false;
+    internal bool isCrouching = false;
 
     private struct SyncMovement
     {
@@ -72,6 +73,7 @@ public class Character : Actor
         animator.SetBool( AnimatorParameters.IsGrounded, isGrounded );
         animator.SetBool( AnimatorParameters.IsStrafing, true );
         animator.SetBool( AnimatorParameters.IsSprinting, isSprinting );
+        animator.SetBool( AnimatorParameters.IsCrouching, isCrouching );
 
         bool isStop = rigidBody.velocity.sqrMagnitude < float.Epsilon;
         animator.SetFloat( AnimatorParameters.InputHorizontal, isStop ? 0.0f : inputHorizontal, AnimationDampTime, Time.deltaTime );
@@ -90,5 +92,6 @@ public class Character : Actor
         public static int IsGrounded = Animator.StringToHash( "IsGrounded" );
         public static int IsStrafing = Animator.StringToHash( "IsStrafing" );
         public static int IsSprinting = Animator.StringToHash( "IsSprinting" );
+        public static int IsCrouching = Animator.StringToHash( "IsCrouching" );
     }
 }
