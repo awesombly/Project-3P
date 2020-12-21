@@ -14,6 +14,7 @@ using System.Net;
 public class FirstPersonAIO : MonoBehaviour
 {
     private Character myPlayer;
+    private GameObject model;
 
     #region Variables
 
@@ -234,6 +235,8 @@ public class FirstPersonAIO : MonoBehaviour
             Debug.LogError( "Actor not found." );
         }
 
+        model = GetComponentInChildren<Animator>().gameObject;
+
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
 
@@ -365,8 +368,14 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( _crouchModifiers.useCrouch )
         {
-            if ( !_crouchModifiers.toggleCrouch ) { IsCrouching = _crouchModifiers.crouchOverride || Input.GetKey( _crouchModifiers.crouchKey ); }
-            else if ( Input.GetKeyDown( _crouchModifiers.crouchKey ) ) { IsCrouching = !IsCrouching || _crouchModifiers.crouchOverride; }
+            if ( !_crouchModifiers.toggleCrouch ) 
+            {
+                IsCrouching = _crouchModifiers.crouchOverride || Input.GetKey( _crouchModifiers.crouchKey );
+            }
+            else if ( Input.GetKeyDown( _crouchModifiers.crouchKey ) ) 
+            {
+                IsCrouching = !IsCrouching || _crouchModifiers.crouchOverride;
+            }
         }
 
         if ( Input.GetButtonDown( "Cancel" ) ) { ControllerPause(); }
@@ -538,13 +547,11 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( _crouchModifiers.useCrouch )
         {
-
             if ( IsCrouching )
             {
-                capsule.height = Mathf.MoveTowards( capsule.height, _crouchModifiers.colliderHeight / 1.5f, 5 * Time.deltaTime );
+                capsule.height = Mathf.MoveTowards( capsule.height, _crouchModifiers.colliderHeight * 0.65f, 5 * Time.deltaTime );
                 walkSpeedInternal = walkSpeed * _crouchModifiers.crouchWalkSpeedMultiplier;
                 jumpPowerInternal = jumpPower * _crouchModifiers.crouchJumpPowerMultiplier;
-
             }
             else
             {
@@ -553,6 +560,8 @@ public class FirstPersonAIO : MonoBehaviour
                 sprintSpeedInternal = sprintSpeed;
                 jumpPowerInternal = jumpPower;
             }
+
+            model.transform.localPosition = ( capsule.height * 0.5f * Vector3.down );
         }
 
         #endregion
