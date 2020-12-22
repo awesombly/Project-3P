@@ -13,7 +13,7 @@ using System.Net;
 
 public class FirstPersonAIO : MonoBehaviour
 {
-    private Character myPlayer;
+    private Player myPlayer;
     private GameObject model;
 
     #region Variables
@@ -229,7 +229,7 @@ public class FirstPersonAIO : MonoBehaviour
 
     private void Awake()
     {
-        myPlayer = GetComponent<Character>();
+        myPlayer = GetComponent<Player>();
         if ( myPlayer == null )
         {
             Debug.LogError( "Actor not found." );

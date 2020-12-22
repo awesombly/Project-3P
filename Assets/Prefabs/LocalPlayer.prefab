@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 54587624234064098}
   - component: {fileID: 136239539305442568}
   - component: {fileID: 114051214696948948}
-  - component: {fileID: -3782142987958112316}
+  - component: {fileID: 6075927902773247051}
   m_Layer: 0
   m_Name: LocalPlayer
   m_TagString: Player
@@ -470,7 +470,6 @@ MonoBehaviour:
     FOVKickAmount: 2.5
     changeTime: 0.75
     fovRef: 0
-  isCrouching: 0
   useHeadbob: 1
   head: {fileID: 4204582120663750}
   snapHeadjointToCapsul: 0
@@ -550,7 +549,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f998ace3fc86c2c4488fcaf52fed8fe4, type: 3}
     - {fileID: 8300000, guid: 6f68bc2e1807ff0478d37ee6f1c6c29c, type: 3}
     - {fileID: 8300000, guid: f268cfd457dd6124c87c112ab143aa1f, type: 3}
---- !u!114 &-3782142987958112316
+--- !u!114 &6075927902773247051
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -559,9 +558,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1743903104223250}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6bf797ff084979428a4af1cf1125d7e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a1b9146c6cd0d3439b9f0b276d3c348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boneInfo:
+    LeftHand: {fileID: 1194495763047321393}
+    RightHand: {fileID: 1194495763047321447}
+  testPrefab: {fileID: 164718, guid: f990a7f182be91b41b7167bc5fdff7eb, type: 3}
 --- !u!1001 &1194495763047191971
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -782,5 +785,15 @@ PrefabInstance:
 --- !u!4 &1194495763047321437 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400126, guid: 133d811bb01bcd94193efb9f33d1ebce, type: 3}
+  m_PrefabInstance: {fileID: 1194495763047191971}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1194495763047321393 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400018, guid: 133d811bb01bcd94193efb9f33d1ebce, type: 3}
+  m_PrefabInstance: {fileID: 1194495763047191971}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1194495763047321447 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400068, guid: 133d811bb01bcd94193efb9f33d1ebce, type: 3}
   m_PrefabInstance: {fileID: 1194495763047191971}
   m_PrefabAsset: {fileID: 0}
