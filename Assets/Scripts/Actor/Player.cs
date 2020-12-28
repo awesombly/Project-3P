@@ -21,9 +21,9 @@ public class Player : Character
         public Transform Reference;
     }
     public List<BoneInfo> boneList; // 인스펙터 편집용
-    private Dictionary<EBoneType, BoneInfo> boneInfos;
+    private Dictionary<EBoneType, BoneInfo> boneInfos = new Dictionary<EBoneType, BoneInfo>();
 
-    public GameObject testPrefab;
+    public Equipment testEquip;
 
     protected override void Awake()
     {
@@ -40,13 +40,14 @@ public class Player : Character
 
     private void Start()
     {
+        if ( testEquip == null )
         {
-            GameObject instance = Instantiate( testPrefab, boneInfos[ EBoneType.LeftHand ].Reference );
-            instance.transform.localScale = BoneInfo.OriginalScale;
+            return;
         }
 
+        foreach ( Equipment.ModelInfo info in testEquip.modelInfos )
         {
-            GameObject instance = Instantiate( testPrefab, boneInfos[ EBoneType.RightHand ].Reference );
+            GameObject instance = Instantiate( info.Prefab, boneInfos[ info.AttachBone ].Reference );
             instance.transform.localScale = BoneInfo.OriginalScale;
         }
     }

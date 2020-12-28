@@ -561,11 +561,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1b9146c6cd0d3439b9f0b276d3c348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boneInfo:
+  boneList:
+  - BoneType: 0
     Reference: {fileID: 1194495763047321279}
-    LeftHand: {fileID: 4496883081163120107}
-    RightHand: {fileID: 3577637095626918573}
-  testPrefab: {fileID: 164718, guid: f990a7f182be91b41b7167bc5fdff7eb, type: 3}
+  - BoneType: 1
+    Reference: {fileID: 4496883081163120107}
+  - BoneType: 2
+    Reference: {fileID: 3577637095626918573}
+  testEquip: {fileID: 11400000, guid: 4dad1f1a7924a3f41a2835854f681c09, type: 2}
 --- !u!1 &277782326091747974
 GameObject:
   m_ObjectHideFlags: 0
