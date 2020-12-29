@@ -17,7 +17,6 @@ public class ChatMain : MonoBehaviour
     public List<Message> messages = new List<Message>();
 
     public InputField enterContent;
-    public GameObject chatPannel;
     public GameObject chatContents;
     public GameObject textPrefab;
 
