@@ -20,15 +20,17 @@ public class Player : Character
         public EBoneType BoneType;
         public Transform Reference;
     }
-    public List<BoneInfo> boneList; // 인스펙터 편집용
+    [SerializeField]
+    private List<BoneInfo> boneList; // 인스펙터 편집용
     private Dictionary<EBoneType, BoneInfo> boneInfos = new Dictionary<EBoneType, BoneInfo>();
 
-    public struct EquipInfo
+    private struct EquipInfo
     {
         public Equipment Equip;
         public List<GameObject> Models;
     }
-    internal Dictionary<EEquipType, EquipInfo> equipInfos = new Dictionary<EEquipType, EquipInfo>();
+    private Dictionary<EEquipType, EquipInfo> equipInfos = new Dictionary<EEquipType, EquipInfo>();
+    private Dictionary<int/*index*/, Equipment> equipQuickslot = new Dictionary<int/*index*/, Equipment>();
 
     public Equipment testEquip;
     public Equipment testEquip2;
@@ -48,8 +50,14 @@ public class Player : Character
 
     private void Start()
     {
-        SetEquipment( testEquip );
-        SetEquipment( testEquip2 );
+        SetEquipQuickslot( 0, testEquip );
+        SetEquipQuickslot( 1, testEquip2 );
+        SetEquipQuickslot( 2, testEquip );
+        SetEquipQuickslot( 3, testEquip2 );
+        SetEquipQuickslot( 4, testEquip );
+        SetEquipQuickslot( 5, testEquip2 );
+
+        UseEquipQuickslot( 0 );
     }
 
     public void SetEquipment( Equipment equip )
@@ -91,5 +99,25 @@ public class Player : Character
         }
 
         equipInfos.Remove( equipType );
+    }
+
+    public void SetEquipQuickslot( int index, Equipment equip )
+    {
+        if ( !equipQuickslot.ContainsKey( index ) )
+        {
+            equipQuickslot.Add( index, null );
+        }
+
+        equipQuickslot[ index ] = equip;
+    }
+
+    public void UseEquipQuickslot( int index )
+    {
+        if ( !equipQuickslot.ContainsKey( index ) )
+        {
+            return;
+        }
+
+        SetEquipment( equipQuickslot[ index ] );
     }
 }

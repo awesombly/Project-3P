@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class Item : ScriptableObject
 {
-    ///
+    public string id;
+    public string desc;
+    public int price;
+    internal enum EItemType
+    {
+        None,
+        Equipment,
+    }
+    internal EItemType itemType;
 }
 
 public enum EEquipType
@@ -23,5 +31,10 @@ public class Equipment : Item
         public EBoneType AttachBone;
         public GameObject Prefab;
     }
-    public List<ModelInfo> modelInfos; 
+    public List<ModelInfo> modelInfos;
+
+    private void OnEnable()
+    {
+        itemType = EItemType.Equipment;
+    }
 }
