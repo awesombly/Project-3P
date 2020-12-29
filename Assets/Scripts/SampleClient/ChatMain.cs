@@ -21,7 +21,7 @@ public class ChatMain : MonoBehaviour
     public GameObject textPrefab;
 
     public delegate void ChatReturnEvent();
-    public event ChatReturnEvent ChatEvent;
+    public static event ChatReturnEvent ChatEvent;
 
     private const int maxMessageCount = 25;
     
@@ -46,6 +46,8 @@ public class ChatMain : MonoBehaviour
                 enterContent.gameObject.SetActive( true );
                 enterContent.ActivateInputField();
             }
+
+            ChatEvent();
         }
 
         if ( texts.Count > 0 )

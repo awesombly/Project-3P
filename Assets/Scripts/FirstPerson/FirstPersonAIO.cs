@@ -237,6 +237,8 @@ public class FirstPersonAIO : MonoBehaviour
 
         model = GetComponentInChildren<Animator>().gameObject;
 
+        ChatMain.ChatEvent += () => { playerCanMove = !playerCanMove; };
+
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
 
@@ -424,7 +426,6 @@ public class FirstPersonAIO : MonoBehaviour
 
         moveDirection = Vector3.zero;
         speed = walkByDefault ? IsCrouching ? walkSpeedInternal : ( IsSprinting ? sprintSpeedInternal : walkSpeedInternal ) : ( IsSprinting ? walkSpeedInternal : sprintSpeedInternal );
-
 
         if ( advanced.maxSlopeAngle > 0 )
         {
