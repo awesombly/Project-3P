@@ -23,7 +23,15 @@ public class Player : Character
     public List<BoneInfo> boneList; // 인스펙터 편집용
     private Dictionary<EBoneType, BoneInfo> boneInfos = new Dictionary<EBoneType, BoneInfo>();
 
+    public struct EquipInfo
+    {
+        public Equipment Equip;
+        public List<GameObject> Models;
+    }
+    internal Dictionary<EEquipType, EquipInfo> equipInfos = new Dictionary<EEquipType, EquipInfo>();
+
     public Equipment testEquip;
+    public Equipment testEquip2;
 
     protected override void Awake()
     {
@@ -40,15 +48,48 @@ public class Player : Character
 
     private void Start()
     {
-        if ( testEquip == null )
+        SetEquipment( testEquip );
+        SetEquipment( testEquip2 );
+    }
+
+    public void SetEquipment( Equipment equip )
+    {
+        if ( equip == null )
+        {
+            Debug.LogWarning( "equip is null." );
+            return;
+        }
+
+        ReleaseEquipment( equip.equipType );
+
+        EquipInfo equipInfo;
+        equipInfo.Equip = equip;
+        equipInfo.Models = new List<GameObject>();
+
+        foreach ( Equipment.ModelInfo info in equip.modelInfos )
+        {
+            GameObject instance = Instantiate( info.Prefab, boneInfos[ info.AttachBone ].Reference );
+            instance.transform.localScale = BoneInfo.OriginalScale;
+
+            equipInfo.Models.Add( instance );
+        }
+
+        equipInfos.Add( equip.equipType, equipInfo );
+    }
+
+    public void ReleaseEquipment( EEquipType equipType )
+    {
+        if ( !equipInfos.ContainsKey( equipType ) )
         {
             return;
         }
 
-        foreach ( Equipment.ModelInfo info in testEquip.modelInfos )
+        EquipInfo prevEquip = equipInfos[ equipType ];
+        foreach ( GameObject model in prevEquip.Models )
         {
-            GameObject instance = Instantiate( info.Prefab, boneInfos[ info.AttachBone ].Reference );
-            instance.transform.localScale = BoneInfo.OriginalScale;
+            Destroy( model );
         }
+
+        equipInfos.Remove( equipType );
     }
 }

@@ -569,6 +569,7 @@ MonoBehaviour:
   - BoneType: 2
     Reference: {fileID: 3577637095626918573}
   testEquip: {fileID: 11400000, guid: 4dad1f1a7924a3f41a2835854f681c09, type: 2}
+  testEquip2: {fileID: 11400000, guid: 44b4727d6f6630a458135bf2225699d8, type: 2}
 --- !u!1 &277782326091747974
 GameObject:
   m_ObjectHideFlags: 0

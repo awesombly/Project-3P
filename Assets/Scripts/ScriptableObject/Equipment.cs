@@ -15,7 +15,7 @@ public enum EEquipType
 [CreateAssetMenu( fileName = "Equipment", menuName = "Scriptable Object/Equipment" )]
 public class Equipment : Item
 {
-    public EEquipType equiType;
+    public EEquipType equipType;
 
     [System.Serializable]
     public struct ModelInfo
@@ -23,6 +23,5 @@ public class Equipment : Item
         public EBoneType AttachBone;
         public GameObject Prefab;
     }
-    /// 장비 하나에 여러 모델이 추가될수도 있어 List로 함
     public List<ModelInfo> modelInfos; 
 }
