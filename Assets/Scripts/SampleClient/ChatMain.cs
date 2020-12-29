@@ -32,14 +32,11 @@ public class ChatMain : MonoBehaviour
 
     private void Update()
     {
-        if ( Input.GetKeyDown( KeyCode.Return ) )
+        if ( Input.GetKeyDown( KeyCode.Return )  )
         {
-            if ( enterContent.isActiveAndEnabled )
+            if ( enterContent.IsActive() )
             {
-                Protocol.Both.ChatMessage protocol;
-                protocol.Message = enterContent.text;
-
-                Network.Instance.Send( protocol );
+                SendChatMessage( enterContent.text );
                 enterContent.text = "";
 
                 enterContent.gameObject.SetActive( false );
@@ -54,6 +51,17 @@ public class ChatMain : MonoBehaviour
         if ( texts.Count > 0 )
         {
             MakeMessage( texts[ 0 ] );
+        }
+    }
+
+    private void SendChatMessage( string _message )
+    {
+        if ( !_message.Equals( "" ) )
+        {
+            Protocol.Both.ChatMessage protocol;
+            protocol.Message = _message;
+
+            Network.Instance.Send( protocol );
         }
     }
 
