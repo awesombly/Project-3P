@@ -16,26 +16,46 @@ public class ChatMain : MonoBehaviour
     public static List<string> texts = new List<string>();
     public List<Message> messages = new List<Message>();
 
-    public InputField inputMessage;
+    public InputField enterContent;
     public GameObject chatPannel;
-    public GameObject textContent;
+    public GameObject chatContents;
     public GameObject textPrefab;
 
+    public delegate void ChatReturnEvent();
+    public event ChatReturnEvent ChatEvent;
+
     private const int maxMessageCount = 25;
+    
+    private void Awake()
+    {
+        enterContent.gameObject.SetActive( false );
+    }
 
     private void Update()
     {
         if ( Input.GetKeyDown( KeyCode.Return ) )
         {
-            OnVisibleChatPannel( true );
+            if ( enterContent.isActiveAndEnabled )
+            {
+                Protocol.Both.ChatMessage protocol;
+                protocol.Message = enterContent.text;
+
+                Network.Instance.Send( protocol );
+                enterContent.text = "";
+
+                enterContent.gameObject.SetActive( false );
+            }
+            else
+            {
+                enterContent.gameObject.SetActive( true );
+                enterContent.ActivateInputField();
+            }
         }
 
         if ( texts.Count > 0 )
         {
             MakeMessage( texts[ 0 ] );
         }
-
-        
     }
 
     public void MakeMessage( string _text )
@@ -49,33 +69,11 @@ public class ChatMain : MonoBehaviour
         Message newMessage = new Message();
         newMessage.text = _text;
 
-        GameObject newText = Instantiate( textPrefab, textContent.transform );
+        GameObject newText = Instantiate( textPrefab, chatContents.transform );
         newMessage.textObject = newText.GetComponent<Text>();
         newMessage.textObject.text = newMessage.text;
         messages.Add( newMessage );
 
         texts.Remove( _text );
-    }
-
-    public void SendChatMessage()
-    {
-        Protocol.Both.ChatMessage protocol;
-        protocol.Message = inputMessage.text;
-        
-        Network.Instance.Send( protocol );
-        inputMessage.text = "";
-    }
-
-    public void OnVisibleChatPannel( bool isVisible )
-    {
-        if ( chatPannel != null )
-        {
-            chatPannel.SetActive( isVisible );
-        }
-
-        if ( isVisible )
-        {
-            inputMessage.Select();
-        }
     }
 }
