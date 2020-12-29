@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6624005549295545591}
   - component: {fileID: 6624005549295545588}
   m_Layer: 5
-  m_Name: ScrollView
+  m_Name: ChatContents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -193, y: -132}
-  m_SizeDelta: {x: 281.27844, y: 133.48074}
+  m_AnchoredPosition: {x: 0.18041992, y: -1.1297913}
+  m_SizeDelta: {x: -0.36071777, y: -2.2596436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6624005549295545590
 CanvasRenderer:
@@ -141,7 +141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.0000044748626, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6624005550042653824
@@ -220,8 +220,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: -17}
+  m_AnchoredPosition: {x: 2, y: -1}
+  m_SizeDelta: {x: -1.999939, y: -0.99993896}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6624005550606498613
 CanvasRenderer:
