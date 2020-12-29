@@ -34,6 +34,8 @@ public class ChatMain : MonoBehaviour
         {
             MakeMessage( texts[ 0 ] );
         }
+
+        
     }
 
     public void MakeMessage( string _text )
