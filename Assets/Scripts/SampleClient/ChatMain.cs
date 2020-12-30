@@ -82,6 +82,7 @@ public class ChatMain : MonoBehaviour
         GameObject newText = Instantiate( textPrefab, chatContents.transform );
         newMessage.textObject = newText.GetComponent<TextMeshProUGUI>();
         newMessage.textObject.text = newMessage.text;
+
         messages.Add( newMessage );
 
         texts.Remove( _text );
