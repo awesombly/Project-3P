@@ -2903,7 +2903,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enterContent: {fileID: 1522895166}
   chatContents: {fileID: 531525825}
-  textPrefab: {fileID: 895400065406932687, guid: a276f3baa3d6937428fd2a4434dfb1b3, type: 3}
+  textPrefab: {fileID: 2446521198419580802, guid: 63ae343bcf9443348978be83e8935d22, type: 3}
 --- !u!1001 &611431837
 PrefabInstance:
   m_ObjectHideFlags: 0

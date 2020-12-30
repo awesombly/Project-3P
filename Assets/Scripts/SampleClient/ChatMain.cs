@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 // 솔루션 탐색기에 UnityCppServerConsole이 안보이면
 // 기존 프로젝트 추가 -> Server폴더 찾으셔서 추가하세요.
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 public struct Message
 {
     public string text;
-    public Text textObject;
+    public TextMeshProUGUI textObject;
 }
 
 public class ChatMain : MonoBehaviour
@@ -79,7 +80,7 @@ public class ChatMain : MonoBehaviour
         newMessage.text = _text;
 
         GameObject newText = Instantiate( textPrefab, chatContents.transform );
-        newMessage.textObject = newText.GetComponent<Text>();
+        newMessage.textObject = newText.GetComponent<TextMeshProUGUI>();
         newMessage.textObject.text = newMessage.text;
         messages.Add( newMessage );
 
