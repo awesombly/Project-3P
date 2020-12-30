@@ -2546,6 +2546,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChatContents
       objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653824, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653825, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_ChildAlignment
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653825, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653825, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653830, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653830, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653830, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653830, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000076293945
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653830, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -199.96265
+      objectReference: {fileID: 0}
     - target: {fileID: 6624005550606498616, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0.000061035156
