@@ -2,19 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SceneBase : MonoBehaviour
+public class SceneBase : Singleton<SceneBase>
 {
-    public GameObject localPlayerPrefab;
-    public GameObject otherPlayerPrefab;
+    [SerializeField]
+    private GameObject localPlayerPrefab;
+    [SerializeField]
+    private GameObject otherPlayerPrefab;
 
-    public Transform spawnTransform;
+    [SerializeField]
+    private Transform spawnTransform;
     private Vector3 spawnPosition;
 
-    private Actor localPlayer;
+    private Player localPlayer;
+    public Player LocalPlayer
+    {
+        get { return localPlayer; }
+        set 
+        {
+            localPlayer = value;
+            OnChangeLocalPlayer?.Invoke( localPlayer );
+        }
+    }
+    public delegate void DelChangeLocalPlayer( Player localPlayer );
+    public event DelChangeLocalPlayer OnChangeLocalPlayer;
+
     private List<Actor> otherPlayers = new List<Actor>();
     private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
 
-    private string stageId;
+    internal string stageId;
 
     protected virtual void Awake()
     {
@@ -111,7 +126,7 @@ public class SceneBase : MonoBehaviour
             return;
         }
 
-        Actor player = instance.GetComponent<Actor>();
+        Player player = instance.GetComponent<Player>();
         if ( ReferenceEquals( player, null ) )
         {
             Debug.LogError( "is not player. Type = " + instance.GetType().Name );
@@ -123,7 +138,7 @@ public class SceneBase : MonoBehaviour
         actors.Add( player.serial, player );
         if ( player.isLocal )
         {
-            localPlayer = player;
+            LocalPlayer = player;
         }
         else
         {
