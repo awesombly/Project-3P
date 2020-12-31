@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EquipQuickslot : MonoBehaviour
 {
@@ -16,6 +17,11 @@ public class EquipQuickslot : MonoBehaviour
     }
     public SlotInfo slotInfo;
     private List<RectTransform> slotList = new List<RectTransform>();
+
+    private void Awake()
+    {
+        SceneBase.Instance.OnChangeLocalPlayer += OnChangeLocalPlayer;
+    }
 
     private void Start()
     {
@@ -65,5 +71,35 @@ public class EquipQuickslot : MonoBehaviour
             slotRect.anchorMin = new Vector2( vIndex / ( float )slotInfo.VerticalCount, hIndex / ( float )slotInfo.HorizontalCount );
             slotRect.anchorMax = new Vector2( ( vIndex + 1 ) / ( float )slotInfo.VerticalCount, ( hIndex + 1 ) / ( float )slotInfo.HorizontalCount );
         }
+    }
+
+    private void UpdateSlotData( Dictionary<int/*index*/, Equipment> equipSlot )
+    {
+        foreach ( KeyValuePair<int/*index*/, Equipment> pair in equipSlot )
+        {
+            if ( pair.Key >= slotList.Count )
+            {
+                Debug.LogError( "invalid slot index. key = " + pair.Key + ", slotCount = " + slotList.Count );
+                continue;
+            }
+
+            RectTransform slotRect = slotList[ pair.Key ];
+            Image imageUI = slotRect.GetComponent<Image>();
+            Text textUI = slotRect.GetComponentInChildren<Text>();
+
+            textUI.text = pair.Value.id;
+            imageUI.sprite = pair.Value.sprite;
+        }
+    }
+
+    private void OnChangeLocalPlayer( Player localPlayer )
+    {
+        if ( localPlayer == null )
+        {
+            Debug.LogError( "localPlayer is null." );
+            return;
+        }
+
+        UpdateSlotData( localPlayer.equipQuickslot );
     }
 }

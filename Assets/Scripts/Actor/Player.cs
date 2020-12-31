@@ -30,7 +30,7 @@ public class Player : Character
         public List<GameObject> Models;
     }
     private Dictionary<EEquipType, EquipInfo> equipInfos = new Dictionary<EEquipType, EquipInfo>();
-    private Dictionary<int/*index*/, Equipment> equipQuickslot = new Dictionary<int/*index*/, Equipment>();
+    internal Dictionary<int/*index*/, Equipment> equipQuickslot = new Dictionary<int/*index*/, Equipment>();
 
     public Equipment testEquip;
     public Equipment testEquip2;
@@ -46,16 +46,16 @@ public class Player : Character
 
         Vector3 rootScale = boneInfos[ EBoneType.Root ].Reference.lossyScale;
         BoneInfo.OriginalScale = new Vector3( 1.0f / rootScale.x, 1.0f / rootScale.y, 1.0f / rootScale.z );
-    }
-
-    private void Start()
-    {
+        
         SetEquipQuickslot( 0, testEquip );
         SetEquipQuickslot( 1, testEquip2 );
         SetEquipQuickslot( 2, testEquip );
         SetEquipQuickslot( 3, testEquip2 );
         SetEquipQuickslot( 4, testEquip );
         SetEquipQuickslot( 5, testEquip2 );
+        SetEquipQuickslot( 6, testEquip );
+        SetEquipQuickslot( 7, testEquip2 );
+        SetEquipQuickslot( 8, testEquip );
 
         UseEquipQuickslot( 0 );
     }

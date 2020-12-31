@@ -24,6 +24,7 @@ public enum EEquipType
 public class Equipment : Item
 {
     public EEquipType equipType;
+    public Sprite sprite;
 
     [System.Serializable]
     public struct ModelInfo
