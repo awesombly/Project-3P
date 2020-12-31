@@ -73,9 +73,15 @@ public class EquipQuickslot : MonoBehaviour
         }
     }
 
-    private void UpdateSlotData( Dictionary<int/*index*/, Equipment> equipSlot )
+    private void UpdateSlotData( Player localPlayer )
     {
-        foreach ( KeyValuePair<int/*index*/, Equipment> pair in equipSlot )
+        if ( localPlayer == null )
+        {
+            Debug.LogWarning( "localPlayer is null." );
+            return;
+        }
+
+        foreach ( KeyValuePair<int/*index*/, Equipment> pair in localPlayer.equipQuickslot )
         {
             if ( pair.Key >= slotList.Count )
             {
@@ -84,22 +90,20 @@ public class EquipQuickslot : MonoBehaviour
             }
 
             RectTransform slotRect = slotList[ pair.Key ];
-            Image imageUI = slotRect.GetComponent<Image>();
-            Text textUI = slotRect.GetComponentInChildren<Text>();
 
-            textUI.text = pair.Value.id;
+            Button buttonUI = slotRect.GetComponent<Button>();
+            buttonUI.onClick.AddListener( () => { localPlayer.UseEquipQuickslot( pair.Key ); } );
+
+            Image imageUI = slotRect.GetComponent<Image>();
             imageUI.sprite = pair.Value.sprite;
+
+            Text textUI = slotRect.GetComponentInChildren<Text>();
+            textUI.text = pair.Value.id;
         }
     }
 
     private void OnChangeLocalPlayer( Player localPlayer )
     {
-        if ( localPlayer == null )
-        {
-            Debug.LogError( "localPlayer is null." );
-            return;
-        }
-
-        UpdateSlotData( localPlayer.equipQuickslot );
+        UpdateSlotData( localPlayer );
     }
 }
