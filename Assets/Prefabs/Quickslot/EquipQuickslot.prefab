@@ -90,4 +90,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pannelRect: {fileID: 9213925543382308478}
   pannelRatioAtScreen: 0.7
-  slotPrefab: {fileID: 6863303009658400446, guid: 8810e8aa52c1695438119b7e076fd519, type: 3}
+  slotInfo:
+    Prefab: {fileID: 6863303009658400446, guid: 8810e8aa52c1695438119b7e076fd519, type: 3}
+    VerticalCount: 3
+    HorizontalCount: 3
