@@ -5,8 +5,13 @@ using UnityEngine.UI;
 
 public class EquipQuickslot : MonoBehaviour
 {
-    public RectTransform pannelRect;
-    public float pannelRatioAtScreen;
+    [SerializeField]
+    private KeyCode activeKey;
+
+    [SerializeField]
+    private RectTransform pannelRect;
+    [SerializeField]
+    private float pannelRatioAtScreen;
 
     [System.Serializable]
     public struct SlotInfo
@@ -15,11 +20,14 @@ public class EquipQuickslot : MonoBehaviour
         public int VerticalCount;
         public int HorizontalCount;
     }
-    public SlotInfo slotInfo;
+    [SerializeField]
+    private SlotInfo slotInfo;
     private List<RectTransform> slotList = new List<RectTransform>();
 
     private void Awake()
     {
+        pannelRect.gameObject.SetActive( false );
+
         SceneBase.Instance.OnChangeLocalPlayer += OnChangeLocalPlayer;
     }
 
@@ -27,6 +35,21 @@ public class EquipQuickslot : MonoBehaviour
     {
         UpdatePannelTransform();
         UpdateSlotTransform();
+    }
+
+    private void Update()
+    {
+        if ( Input.GetKeyDown( activeKey ) )
+        {
+            pannelRect.gameObject.SetActive( true );
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+        else if ( Input.GetKeyUp( activeKey ) )
+        {
+            pannelRect.gameObject.SetActive( false );
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     private void UpdatePannelTransform()
@@ -95,7 +118,7 @@ public class EquipQuickslot : MonoBehaviour
             buttonUI.onClick.AddListener( () => { localPlayer.UseEquipQuickslot( pair.Key ); } );
 
             Image imageUI = slotRect.GetComponent<Image>();
-            imageUI.sprite = pair.Value.sprite;
+            imageUI.sprite = pair.Value.icon;
 
             Text textUI = slotRect.GetComponentInChildren<Text>();
             textUI.text = pair.Value.id;
