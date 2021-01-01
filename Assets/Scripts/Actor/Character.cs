@@ -6,7 +6,24 @@ public class Character : Actor
 {
     internal bool isGrounded = true;
     internal bool isSprinting = false;
-    internal bool isCrouching = false;
+
+    private bool isCrouching = false;
+    internal bool IsCrouching
+    {
+        get { return isCrouching; }
+        set 
+        {
+            if ( isCrouching == value )
+            {
+                return;
+            }
+
+            isCrouching = value;
+            OnChangeCrouching?.Invoke( isCrouching );
+        }
+    }
+    public delegate void DelChangeCrouching( bool isCrouch );
+    public event DelChangeCrouching OnChangeCrouching;
 
     private struct SyncMovement
     {
@@ -17,6 +34,8 @@ public class Character : Actor
     private SyncMovement syncMovement;
 
     private Animator animator;
+    private CapsuleCollider capsule;
+    private float originCapsuleHeight;
 
     private const float AnimationDampTime = 0.2f;
     private float inputVertical;
@@ -26,17 +45,22 @@ public class Character : Actor
     protected override void Awake()
     {
         base.Awake();
-        
+
         animator = GetComponentInChildren<Animator>();
+
+        capsule = GetComponent<CapsuleCollider>();
+        originCapsuleHeight = capsule.height;
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
 
+        UpdateCrouchState();
+
         UpdateInputParameters();
         UpdateAnimatorParameters();
-
+        
         if ( !isLocal )
         {
             return;
@@ -57,6 +81,21 @@ public class Character : Actor
         syncMovement.PrevSqrMagnitude = rigidBody.velocity.sqrMagnitude;
 
         /// TODO : 정지중일때 방향전환시 동기화
+    }
+
+    private void UpdateCrouchState()
+    {
+        /// 필요할때만 코루틴으로 처리하는게 좋을듯
+        if ( IsCrouching )
+        {
+            capsule.height = Mathf.MoveTowards( capsule.height, originCapsuleHeight * 0.65f, Time.deltaTime * 5.0f );
+        }
+        else
+        {
+            capsule.height = Mathf.MoveTowards( capsule.height, originCapsuleHeight, Time.deltaTime * 5.0f );
+        }
+
+        animator.gameObject.transform.localPosition = ( capsule.height * 0.5f * Vector3.down );
     }
 
     private void UpdateInputParameters()

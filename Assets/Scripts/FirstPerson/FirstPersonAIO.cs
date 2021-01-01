@@ -14,7 +14,6 @@ using System.Net;
 public class FirstPersonAIO : MonoBehaviour
 {
     private Player myPlayer;
-    private GameObject model;
 
     #region Variables
 
@@ -142,8 +141,8 @@ public class FirstPersonAIO : MonoBehaviour
 
     private bool IsCrouching
     {
-        get { return myPlayer.isCrouching; }
-        set { myPlayer.isCrouching = value; }
+        get { return myPlayer.IsCrouching; }
+        set { myPlayer.IsCrouching = value; }
     }
 
     #endregion
@@ -235,8 +234,7 @@ public class FirstPersonAIO : MonoBehaviour
             Debug.LogError( "Actor not found." );
         }
 
-        model = GetComponentInChildren<Animator>().gameObject;
-
+        myPlayer.OnChangeCrouching += OnChangeCrouching;
         ChatMain.ChatEvent += () => { playerCanMove = !playerCanMove; };
 
         #region Look Settings - Awake
@@ -546,25 +544,6 @@ public class FirstPersonAIO : MonoBehaviour
 
         }
 
-        if ( _crouchModifiers.useCrouch )
-        {
-            if ( IsCrouching )
-            {
-                capsule.height = Mathf.MoveTowards( capsule.height, _crouchModifiers.colliderHeight * 0.65f, 5 * Time.deltaTime );
-                walkSpeedInternal = walkSpeed * _crouchModifiers.crouchWalkSpeedMultiplier;
-                jumpPowerInternal = jumpPower * _crouchModifiers.crouchJumpPowerMultiplier;
-            }
-            else
-            {
-                capsule.height = Mathf.MoveTowards( capsule.height, _crouchModifiers.colliderHeight, 5 * Time.deltaTime );
-                walkSpeedInternal = walkSpeed;
-                sprintSpeedInternal = sprintSpeed;
-                jumpPowerInternal = jumpPower;
-            }
-
-            model.transform.localPosition = ( capsule.height * 0.5f * Vector3.down );
-        }
-
         #endregion
 
         #region Headbobbing Settings - FixedUpdate
@@ -812,7 +791,7 @@ public class FirstPersonAIO : MonoBehaviour
 
     }
 
-
+    
 
     private void OnCollisionEnter( Collision CollisionData )
     {
@@ -875,7 +854,25 @@ public class FirstPersonAIO : MonoBehaviour
 
     }
 
+    private void OnChangeCrouching( bool isCrouching )
+    {
+        if ( !_crouchModifiers.useCrouch )
+        {
+            return;
+        }
 
+        if ( isCrouching )
+        {
+            walkSpeedInternal = walkSpeed * _crouchModifiers.crouchWalkSpeedMultiplier;
+            jumpPowerInternal = jumpPower * _crouchModifiers.crouchJumpPowerMultiplier;
+        }
+        else
+        {
+            walkSpeedInternal = walkSpeed;
+            sprintSpeedInternal = sprintSpeed;
+            jumpPowerInternal = jumpPower;
+        }
+    }
 }
 
 #if UNITY_EDITOR
