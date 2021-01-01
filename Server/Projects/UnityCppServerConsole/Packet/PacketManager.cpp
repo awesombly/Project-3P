@@ -46,6 +46,7 @@ void PacketManager::BindProtocols()
 	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::BroadcastToStage;
 	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::SyncTransform;
 	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::SyncInterpolation;
+	protocols[ Protocol::Both::SyncCrouch::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::EnterStage;
 }

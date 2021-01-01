@@ -79,6 +79,21 @@ namespace Protocol
 				ar( CEREAL_NVP( Velocity ) );
 			}
 		};
+
+		struct SyncCrouch : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			SerialType Serial;
+			bool IsCrouch;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Serial ) );
+				ar( CEREAL_NVP( IsCrouch ) );
+			}
+		};
 	}
 
 	namespace ToServer

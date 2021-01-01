@@ -59,6 +59,7 @@ public class SceneBase : Singleton<SceneBase>
     {
         Network.Instance.AddBind( Protocol.Both.SyncTransform.PacketType, SyncTransform );
         Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
+        Network.Instance.AddBind( Protocol.Both.SyncCrouch.PacketType, SyncCrouch );
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
         Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
     }
@@ -104,6 +105,26 @@ public class SceneBase : Singleton<SceneBase>
         actor.rigidBody.MovePosition( protocol.Actor.Position );
         actor.rigidBody.MoveRotation( protocol.Actor.Rotation );
         actor.syncVelocity = protocol.Velocity;
+    }
+
+    private void SyncCrouch( string _data )
+    {
+        Protocol.Both.SyncCrouch protocol = JsonUtility.FromJson<Protocol.Both.SyncCrouch>( _data );
+
+        if ( !actors.ContainsKey( protocol.Serial ) )
+        {
+            Debug.LogWarning( "actor not Found. Serial = " + protocol.Serial );
+            return;
+        }
+
+        Character character = actors[ protocol.Serial ] as Character;
+        if ( ReferenceEquals( character, null ) )
+        {
+            Debug.LogError( "character is null. Serial = " + protocol.Serial );
+            return;
+        }
+
+        character.IsCrouching = protocol.IsCrouch;
     }
 
     private void CreatePlayer( string _data )

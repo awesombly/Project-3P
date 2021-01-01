@@ -46,6 +46,8 @@ public class Character : Actor
     {
         base.Awake();
 
+        OnChangeCrouching += SendSyncCrouch;
+
         animator = GetComponentInChildren<Animator>();
 
         capsule = GetComponent<CapsuleCollider>();
@@ -119,6 +121,19 @@ public class Character : Actor
         animator.SetFloat( AnimatorParameters.InputVertical, isStop ? 0.0f : inputVertical, AnimationDampTime, Time.deltaTime );
         animator.SetFloat( AnimatorParameters.InputMagnitude, isStop ? 0.0f : inputMagnitude, AnimationDampTime, Time.deltaTime );
         animator.SetFloat( AnimatorParameters.VelocityY, rigidBody.velocity.y );
+    }
+
+    private void SendSyncCrouch( bool isCrouch )
+    {
+        if ( !isLocal )
+        {
+            return;
+        }
+
+        Protocol.Both.SyncCrouch protocol;
+        protocol.Serial = serial;
+        protocol.IsCrouch = isCrouch;
+        Network.Instance.Send( protocol );
     }
 
     private static class AnimatorParameters
