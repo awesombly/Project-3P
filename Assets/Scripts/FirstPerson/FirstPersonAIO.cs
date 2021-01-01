@@ -759,8 +759,6 @@ public class FirstPersonAIO : MonoBehaviour
 
         #region  Reset Checks
 
-        IsGrounded = false;
-
         if ( advanced.maxSlopeAngle > 0 )
         {
             if ( advanced.isTouchingFlat || advanced.isTouchingWalkable || advanced.isTouchingUpright ) { didJump = false; }
