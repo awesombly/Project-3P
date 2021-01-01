@@ -129,8 +129,8 @@ public class FirstPersonAIO : MonoBehaviour
 
     private bool IsGrounded
     {
-        get { return myPlayer.isGrounded; }
-        set { myPlayer.isGrounded = value; }
+        get { return myPlayer.IsGrounded; }
+        set { myPlayer.IsGrounded = value; }
     }
 
     private bool IsSprinting

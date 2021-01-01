@@ -4,8 +4,25 @@ using UnityEngine;
 
 public class Character : Actor
 {
-    internal bool isGrounded = true;
     internal bool isSprinting = false;
+
+    private bool isGrounded = true;
+    internal bool IsGrounded
+    {
+        get { return isGrounded; }
+        set
+        {
+            if ( isGrounded == value )
+            {
+                return;
+            }
+
+            isGrounded = value;
+            OnChangeGrounded?.Invoke( isGrounded );
+        }
+    }
+    public delegate void DelChangeGrounded( bool isGrounded );
+    public event DelChangeGrounded OnChangeGrounded;
 
     private bool isCrouching = false;
     internal bool IsCrouching
@@ -47,6 +64,7 @@ public class Character : Actor
         base.Awake();
 
         OnChangeCrouching += SendSyncCrouch;
+        OnChangeGrounded += SendSyncGrounded;
 
         animator = GetComponentInChildren<Animator>();
 
@@ -133,6 +151,19 @@ public class Character : Actor
         Protocol.Both.SyncCrouch protocol;
         protocol.Serial = serial;
         protocol.IsCrouch = isCrouch;
+        Network.Instance.Send( protocol );
+    }
+
+    private void SendSyncGrounded( bool isGrounded )
+    {
+        if ( !isLocal )
+        {
+            return;
+        }
+
+        Protocol.Both.SyncGrounded protocol;
+        protocol.Serial = serial;
+        protocol.IsGrounded = isGrounded;
         Network.Instance.Send( protocol );
     }
 

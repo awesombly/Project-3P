@@ -94,6 +94,21 @@ namespace Protocol
 				ar( CEREAL_NVP( IsCrouch ) );
 			}
 		};
+
+		struct SyncGrounded : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			SerialType Serial;
+			bool IsGrounded;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Serial ) );
+				ar( CEREAL_NVP( IsGrounded ) );
+			}
+		};
 	}
 
 	namespace ToServer

@@ -68,6 +68,18 @@ namespace Protocol
                 return PacketType;
             }
         }
+
+        public struct SyncGrounded : IProtocol
+        {
+            public uint Serial;
+            public bool IsGrounded;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
     
     namespace ToServer
