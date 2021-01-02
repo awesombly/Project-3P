@@ -854,14 +854,14 @@ public class FirstPersonAIO : MonoBehaviour
 
     }
 
-    private void OnChangeCrouching( bool isCrouching )
+    private void OnChangeCrouching( bool _isCrouching )
     {
         if ( !_crouchModifiers.useCrouch )
         {
             return;
         }
 
-        if ( isCrouching )
+        if ( _isCrouching )
         {
             walkSpeedInternal = walkSpeed * _crouchModifiers.crouchWalkSpeedMultiplier;
             jumpPowerInternal = jumpPower * _crouchModifiers.crouchJumpPowerMultiplier;

@@ -21,7 +21,7 @@ public class Character : Actor
             OnChangeGrounded?.Invoke( isGrounded );
         }
     }
-    public delegate void DelChangeGrounded( bool isGrounded );
+    public delegate void DelChangeGrounded( bool _isGrounded );
     public event DelChangeGrounded OnChangeGrounded;
 
     private bool isCrouching = false;
@@ -39,7 +39,7 @@ public class Character : Actor
             OnChangeCrouching?.Invoke( isCrouching );
         }
     }
-    public delegate void DelChangeCrouching( bool isCrouch );
+    public delegate void DelChangeCrouching( bool _isCrouching );
     public event DelChangeCrouching OnChangeCrouching;
 
     private struct SyncMovement
@@ -141,7 +141,7 @@ public class Character : Actor
         animator.SetFloat( AnimatorParameters.VelocityY, rigidBody.velocity.y );
     }
 
-    private void SendSyncCrouch( bool isCrouch )
+    private void SendSyncCrouch( bool _isCrouching )
     {
         if ( !isLocal )
         {
@@ -150,11 +150,11 @@ public class Character : Actor
 
         Protocol.Both.SyncCrouch protocol;
         protocol.Serial = serial;
-        protocol.IsCrouch = isCrouch;
+        protocol.IsCrouch = _isCrouching;
         Network.Instance.Send( protocol );
     }
 
-    private void SendSyncGrounded( bool isGrounded )
+    private void SendSyncGrounded( bool _isGrounded )
     {
         if ( !isLocal )
         {
@@ -163,7 +163,7 @@ public class Character : Actor
 
         Protocol.Both.SyncGrounded protocol;
         protocol.Serial = serial;
-        protocol.IsGrounded = isGrounded;
+        protocol.IsGrounded = _isGrounded;
         Network.Instance.Send( protocol );
     }
 
