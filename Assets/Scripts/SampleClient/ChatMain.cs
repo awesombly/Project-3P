@@ -24,20 +24,28 @@ public class ChatMain : MonoBehaviour
 
     private const int maxMessageCount = 25;
 
+    private WaitForSeconds ProcessTime = new WaitForSeconds( 0.125f );
+
     private WaitForSeconds waitFadeOutTime = new WaitForSeconds( 2.0f );
     private float fadeOutDuration = 2.0f;
 
     private void Awake()
     {
         StartCoroutine( "InputStart" );
+        StartCoroutine( "ProcessTexts" );
         enterContent.gameObject.SetActive( false );
     }
 
-    private void Update()
+    private IEnumerator ProcessTexts()
     {
-        if ( texts.Count > 0 )
+        while ( true )
         {
-            MakeMessage( texts[0] );
+            if ( texts.Count > 0 )
+            {
+                MakeMessage( texts[0] );
+            }
+
+            yield return ProcessTime;
         }
     }
 
