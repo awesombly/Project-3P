@@ -89,5 +89,7 @@ public class ChatMain : MonoBehaviour
         messages.Add( newMessage );
 
         texts.Remove( _text );
+
+        chatContents.GetComponentInChildren<VerticalLayoutGroup>().SetLayoutHorizontal();
     }
 }
