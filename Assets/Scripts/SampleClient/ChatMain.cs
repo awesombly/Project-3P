@@ -3,9 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// 솔루션 탐색기에 UnityCppServerConsole이 안보이면
-// 기존 프로젝트 추가 -> Server폴더 찾으셔서 추가하세요.
-
 public struct Message
 {
     public string text;
@@ -18,7 +15,7 @@ public class ChatMain : MonoBehaviour
     public List<Message> messages = new List<Message>();
 
     public InputField enterContent;
-    public GameObject chatContents;
+    public GameObject contents;
     public GameObject textPrefab;
 
     public delegate void ChatReturnEvent();
@@ -79,7 +76,7 @@ public class ChatMain : MonoBehaviour
         Message newMessage = new Message();
         newMessage.text = _text;
 
-        GameObject newText = Instantiate( textPrefab, chatContents.transform );
+        GameObject newText = Instantiate( textPrefab, contents.transform );
         newMessage.textObject = newText.GetComponent<TextMeshProUGUI>();
         newMessage.textObject.text = 
             "<color=white>" + System.DateTime.Now.ToString( "HH:mm " ) + "</color>" +
@@ -89,7 +86,5 @@ public class ChatMain : MonoBehaviour
         messages.Add( newMessage );
 
         texts.Remove( _text );
-
-        chatContents.GetComponentInChildren<VerticalLayoutGroup>().SetLayoutHorizontal();
     }
 }

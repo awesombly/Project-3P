@@ -2273,6 +2273,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6624005549295545591, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6624005549295545594, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
       propertyPath: m_Name
       value: ChatContents
@@ -2288,6 +2292,10 @@ PrefabInstance:
     - target: {fileID: 6624005550042653830, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6624005550042653831, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
+      propertyPath: m_Name
+      value: Contents
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02365bd1d938def458c3dd9dada31169, type: 3}
@@ -3046,7 +3054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enterContent: {fileID: 1522895166}
-  chatContents: {fileID: 730539579}
+  contents: {fileID: 730539579}
   textPrefab: {fileID: 2446521198419580802, guid: 63ae343bcf9443348978be83e8935d22, type: 3}
 --- !u!1001 &611431837
 PrefabInstance:
@@ -11510,6 +11518,10 @@ PrefabInstance:
     - target: {fileID: 321438489754697580, guid: 8aa99d15568bb5b4d8c938ecc9aca624, type: 3}
       propertyPath: m_Name
       value: EnterContent
+      objectReference: {fileID: 0}
+    - target: {fileID: 321438489754697580, guid: 8aa99d15568bb5b4d8c938ecc9aca624, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 321438489754697581, guid: 8aa99d15568bb5b4d8c938ecc9aca624, type: 3}
       propertyPath: m_Pivot.x
