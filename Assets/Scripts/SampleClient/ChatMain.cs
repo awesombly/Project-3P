@@ -81,7 +81,10 @@ public class ChatMain : MonoBehaviour
 
         GameObject newText = Instantiate( textPrefab, chatContents.transform );
         newMessage.textObject = newText.GetComponent<TextMeshProUGUI>();
-        newMessage.textObject.text = newMessage.text;
+        newMessage.textObject.text =
+            "<color=white>" + "12:35 " + "</color>" +
+            "<color=red>" + "NickName " + "</color>" +
+            "<#80ffff>" + newMessage.text + "</color>";
 
         messages.Add( newMessage );
 
