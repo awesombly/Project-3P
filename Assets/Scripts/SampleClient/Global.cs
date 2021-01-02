@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using UnityEngine;
 
 public class Global
 {
@@ -6,9 +7,17 @@ public class Global
     {
         int copySize = ( _obj as UPACKET ).length;
         int bufSize = Marshal.SizeOf( _obj );
-        byte[] data = new byte[copySize];
+
         System.IntPtr buffer = Marshal.AllocHGlobal( bufSize + 1 );
+        if ( buffer == System.IntPtr.Zero )
+        {
+            Debug.LogError( "failed Marshal.AllocHGlobal()." );
+            return null;
+        }
+
         Marshal.StructureToPtr( _obj, buffer, false );
+
+        byte[] data = new byte[ copySize ];
         Marshal.Copy( buffer, data, 0, copySize );
         Marshal.FreeHGlobal( buffer );
 

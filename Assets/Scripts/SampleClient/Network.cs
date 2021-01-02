@@ -36,6 +36,11 @@ public class Network : Singleton<Network>
         UPACKET packet = new UPACKET( _protocol );
 
         byte[] packetData = Global.Serialize( packet );
+        if ( ReferenceEquals( packetData, null ) )
+        {
+            return;
+        }
+
         socket.Send( packetData );
     }
 
