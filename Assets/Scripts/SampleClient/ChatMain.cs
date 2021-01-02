@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,44 +14,72 @@ public class ChatMain : MonoBehaviour
 {
     public static List<string> texts = new List<string>();
     public List<Message> messages = new List<Message>();
+    
+    public static event ChatReturnEvent ChatEvent;
+    public delegate void ChatReturnEvent();
 
     public InputField enterContent;
     public GameObject contents;
     public GameObject textPrefab;
 
-    public delegate void ChatReturnEvent();
-    public static event ChatReturnEvent ChatEvent;
-
     private const int maxMessageCount = 25;
-    
+
+    private WaitForSeconds waitFadeOutTime = new WaitForSeconds( 2.0f );
+    private float fadeOutDuration = 2.0f;
+
     private void Awake()
     {
+        StartCoroutine( "InputStart" );
         enterContent.gameObject.SetActive( false );
     }
 
     private void Update()
     {
-        if ( Input.GetKeyDown( KeyCode.Return )  )
-        {
-            if ( enterContent.IsActive() )
-            {
-                SendChatMessage( enterContent.text );
-                enterContent.text = "";
-
-                enterContent.gameObject.SetActive( false );
-            }
-            else
-            {
-                enterContent.gameObject.SetActive( true );
-                enterContent.ActivateInputField();
-            }
-
-            ChatEvent();
-        }
-
         if ( texts.Count > 0 )
         {
-            MakeMessage( texts[ 0 ] );
+            MakeMessage( texts[0] );
+        }
+    }
+
+    private IEnumerator InputStart()
+    {
+        while ( true )
+        {
+            yield return null;
+            if ( Input.GetKeyDown( KeyCode.Return ) )
+            {
+                if ( enterContent.IsActive() )
+                {
+                    SendChatMessage( enterContent.text );
+                    enterContent.text = "";
+
+                    enterContent.gameObject.SetActive( false );
+                    StartCoroutine( "ContentsFadeOut" );
+                }
+                else
+                {
+                    StopCoroutine( "ContentsFadeOut" );
+                    foreach ( Message msg in messages )
+                    {
+                        msg.textObject.CrossFadeAlpha( 1.0f, 0.0f, false );
+                    }
+
+                    enterContent.gameObject.SetActive( true );
+                    enterContent.ActivateInputField();
+                }
+
+                ChatEvent();
+            }
+        }
+    }
+
+    private IEnumerator ContentsFadeOut()
+    {
+        yield return waitFadeOutTime;
+
+        foreach ( Message msg in messages )
+        {
+            msg.textObject.CrossFadeAlpha( 0.0f, fadeOutDuration, false );
         }
     }
 
