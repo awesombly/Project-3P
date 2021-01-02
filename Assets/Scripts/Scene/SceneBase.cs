@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SceneBase : Singleton<SceneBase>
 {
+    internal string stageId;
+
     [SerializeField]
     private GameObject localPlayerPrefab;
     [SerializeField]
@@ -26,10 +28,19 @@ public class SceneBase : Singleton<SceneBase>
     public delegate void DelChangeLocalPlayer( Player localPlayer );
     public event DelChangeLocalPlayer OnChangeLocalPlayer;
 
-    private List<Actor> otherPlayers = new List<Actor>();
+    private List<Player> otherPlayers = new List<Player>();
     private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
 
-    internal string stageId;
+    public Actor GetActor( uint _serial )
+    {
+        if ( !actors.ContainsKey( _serial ) )
+        {
+            Debug.LogWarning( "actor not Found. serial = " + _serial );
+            return null;
+        }
+
+        return actors[ _serial ];
+    }
 
     protected virtual void Awake()
     {
@@ -69,13 +80,7 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncTransform protocol = JsonUtility.FromJson<Protocol.Both.SyncTransform>( _data );
 
-        if ( !actors.ContainsKey( protocol.Actor.Serial ) )
-        {
-            Debug.LogWarning( "actor not Found. Serial = " + protocol.Actor.Serial );
-            return;
-        }
-
-        Actor actor = actors[ protocol.Actor.Serial ];
+        Actor actor = GetActor( protocol.Actor.Serial );
         if ( ReferenceEquals( actor, null ) )
         {
             Debug.LogError( "actor is null. Serial = " + protocol.Actor.Serial );
@@ -90,13 +95,7 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncInterpolation protocol = JsonUtility.FromJson<Protocol.Both.SyncInterpolation>( _data );
 
-        if ( !actors.ContainsKey( protocol.Actor.Serial ) )
-        {
-            Debug.LogWarning( "actor not Found. Serial = " + protocol.Actor.Serial );
-            return;
-        }
-
-        Actor actor = actors[ protocol.Actor.Serial ];
+        Actor actor = GetActor( protocol.Actor.Serial );
         if ( ReferenceEquals( actor, null ) )
         {
             Debug.LogError( "actor is null. Serial = " + protocol.Actor.Serial );
@@ -112,13 +111,7 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncCrouch protocol = JsonUtility.FromJson<Protocol.Both.SyncCrouch>( _data );
 
-        if ( !actors.ContainsKey( protocol.Serial ) )
-        {
-            Debug.LogWarning( "actor not Found. Serial = " + protocol.Serial );
-            return;
-        }
-
-        Character character = actors[ protocol.Serial ] as Character;
+        Character character = GetActor( protocol.Serial ) as Character;
         if ( ReferenceEquals( character, null ) )
         {
             Debug.LogError( "character is null. Serial = " + protocol.Serial );
@@ -132,13 +125,7 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncGrounded protocol = JsonUtility.FromJson<Protocol.Both.SyncGrounded>( _data );
 
-        if ( !actors.ContainsKey( protocol.Serial ) )
-        {
-            Debug.LogWarning( "actor not Found. Serial = " + protocol.Serial );
-            return;
-        }
-
-        Character character = actors[ protocol.Serial ] as Character;
+        Character character = GetActor( protocol.Serial ) as Character;
         if ( ReferenceEquals( character, null ) )
         {
             Debug.LogError( "character is null. Serial = " + protocol.Serial );
@@ -191,14 +178,9 @@ public class SceneBase : Singleton<SceneBase>
     private void DestroyActor( string _data )
     {
         Protocol.FromServer.DestroyActor protocol = JsonUtility.FromJson<Protocol.FromServer.DestroyActor>( _data );
-        if ( !actors.ContainsKey( protocol.Serial ) )
-        {
-            Debug.LogError( "Actor not found. Serial = " + protocol.Serial );
-            return;
-        }
 
-        Actor actor = actors[ protocol.Serial ];
-        otherPlayers.Remove( actor );
+        Actor actor = GetActor( protocol.Serial );
+        otherPlayers.Remove( actor as Player );
         actors.Remove( protocol.Serial );
 
         Destroy( actor.gameObject );
