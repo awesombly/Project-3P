@@ -168,6 +168,7 @@ public class Network : Singleton<Network>
     {
         Protocol.Both.ChatMessage protocol = JsonUtility.FromJson<Protocol.Both.ChatMessage>( _data );
 
-        ChatMain.texts.Add( protocol.Message );
+        ChatSystem.Instance.PushMessage( protocol.Message );
+        // ChatMain.texts.Add( protocol.Message );
     }
 }
