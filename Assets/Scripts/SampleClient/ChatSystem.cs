@@ -58,7 +58,6 @@ public class ChatSystem : Singleton<ChatSystem>
     private void Awake()
     {
         StartCoroutine( "InputStart" );
-        StartCoroutine( "ProcessTexts" );
         enterContent.gameObject.SetActive( false );
     }
 
