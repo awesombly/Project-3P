@@ -388,7 +388,7 @@ public class FirstPersonAIO : MonoBehaviour
 
         if ( useStamina )
         {
-            float needStamina = ( staminaDepletionSpeed * 2.0f ) * Time.deltaTime;
+            float needStamina = staminaDepletionSpeed * Time.deltaTime;
             IsSprinting = Input.GetKey( sprintKey ) && !IsCrouching && staminaInternal > needStamina && ( myPlayer.localVelocity.z > 0.01f );
             if ( IsSprinting )
             {
@@ -401,7 +401,7 @@ public class FirstPersonAIO : MonoBehaviour
             }
             else
             {
-                staminaInternal += staminaDepletionSpeed * Time.deltaTime;
+                staminaInternal += staminaDepletionSpeed * 2.0f * Time.deltaTime;
             }
 
             if ( drawStaminaMeter )

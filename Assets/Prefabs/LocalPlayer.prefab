@@ -447,7 +447,7 @@ MonoBehaviour:
   canHoldJump: 0
   useStamina: 1
   staminaDepletionSpeed: 2
-  staminaLevel: 50
+  staminaLevel: 15
   speed: 0
   staminaInternal: 0
   _crouchModifiers:
