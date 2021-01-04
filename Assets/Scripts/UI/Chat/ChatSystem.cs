@@ -22,16 +22,21 @@ public class ChatSystem : Singleton<ChatSystem>
     public GameObject textPrefab;
 
     private const int maxMessageCount = 25;
+    private System.Text.StringBuilder text = new System.Text.StringBuilder( 50 );
 
+    private Coroutine fadeOutCoroutine = null;
     private readonly WaitForSeconds fadeOutWaitSeconds = new WaitForSeconds( 5.0f );
     private float fadeOutDuration = 0.5f;
 
     public void PushMessage( string _msg )
     {
         MakeMessage( _msg );
-        StopCoroutine( "FadeOutContents" );
-        FadeInContents( 0.0f );
-        StartCoroutine( FadeOutContents( fadeOutDuration ) );
+        if ( !ReferenceEquals( fadeOutCoroutine, null ) )
+        {
+            StopCoroutine( fadeOutCoroutine );
+        }
+        FadeInContents();
+        fadeOutCoroutine = StartCoroutine( FadeOutContents( fadeOutDuration ) );
     }
 
     private void MakeMessage( string _text )
@@ -47,17 +52,23 @@ public class ChatSystem : Singleton<ChatSystem>
 
         GameObject newText = Instantiate( textPrefab, contents.transform );
         newMessage.textObject = newText.GetComponent<TextMeshProUGUI>();
-        newMessage.textObject.text =
-            "<color=white>" + System.DateTime.Now.ToString( "HH:mm " ) + "</color>" +
-            "<#ffa4a4>" + "Name " + "</color>" +
-            "<#9ddaff>" + newMessage.text + "</color>";
+
+        text.Length = 0;
+        text.Append( "<color=white>" ).Append( System.DateTime.Now.ToString( "HH:mm " ) ).Append( "</color>" );
+        text.Append( "<#ffa4a4>" ).Append( "Name" ).Append( "</color>" );
+        text.Append( "<#9ddaff>" ).Append( newMessage.text ).Append( "</color>" );
+
+        newMessage.textObject.text = text.ToString();
+            //"<color=white>" + System.DateTime.Now.ToString( "HH:mm " ) + "</color>" +
+            //"<#ffa4a4>" + "Name " + "</color>" +
+            //"<#9ddaff>" + newMessage.text + "</color>";
 
         messages.Add( newMessage );
     }
 
     private void Awake()
     {
-        StartCoroutine( "InputStart" );
+        StartCoroutine( InputStart() );
         enterContent.gameObject.SetActive( false );
     }
 
@@ -72,11 +83,11 @@ public class ChatSystem : Singleton<ChatSystem>
         }
     }
 
-    private void FadeInContents( float _duration )
+    private void FadeInContents()
     {
         foreach ( Message msg in messages )
         {
-            msg.textObject.CrossFadeAlpha( 1.0f, _duration, false );
+            msg.textObject.CrossFadeAlpha( 1.0f, 0.0f, false );
         }
     }
 
@@ -89,6 +100,7 @@ public class ChatSystem : Singleton<ChatSystem>
             msg.textObject.CrossFadeAlpha( 0.0f, _duration, false );
         }
     }
+
     private IEnumerator InputStart()
     {
         while ( true )
@@ -102,12 +114,15 @@ public class ChatSystem : Singleton<ChatSystem>
                     enterContent.text = "";
 
                     enterContent.gameObject.SetActive( false );
-                    StartCoroutine( FadeOutContents( fadeOutDuration ) );
+                    fadeOutCoroutine = StartCoroutine( FadeOutContents( fadeOutDuration ) );
                 }
                 else
                 {
-                    StopCoroutine( "FadeOutContents" );
-                    FadeInContents( 0.0f );
+                    if ( !ReferenceEquals( fadeOutCoroutine, null ) )
+                    {
+                        StopCoroutine( fadeOutCoroutine );
+                    }
+                    FadeInContents();
 
                     enterContent.gameObject.SetActive( true );
                     enterContent.ActivateInputField();
