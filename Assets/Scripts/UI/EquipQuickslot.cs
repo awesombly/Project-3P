@@ -55,8 +55,6 @@ public class EquipQuickslot : MonoBehaviour
                 {
                     Button buttonUI = slotList[ slotIndex ].GetComponent<Button>();
                     buttonUI.onClick?.Invoke();
-
-                    return;
                 }
             }
 

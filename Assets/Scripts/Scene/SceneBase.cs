@@ -19,8 +19,14 @@ public class SceneBase : Singleton<SceneBase>
     public Player LocalPlayer
     {
         get { return localPlayer; }
-        set 
+        set
         {
+            if ( localPlayer != null )
+            {
+                actors.Remove( localPlayer.serial );
+                Destroy( localPlayer.gameObject );
+            }
+
             localPlayer = value;
             OnChangeLocalPlayer?.Invoke( localPlayer );
         }
@@ -50,6 +56,20 @@ public class SceneBase : Singleton<SceneBase>
 
         Network.Instance.OnConnect += OnConnect;
         Network.Instance.OnBindProtocols += OnBindProtocols;
+    }
+
+    protected virtual void Start()
+    {
+#if UNITY_EDITOR
+        if ( LocalPlayer == null )
+        {
+            Player player = FindObjectOfType<Player>();
+            if ( player != null && player.isLocal )
+            {
+                LocalPlayer = player;
+            }
+        }
+#endif
     }
 
     protected virtual void OnDestroy()
