@@ -44,7 +44,7 @@ public class EquipQuickslot : MonoBehaviour
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }
-        else if ( Input.GetKeyUp( activeKey ) )
+        else if ( Input.GetKeyUp( activeKey ) && pannelRect.gameObject.activeSelf )
         {
             float distance = Vector2.Distance( Input.mousePosition, pannelRect.position );
             if ( distance > pannelRect.rect.width * 0.25f )
@@ -55,6 +55,8 @@ public class EquipQuickslot : MonoBehaviour
                 {
                     Button buttonUI = slotList[ slotIndex ].GetComponent<Button>();
                     buttonUI.onClick?.Invoke();
+
+                    return;
                 }
             }
 
@@ -131,7 +133,13 @@ public class EquipQuickslot : MonoBehaviour
             RectTransform slotRect = slotList[ pair.Key ];
 
             Button buttonUI = slotRect.GetComponent<Button>();
-            buttonUI.onClick.AddListener( () => { localPlayer.UseEquipQuickslot( pair.Key ); } );
+            buttonUI.onClick.AddListener( () => 
+            {
+                localPlayer.UseEquipQuickslot( pair.Key );
+
+                pannelRect.gameObject.SetActive( false );
+                Cursor.lockState = CursorLockMode.Locked;
+            } );
 
             Image imageUI = slotRect.GetComponent<Image>();
             imageUI.sprite = pair.Value.icon;
