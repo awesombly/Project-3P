@@ -131,6 +131,7 @@ public class EquipQuickslot : MonoBehaviour
             RectTransform slotRect = slotList[ pair.Key ];
 
             Button buttonUI = slotRect.GetComponent<Button>();
+            buttonUI.onClick.RemoveAllListeners();
             buttonUI.onClick.AddListener( () => 
             {
                 localPlayer.UseEquipQuickslot( pair.Key );

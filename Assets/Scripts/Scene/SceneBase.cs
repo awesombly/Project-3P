@@ -60,7 +60,6 @@ public class SceneBase : Singleton<SceneBase>
 
     protected virtual void Start()
     {
-#if UNITY_EDITOR
         if ( LocalPlayer == null )
         {
             Player player = FindObjectOfType<Player>();
@@ -69,7 +68,6 @@ public class SceneBase : Singleton<SceneBase>
                 LocalPlayer = player;
             }
         }
-#endif
     }
 
     protected virtual void OnDestroy()
