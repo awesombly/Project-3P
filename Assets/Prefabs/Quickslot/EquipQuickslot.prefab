@@ -134,7 +134,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_TargetDisplay: 0
 --- !u!114 &4905013257031854193
 MonoBehaviour:
@@ -189,8 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeKey: 113
   pannelRect: {fileID: 4308937584883046446}
-  pannelRatioAtScreen: 0.7
+  pannelRatioAtScreen: 0.6
   slotInfo:
     Prefab: {fileID: 6863303009658400446, guid: 8810e8aa52c1695438119b7e076fd519, type: 3}
-    VerticalCount: 3
-    HorizontalCount: 3
+    TotalCount: 8

@@ -17,8 +17,7 @@ public class EquipQuickslot : MonoBehaviour
     public struct SlotInfo
     {
         public GameObject Prefab;
-        public int VerticalCount;
-        public int HorizontalCount;
+        public int TotalCount;
     }
     [SerializeField]
     private SlotInfo slotInfo;
@@ -78,8 +77,10 @@ public class EquipQuickslot : MonoBehaviour
 
     private void UpdateSlotTransform()
     {
-        int totalCount = slotInfo.VerticalCount * slotInfo.HorizontalCount;
-        for ( int i = 0; i < totalCount; ++i )
+        float slotInterval = ( 1.0f / slotInfo.TotalCount );
+
+        // 중앙에서부터 원형으로 배치
+        for ( int i = 0; i < slotInfo.TotalCount; ++i )
         {
             if ( slotList.Count <= i )
             {
@@ -88,11 +89,14 @@ public class EquipQuickslot : MonoBehaviour
             }
 
             RectTransform slotRect = slotList[ i ];
-            int vIndex = ( i % slotInfo.VerticalCount );
-            int hIndex = ( i / slotInfo.VerticalCount );
 
-            slotRect.anchorMin = new Vector2( vIndex / ( float )slotInfo.VerticalCount, hIndex / ( float )slotInfo.HorizontalCount );
-            slotRect.anchorMax = new Vector2( ( vIndex + 1 ) / ( float )slotInfo.VerticalCount, ( hIndex + 1 ) / ( float )slotInfo.HorizontalCount );
+            // param = ( 0 ~ 2PI )
+            float param = ( ( float )i / slotInfo.TotalCount ) * Mathf.PI * 2.0f;
+            // ( -1 ~ 1 ) => ( 0 ~ 1 )
+            float anchorX = ( Mathf.Sin( param ) + 1.0f ) * 0.5f;
+            float anchorY = ( Mathf.Cos( param ) + 1.0f ) * 0.5f;
+            slotRect.anchorMin = new Vector2( anchorX - slotInterval, anchorY - slotInterval );
+            slotRect.anchorMax = new Vector2( anchorX + slotInterval, anchorY + slotInterval );
         }
     }
 
