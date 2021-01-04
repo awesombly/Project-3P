@@ -46,6 +46,18 @@ public class EquipQuickslot : MonoBehaviour
         }
         else if ( Input.GetKeyUp( activeKey ) )
         {
+            float distance = Vector2.Distance( Input.mousePosition, pannelRect.position );
+            if ( distance > pannelRect.rect.width * 0.25f )
+            {
+                // 마우스에 가까운 퀵슬롯 사용
+                int slotIndex = GetNearestSlotIndex();
+                if ( slotIndex >= 0 && slotIndex < slotList.Count )
+                {
+                    Button buttonUI = slotList[ slotIndex ].GetComponent<Button>();
+                    buttonUI.onClick?.Invoke();
+                }
+            }
+
             pannelRect.gameObject.SetActive( false );
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -127,6 +139,24 @@ public class EquipQuickslot : MonoBehaviour
             Text textUI = slotRect.GetComponentInChildren<Text>();
             textUI.text = pair.Value.id;
         }
+    }
+
+    private int GetNearestSlotIndex()
+    {
+        int nearestSlotIndex = -1;
+        float nearestSlotDistance = float.MaxValue;
+
+        for ( int i = 0; i < slotList.Count; ++i )
+        {
+            float distance = Vector2.Distance( slotList[ i ].position, Input.mousePosition );
+            if ( distance < nearestSlotDistance )
+            {
+                nearestSlotDistance = distance;
+                nearestSlotIndex = i;
+            }
+        }
+
+        return nearestSlotIndex;
     }
 
     private void OnChangeLocalPlayer( Player localPlayer )
