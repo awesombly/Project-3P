@@ -106,9 +106,9 @@ public class EquipQuickslot : MonoBehaviour
 
             // param = ( 0 ~ 2PI )
             float param = ( ( float )i / slotInfo.TotalCount ) * Mathf.PI * 2.0f;
-            // ( -1 ~ 1 ) => ( 0 ~ 1 )
-            float anchorX = ( Mathf.Sin( param ) + 1.0f ) * 0.5f;
-            float anchorY = ( Mathf.Cos( param ) + 1.0f ) * 0.5f;
+            // ex: ( 0.125 ~ 0.875 ) = ( -1.0 ~ 1.0 ) * ( 1.0 - 0.25 ) + 1.0 * 0.5
+            float anchorX = ( Mathf.Sin( param ) * ( 1.0f - slotInterval * 2.0f ) + 1.0f ) * 0.5f;
+            float anchorY = ( Mathf.Cos( param ) * ( 1.0f - slotInterval * 2.0f ) + 1.0f ) * 0.5f;
             slotRect.anchorMin = new Vector2( anchorX - slotInterval, anchorY - slotInterval );
             slotRect.anchorMax = new Vector2( anchorX + slotInterval, anchorY + slotInterval );
         }
