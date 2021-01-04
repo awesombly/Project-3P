@@ -16,7 +16,7 @@ MonoBehaviour:
   desc: "\uB300\uCDA9 \uC124\uBA85"
   price: 456
   equipType: 0
-  icon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 1cb023a73f5d18a46932d97b15db34c7, type: 3}
   modelInfos:
   - AttachBone: 2
     Prefab: {fileID: 100656, guid: bf9f4253a04c3724e8628d1f0046c866, type: 3}
