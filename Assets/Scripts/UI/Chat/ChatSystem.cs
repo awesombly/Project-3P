@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Text;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,23 +7,22 @@ using TMPro;
 
 public struct Message
 {
-    public string text;
     public TextMeshProUGUI textObject;
 }
 
 public class ChatSystem : Singleton<ChatSystem>
 {
-    public List<Message> messages = new List<Message>();
-    
     public event ChatReturnEvent ChatEvent;
     public delegate void ChatReturnEvent();
 
-    public InputField enterContent;
-    public GameObject contents;
-    public GameObject textPrefab;
+    private List<Message> messages = new List<Message>();
 
-    private const int maxMessageCount = 25;
-    private System.Text.StringBuilder text = new System.Text.StringBuilder( 50 );
+    private InputField enterContent;
+    private GameObject contents;
+    private GameObject textPrefab;
+
+    private readonly int maxMessageCount = 25;
+    private StringBuilder text = new StringBuilder( 50 );
 
     private Coroutine fadeOutCoroutine = null;
     private readonly WaitForSeconds fadeOutWaitSeconds = new WaitForSeconds( 5.0f );
@@ -35,7 +35,7 @@ public class ChatSystem : Singleton<ChatSystem>
         {
             StopCoroutine( fadeOutCoroutine );
         }
-        FadeInContents();
+        ResetTextAlpha();
         fadeOutCoroutine = StartCoroutine( FadeOutContents( fadeOutDuration ) );
     }
 
@@ -48,15 +48,13 @@ public class ChatSystem : Singleton<ChatSystem>
         }
 
         Message newMessage = new Message();
-        newMessage.text = _text;
-
         GameObject newText = Instantiate( textPrefab, contents.transform );
         newMessage.textObject = newText.GetComponent<TextMeshProUGUI>();
 
         text.Length = 0;
         text.Append( "<color=white>" ).Append( System.DateTime.Now.ToString( "HH:mm " ) ).Append( "</color>" );
-        text.Append( "<#ffa4a4>" ).Append( "Name" ).Append( "</color>" );
-        text.Append( "<#9ddaff>" ).Append( newMessage.text ).Append( "</color>" );
+        text.Append( "<#ffa4a4>" ).Append( "Name " ).Append( "</color>" );
+        text.Append( "<#9ddaff>" ).Append( _text ).Append( "</color>" );
 
         newMessage.textObject.text = text.ToString();
             //"<color=white>" + System.DateTime.Now.ToString( "HH:mm " ) + "</color>" +
@@ -66,9 +64,36 @@ public class ChatSystem : Singleton<ChatSystem>
         messages.Add( newMessage );
     }
 
-    private void Awake()
+    private void Start()
     {
-        StartCoroutine( InputStart() );
+        textPrefab = Resources.Load( "UI/Chat/Prefabs/CopyText" ) as GameObject;
+        if ( ReferenceEquals( textPrefab, null ) )
+        {
+            Debug.Log( "TextPrefab Load Failed" );
+        }
+
+        enterContent = transform.Find( "EnterContent" ).GetComponent<InputField>();
+        if ( ReferenceEquals( enterContent, null ) )
+        {
+            Debug.Log( "EnterContent Load Failed" );
+        }
+
+        Transform[] transforms = gameObject.GetComponentsInChildren<Transform>();
+        foreach( Transform child in transforms )
+        {
+            if ( child.name.Equals( "Contents" ) )
+            {
+                contents = child.gameObject;
+                break;
+            }
+        }
+
+        if ( ReferenceEquals( contents, null ) )
+        {
+            Debug.Log( "Contents Load Failed" );
+        }
+
+        StartCoroutine( Process() );
         enterContent.gameObject.SetActive( false );
     }
 
@@ -83,7 +108,7 @@ public class ChatSystem : Singleton<ChatSystem>
         }
     }
 
-    private void FadeInContents()
+    private void ResetTextAlpha()
     {
         foreach ( Message msg in messages )
         {
@@ -101,7 +126,7 @@ public class ChatSystem : Singleton<ChatSystem>
         }
     }
 
-    private IEnumerator InputStart()
+    private IEnumerator Process()
     {
         while ( true )
         {
@@ -122,7 +147,7 @@ public class ChatSystem : Singleton<ChatSystem>
                     {
                         StopCoroutine( fadeOutCoroutine );
                     }
-                    FadeInContents();
+                    ResetTextAlpha();
 
                     enterContent.gameObject.SetActive( true );
                     enterContent.ActivateInputField();
