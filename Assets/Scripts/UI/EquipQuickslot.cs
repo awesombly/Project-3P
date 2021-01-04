@@ -17,8 +17,7 @@ public class EquipQuickslot : MonoBehaviour
     public struct SlotInfo
     {
         public GameObject Prefab;
-        public int VerticalCount;
-        public int HorizontalCount;
+        public int TotalCount;
     }
     [SerializeField]
     private SlotInfo slotInfo;
@@ -45,8 +44,22 @@ public class EquipQuickslot : MonoBehaviour
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }
-        else if ( Input.GetKeyUp( activeKey ) )
+        else if ( Input.GetKeyUp( activeKey ) && pannelRect.gameObject.activeSelf )
         {
+            float distance = Vector2.Distance( Input.mousePosition, pannelRect.position );
+            if ( distance > pannelRect.rect.width * 0.25f )
+            {
+                // 마우스에 가까운 퀵슬롯 사용
+                int slotIndex = GetNearestSlotIndex();
+                if ( slotIndex >= 0 && slotIndex < slotList.Count )
+                {
+                    Button buttonUI = slotList[ slotIndex ].GetComponent<Button>();
+                    buttonUI.onClick?.Invoke();
+
+                    return;
+                }
+            }
+
             pannelRect.gameObject.SetActive( false );
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -78,8 +91,10 @@ public class EquipQuickslot : MonoBehaviour
 
     private void UpdateSlotTransform()
     {
-        int totalCount = slotInfo.VerticalCount * slotInfo.HorizontalCount;
-        for ( int i = 0; i < totalCount; ++i )
+        float slotInterval = ( 1.0f / slotInfo.TotalCount );
+
+        // 중앙에서부터 원형으로 배치
+        for ( int i = 0; i < slotInfo.TotalCount; ++i )
         {
             if ( slotList.Count <= i )
             {
@@ -88,11 +103,14 @@ public class EquipQuickslot : MonoBehaviour
             }
 
             RectTransform slotRect = slotList[ i ];
-            int vIndex = ( i % slotInfo.VerticalCount );
-            int hIndex = ( i / slotInfo.VerticalCount );
 
-            slotRect.anchorMin = new Vector2( vIndex / ( float )slotInfo.VerticalCount, hIndex / ( float )slotInfo.HorizontalCount );
-            slotRect.anchorMax = new Vector2( ( vIndex + 1 ) / ( float )slotInfo.VerticalCount, ( hIndex + 1 ) / ( float )slotInfo.HorizontalCount );
+            // param = ( 0 ~ 2PI )
+            float param = ( ( float )i / slotInfo.TotalCount ) * Mathf.PI * 2.0f;
+            // ( -1 ~ 1 ) => ( 0 ~ 1 )
+            float anchorX = ( Mathf.Sin( param ) + 1.0f ) * 0.5f;
+            float anchorY = ( Mathf.Cos( param ) + 1.0f ) * 0.5f;
+            slotRect.anchorMin = new Vector2( anchorX - slotInterval, anchorY - slotInterval );
+            slotRect.anchorMax = new Vector2( anchorX + slotInterval, anchorY + slotInterval );
         }
     }
 
@@ -115,7 +133,13 @@ public class EquipQuickslot : MonoBehaviour
             RectTransform slotRect = slotList[ pair.Key ];
 
             Button buttonUI = slotRect.GetComponent<Button>();
-            buttonUI.onClick.AddListener( () => { localPlayer.UseEquipQuickslot( pair.Key ); } );
+            buttonUI.onClick.AddListener( () => 
+            {
+                localPlayer.UseEquipQuickslot( pair.Key );
+
+                pannelRect.gameObject.SetActive( false );
+                Cursor.lockState = CursorLockMode.Locked;
+            } );
 
             Image imageUI = slotRect.GetComponent<Image>();
             imageUI.sprite = pair.Value.icon;
@@ -123,6 +147,24 @@ public class EquipQuickslot : MonoBehaviour
             Text textUI = slotRect.GetComponentInChildren<Text>();
             textUI.text = pair.Value.id;
         }
+    }
+
+    private int GetNearestSlotIndex()
+    {
+        int nearestSlotIndex = -1;
+        float nearestSlotDistance = float.MaxValue;
+
+        for ( int i = 0; i < slotList.Count; ++i )
+        {
+            float distance = Vector2.Distance( slotList[ i ].position, Input.mousePosition );
+            if ( distance < nearestSlotDistance )
+            {
+                nearestSlotDistance = distance;
+                nearestSlotIndex = i;
+            }
+        }
+
+        return nearestSlotIndex;
     }
 
     private void OnChangeLocalPlayer( Player localPlayer )

@@ -71,6 +71,14 @@ public class Player : Character
         foreach ( Equipment.ModelInfo info in equip.modelInfos )
         {
             GameObject instance = Instantiate( info.Prefab, boneInfos[ info.AttachBone ].Reference );
+            
+            MeshCollider mesh = instance.GetComponent<MeshCollider>();
+            if ( !ReferenceEquals( mesh, null ) )
+            {
+                mesh.convex = true;
+                mesh.isTrigger = true;
+            }
+
             instance.transform.localScale = BoneInfo.OriginalScale;
 
             equipInfo.Models.Add( instance );
