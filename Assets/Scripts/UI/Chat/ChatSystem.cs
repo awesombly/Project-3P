@@ -13,7 +13,7 @@ public struct Message
 public class ChatSystem : Singleton<ChatSystem>
 {
     public event ChatReturnEvent ChatEvent;
-    public delegate void ChatReturnEvent();
+    public delegate void ChatReturnEvent( bool _isActive );
 
     private List<Message> messages = new List<Message>();
 
@@ -153,7 +153,7 @@ public class ChatSystem : Singleton<ChatSystem>
                     enterContent.ActivateInputField();
                 }
 
-                ChatEvent();
+                ChatEvent( enterContent.gameObject.activeSelf );
             }
         }
     }

@@ -23,11 +23,14 @@ public class EquipQuickslot : MonoBehaviour
     private SlotInfo slotInfo;
     private List<RectTransform> slotList = new List<RectTransform>();
 
+    private bool isActivable = true;
+
     private void Awake()
     {
         pannelRect.gameObject.SetActive( false );
 
         SceneBase.Instance.OnChangeLocalPlayer += OnChangeLocalPlayer;
+        ChatSystem.Instance.ChatEvent += ( bool _isActive ) => { isActivable = !_isActive; };
     }
 
     private void Start()
@@ -38,11 +41,9 @@ public class EquipQuickslot : MonoBehaviour
 
     private void Update()
     {
-        if ( Input.GetKeyDown( activeKey ) )
+        if ( Input.GetKeyDown( activeKey ) && isActivable )
         {
-            pannelRect.gameObject.SetActive( true );
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
+            SetActiveQuickslot( true );
         }
         else if ( Input.GetKeyUp( activeKey ) && pannelRect.gameObject.activeSelf )
         {
@@ -55,13 +56,10 @@ public class EquipQuickslot : MonoBehaviour
                 {
                     Button buttonUI = slotList[ slotIndex ].GetComponent<Button>();
                     buttonUI.onClick?.Invoke();
-
-                    return;
                 }
             }
 
-            pannelRect.gameObject.SetActive( false );
-            Cursor.lockState = CursorLockMode.Locked;
+            SetActiveQuickslot( false );
         }
     }
 
@@ -114,15 +112,15 @@ public class EquipQuickslot : MonoBehaviour
         }
     }
 
-    private void UpdateSlotData( Player localPlayer )
+    private void UpdateSlotData( Player _localPlayer )
     {
-        if ( localPlayer == null )
+        if ( _localPlayer == null )
         {
             Debug.LogWarning( "localPlayer is null." );
             return;
         }
 
-        foreach ( KeyValuePair<int/*index*/, Equipment> pair in localPlayer.equipQuickslot )
+        foreach ( KeyValuePair<int/*index*/, Equipment> pair in _localPlayer.equipQuickslot )
         {
             if ( pair.Key >= slotList.Count )
             {
@@ -133,12 +131,12 @@ public class EquipQuickslot : MonoBehaviour
             RectTransform slotRect = slotList[ pair.Key ];
 
             Button buttonUI = slotRect.GetComponent<Button>();
+            buttonUI.onClick.RemoveAllListeners();
             buttonUI.onClick.AddListener( () => 
             {
-                localPlayer.UseEquipQuickslot( pair.Key );
+                _localPlayer.UseEquipQuickslot( pair.Key );
 
-                pannelRect.gameObject.SetActive( false );
-                Cursor.lockState = CursorLockMode.Locked;
+                SetActiveQuickslot( false );
             } );
 
             Image imageUI = slotRect.GetComponent<Image>();
@@ -167,8 +165,23 @@ public class EquipQuickslot : MonoBehaviour
         return nearestSlotIndex;
     }
 
-    private void OnChangeLocalPlayer( Player localPlayer )
+    private void SetActiveQuickslot( bool _isActive )
     {
-        UpdateSlotData( localPlayer );
+        pannelRect.gameObject.SetActive( _isActive );
+
+        if ( _isActive )
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+
+    private void OnChangeLocalPlayer( Player _localPlayer )
+    {
+        UpdateSlotData( _localPlayer );
     }
 }
