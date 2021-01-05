@@ -34,8 +34,21 @@ public class Player : Character
 
     public List<Equipment> testEquips;
 
+    private bool isSprinting = true;
+    internal bool IsSprinting
+    {
+        get { return isSprinting; }
+        set
+        {
+            if ( isSprinting == value )
+            {
+                return;
+            }
 
-    internal bool isSprinting = false;
+            isSprinting = value;
+            animator.SetBool( AnimatorParameters.IsSprinting, isSprinting );
+        }
+    }
 
     private bool isGrounded = true;
     internal bool IsGrounded
@@ -49,6 +62,8 @@ public class Player : Character
             }
 
             isGrounded = value;
+            animator.SetBool( AnimatorParameters.IsGrounded, isGrounded );
+
             OnChangeGrounded?.Invoke( isGrounded );
         }
     }
@@ -67,6 +82,8 @@ public class Player : Character
             }
 
             isCrouching = value;
+            animator.SetBool( AnimatorParameters.IsCrouching, isCrouching );
+
             OnChangeCrouching?.Invoke( isCrouching );
         }
     }
@@ -188,10 +205,12 @@ public class Player : Character
     {
         base.UpdateAnimatorParameters();
 
-        animator.SetBool( AnimatorParameters.IsGrounded, isGrounded );
+        if ( ReferenceEquals( animator, null ) )
+        {
+            return;
+        }
+
         animator.SetBool( AnimatorParameters.IsStrafing, true );
-        animator.SetBool( AnimatorParameters.IsSprinting, isSprinting );
-        animator.SetBool( AnimatorParameters.IsCrouching, isCrouching );
     }
 
     private void UpdateCrouchState()

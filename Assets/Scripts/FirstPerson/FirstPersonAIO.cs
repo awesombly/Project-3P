@@ -135,8 +135,8 @@ public class FirstPersonAIO : MonoBehaviour
 
     private bool IsSprinting
     {
-        get { return myPlayer.isSprinting; }
-        set { myPlayer.isSprinting = value; }
+        get { return myPlayer.IsSprinting; }
+        set { myPlayer.IsSprinting = value; }
     }
 
     private bool IsCrouching

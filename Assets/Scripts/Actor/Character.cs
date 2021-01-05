@@ -70,6 +70,11 @@ public class Character : Actor
 
     protected virtual void UpdateAnimatorParameters()
     {
+        if ( ReferenceEquals( animator, null ) )
+        {
+            return;
+        }
+
         bool isStop = rigidBody.velocity.sqrMagnitude < float.Epsilon;
         animator.SetFloat( AnimatorParameters.InputHorizontal, isStop ? 0.0f : inputHorizontal, AnimationDampTime, Time.deltaTime );
         animator.SetFloat( AnimatorParameters.InputVertical, isStop ? 0.0f : inputVertical, AnimationDampTime, Time.deltaTime );
