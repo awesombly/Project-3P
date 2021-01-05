@@ -235,7 +235,7 @@ public class FirstPersonAIO : MonoBehaviour
         }
 
         myPlayer.OnChangeCrouching += OnChangeCrouching;
-        ChatSystem.Instance.ChatEvent += () => { playerCanMove = !playerCanMove; };
+        ChatSystem.Instance.ChatEvent += ( bool _isActive ) => { playerCanMove = !_isActive; };
 
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;

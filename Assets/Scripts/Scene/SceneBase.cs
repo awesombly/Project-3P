@@ -31,7 +31,7 @@ public class SceneBase : Singleton<SceneBase>
             OnChangeLocalPlayer?.Invoke( localPlayer );
         }
     }
-    public delegate void DelChangeLocalPlayer( Player localPlayer );
+    public delegate void DelChangeLocalPlayer( Player _localPlayer );
     public event DelChangeLocalPlayer OnChangeLocalPlayer;
 
     private List<Player> otherPlayers = new List<Player>();
