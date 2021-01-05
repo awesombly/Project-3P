@@ -13,17 +13,26 @@ public abstract class AIBase : Character
         /* 추가 상태 */
         Attack,
         Patrol,
-        Move,
+        Move = 3,
         Dash,
         Dead,
     };
 
-    protected AIState state { get; private set; } = AIState.Idle;
+    protected NavMeshAgent nav { get; private set; }
+    // protected AIState state { get; private set; }
+
     private Coroutine currentCoroutine = null;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        nav = GetComponent<NavMeshAgent>();
+    }
 
     protected virtual void Start()
     {
-        ChangeState( state );
+        ChangeState( AIState.Idle );
     }
 
     protected void ChangeState( AIState _state )
@@ -32,7 +41,8 @@ public abstract class AIBase : Character
         {
             StopCoroutine( currentCoroutine );
         }
-        state = _state;
+        // state = _state;
+        animator.SetInteger( AnimatorParameters.AIState, ( int )_state );
         currentCoroutine = StartCoroutine( _state.ToString() );
     }
 

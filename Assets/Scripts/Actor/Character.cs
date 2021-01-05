@@ -93,5 +93,8 @@ public class Character : Actor
         public static int IsStrafing = Animator.StringToHash( "IsStrafing" );
         public static int IsSprinting = Animator.StringToHash( "IsSprinting" );
         public static int IsCrouching = Animator.StringToHash( "IsCrouching" );
+
+        /* AI */
+        public static int AIState = Animator.StringToHash( "State" );
     }
 }
