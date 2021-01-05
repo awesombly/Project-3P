@@ -16,8 +16,11 @@ public class NPCBase : AIBase
     private List<Transform> spots = new List<Transform>();
     [SerializeField]
     private Transform currentSpot;
-    private void Awake()
+
+    protected override void Awake()
     {
+        base.Awake();
+
         myTransform = transform;
 
         spots.AddRange( GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>() );
