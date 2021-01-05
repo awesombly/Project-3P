@@ -34,9 +34,52 @@ public class Player : Character
 
     public List<Equipment> testEquips;
 
+
+    internal bool isSprinting = false;
+
+    private bool isGrounded = true;
+    internal bool IsGrounded
+    {
+        get { return isGrounded; }
+        set
+        {
+            if ( isGrounded == value )
+            {
+                return;
+            }
+
+            isGrounded = value;
+            OnChangeGrounded?.Invoke( isGrounded );
+        }
+    }
+    public delegate void DelChangeGrounded( bool _isGrounded );
+    public event DelChangeGrounded OnChangeGrounded;
+
+    private bool isCrouching = false;
+    internal bool IsCrouching
+    {
+        get { return isCrouching; }
+        set
+        {
+            if ( isCrouching == value )
+            {
+                return;
+            }
+
+            isCrouching = value;
+            OnChangeCrouching?.Invoke( isCrouching );
+        }
+    }
+    public delegate void DelChangeCrouching( bool _isCrouching );
+    public event DelChangeCrouching OnChangeCrouching;
+
+
     protected override void Awake()
     {
         base.Awake();
+
+        OnChangeCrouching += SendSyncCrouch;
+        OnChangeGrounded += SendSyncGrounded;
 
         foreach ( BoneInfo info in boneList )
         {
@@ -54,6 +97,14 @@ public class Player : Character
         UseEquipQuickslot( 0 );
     }
 
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        UpdateCrouchState();
+    }
+
+    #region Equipment
     public void SetEquipment( Equipment equip )
     {
         if ( equip == null )
@@ -71,7 +122,7 @@ public class Player : Character
         foreach ( Equipment.ModelInfo info in equip.modelInfos )
         {
             GameObject instance = Instantiate( info.Prefab, boneInfos[ info.AttachBone ].Reference );
-            
+
             MeshCollider mesh = instance.GetComponent<MeshCollider>();
             if ( !ReferenceEquals( mesh, null ) )
             {
@@ -121,5 +172,66 @@ public class Player : Character
         }
 
         SetEquipment( equipQuickslot[ index ] );
+    }
+    #endregion
+
+    protected override void UpdateInputParameters()
+    {
+        base.UpdateInputParameters();
+
+        float sprintingRate = ( isSprinting ? 1.5f : 1.0f );
+        inputVertical *= sprintingRate;
+        inputHorizontal *= sprintingRate;
+    }
+
+    protected override void UpdateAnimatorParameters()
+    {
+        base.UpdateAnimatorParameters();
+
+        animator.SetBool( AnimatorParameters.IsGrounded, isGrounded );
+        animator.SetBool( AnimatorParameters.IsStrafing, true );
+        animator.SetBool( AnimatorParameters.IsSprinting, isSprinting );
+        animator.SetBool( AnimatorParameters.IsCrouching, isCrouching );
+    }
+
+    private void UpdateCrouchState()
+    {
+        /// 필요할때만 코루틴으로 처리하는게 좋을듯
+        if ( IsCrouching )
+        {
+            capsule.height = Mathf.MoveTowards( capsule.height, originCapsuleHeight * 0.65f, Time.deltaTime * 5.0f );
+        }
+        else
+        {
+            capsule.height = Mathf.MoveTowards( capsule.height, originCapsuleHeight, Time.deltaTime * 5.0f );
+        }
+
+        animator.gameObject.transform.localPosition = ( capsule.height * 0.5f * Vector3.down );
+    }
+
+    private void SendSyncCrouch( bool _isCrouching )
+    {
+        if ( !isLocal )
+        {
+            return;
+        }
+
+        Protocol.Both.SyncCrouch protocol;
+        protocol.Serial = serial;
+        protocol.IsCrouch = _isCrouching;
+        Network.Instance.Send( protocol );
+    }
+
+    private void SendSyncGrounded( bool _isGrounded )
+    {
+        if ( !isLocal )
+        {
+            return;
+        }
+
+        Protocol.Both.SyncGrounded protocol;
+        protocol.Serial = serial;
+        protocol.IsGrounded = _isGrounded;
+        Network.Instance.Send( protocol );
     }
 }

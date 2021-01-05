@@ -18,11 +18,11 @@ public class Actor : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        localVelocity = transform.InverseTransformDirection( rigidBody.velocity );
-
         if ( !isLocal )
         {
             rigidBody.velocity = syncVelocity;
         }
+
+        localVelocity = transform.InverseTransformDirection( rigidBody.velocity );
     }
 }

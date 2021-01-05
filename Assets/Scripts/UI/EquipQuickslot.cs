@@ -41,7 +41,7 @@ public class EquipQuickslot : MonoBehaviour
 
     private void Update()
     {
-        if ( Input.GetKeyDown( activeKey ) && isActivable )
+        if ( Input.GetKeyDown( activeKey ) )
         {
             SetActiveQuickslot( true );
         }
@@ -167,15 +167,20 @@ public class EquipQuickslot : MonoBehaviour
 
     private void SetActiveQuickslot( bool _isActive )
     {
-        pannelRect.gameObject.SetActive( _isActive );
-
         if ( _isActive )
         {
+            if ( !isActivable )
+            {
+                return;
+            }
+
+            pannelRect.gameObject.SetActive( true );
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }
         else
         {
+            pannelRect.gameObject.SetActive( false );
             Cursor.lockState = CursorLockMode.Locked;
         }
     }

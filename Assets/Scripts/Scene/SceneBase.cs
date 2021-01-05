@@ -129,28 +129,28 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncCrouch protocol = JsonUtility.FromJson<Protocol.Both.SyncCrouch>( _data );
 
-        Character character = GetActor( protocol.Serial ) as Character;
-        if ( ReferenceEquals( character, null ) )
+        Player player = GetActor( protocol.Serial ) as Player;
+        if ( ReferenceEquals( player, null ) )
         {
-            Debug.LogError( "character is null. Serial = " + protocol.Serial );
+            Debug.LogError( "player is null. Serial = " + protocol.Serial );
             return;
         }
 
-        character.IsCrouching = protocol.IsCrouch;
+        player.IsCrouching = protocol.IsCrouch;
     }
 
     private void SyncGrounded( string _data )
     {
         Protocol.Both.SyncGrounded protocol = JsonUtility.FromJson<Protocol.Both.SyncGrounded>( _data );
 
-        Character character = GetActor( protocol.Serial ) as Character;
-        if ( ReferenceEquals( character, null ) )
+        Player player = GetActor( protocol.Serial ) as Player;
+        if ( ReferenceEquals( player, null ) )
         {
-            Debug.LogError( "character is null. Serial = " + protocol.Serial );
+            Debug.LogError( "player is null. Serial = " + protocol.Serial );
             return;
         }
 
-        character.IsGrounded = protocol.IsGrounded;
+        player.IsGrounded = protocol.IsGrounded;
     }
 
     private void CreatePlayer( string _data )
