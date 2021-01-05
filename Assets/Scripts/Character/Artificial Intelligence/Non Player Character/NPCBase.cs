@@ -1,74 +1,65 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class NPCBase : AIBase
 {
-    protected int spotCount
-    {
-        get
-        {
-            return spots.Count;
-        }
-    }
-    private Transform myTransform;
     [SerializeField]
-    private List<Transform> spots = new List<Transform>();
+    // private List<Transform> spots = new List<Transform>();
+    private Transform[] spots;
     [SerializeField]
     private Transform currentSpot;
+
+    private NavMeshAgent nav;
 
     protected override void Awake()
     {
         base.Awake();
 
-        myTransform = transform;
+        spots = GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>();
+        currentSpot = spots[ Random.Range( 1, spots.Length - 1 ) ];
+        // spots.AddRange( GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>() );
+        // spots.RemoveAt( 0 );
 
-        spots.AddRange( GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>() );
-        spots.RemoveAt( 0 );
-        
         if ( ReferenceEquals( spots, null ) )
         {
             Debug.Log( "spots not found" );
         }
+
+        nav = GetComponent<NavMeshAgent>();
+        nav.speed = 10.0f;
     }
 
     protected override IEnumerator Idle()
     {
         Debug.Log( "Current State : Idle" );
-        while( true )
+        while ( true )
         {
             yield return null;
-            
-            currentSpot = spots[ Random.Range( 0, spotCount - 1 ) ];
-            if ( ReferenceEquals( currentSpot, null ) )
-            {
-                Debug.Log( "spot setting failed" );
-            }
 
-            ChangeState( AIState.Move );
+            int index = Random.Range( 1, spots.Length );
+            if ( !ReferenceEquals( currentSpot, spots[index] ) )
+            {
+                currentSpot = spots[index];
+                Debug.Log( "Next Spot :" + currentSpot.name );
+                ChangeState( AIState.Move );
+            }
         }
     }
 
-    protected override IEnumerator Move()
+    protected virtual IEnumerator Move()
     {
         Debug.Log( "Current State : Move" );
-        if ( ReferenceEquals( currentSpot, null ) )
-        {
-            Debug.Log( "State Move Not Found Spots" );
-            ChangeState( AIState.Idle );
-        }
-
         while ( true )
         {
-            Vector3 dis = ( currentSpot.position - myTransform.position ).normalized;
-            dis.y = 0.0f;
-            myTransform.Translate( dis * 10.0f * Time.deltaTime );
-
             yield return null;
-            if ( Vector3.Distance( myTransform.position, currentSpot.position ) <= 5.0f ) 
+            nav.destination = currentSpot.position;
+            if ( !nav.pathPending && nav.remainingDistance <= 2.0f ) 
             {
                 ChangeState( AIState.Idle );
             }
+
         }
     }
 }

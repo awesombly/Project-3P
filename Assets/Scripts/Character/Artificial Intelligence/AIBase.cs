@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class AIBase : Character
 {
@@ -36,8 +37,6 @@ public abstract class AIBase : Character
     }
 
     protected abstract IEnumerator Idle();
-
-    protected virtual IEnumerator Move() { yield return null; }
 
     protected virtual void OnExit()
     {
