@@ -11,25 +11,33 @@ public abstract class AIBase : MonoBehaviour
 
         /* 추가 상태 */
         Attack,
+        Patrol,
         Move,
+        Dash,
         Dead,
     };
 
-    protected AIState state { get; set; } = AIState.Idle;
+    protected AIState state { get; private set; } = AIState.Idle;
+    private Coroutine currentCoroutine = null;
 
     protected virtual void Start()
     {
-        StartCoroutine( ChangeState( state ) );
+        ChangeState( state );
     }
 
-    protected IEnumerator ChangeState( AIState _state )
+    protected void ChangeState( AIState _state )
     {
-        StopCoroutine( state.ToString() );
+        if ( !ReferenceEquals( currentCoroutine, null ) )
+        {
+            StopCoroutine( currentCoroutine );
+        }
         state = _state;
-        yield return StartCoroutine( _state.ToString() );
+        currentCoroutine = StartCoroutine( _state.ToString() );
     }
 
     protected abstract IEnumerator Idle();
+
+    protected virtual IEnumerator Move() { yield return null; }
 
     protected virtual void OnExit()
     {
