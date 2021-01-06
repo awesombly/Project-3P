@@ -49,6 +49,12 @@ public class Network : Singleton<Network>
         protocols.Add( _packetType, _handler );
     }
 
+    public void InvokeOnConnect()
+    {
+        Debug.Log( "Connected. Ip = " + ipAddress );
+        OnConnect?.Invoke();
+    }
+
     private void Run()
     {
         // Connecting
@@ -72,8 +78,6 @@ public class Network : Singleton<Network>
                     return;
                 }
             }
-
-            OnConnect?.Invoke();
         }
 
         while ( true )
@@ -137,7 +141,6 @@ public class Network : Singleton<Network>
 
     private void Awake()
     {
-        OnConnect += Connected;
         OnBindProtocols += BindProtocols;
     }
 
@@ -152,11 +155,6 @@ public class Network : Singleton<Network>
     private void OnDestroy()
     {
         socket.Close();
-    }
-
-    private void Connected()
-    {
-        Debug.Log( "Connected. Ip = " + ipAddress );
     }
 
     private void BindProtocols()

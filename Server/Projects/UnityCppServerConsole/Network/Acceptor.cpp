@@ -37,6 +37,8 @@ void Acceptor::WaitForClients() const
 		Session* session = new Session( clientsock, client );
 		SessionManager::Instance().Push( session );
 		IOCPManager::Instance().Bind( ( HANDLE )clientsock, ( ULONG_PTR )session );
+
+		session->Send( Protocol::FromServer::Connected() );
 	}
 }
 

@@ -86,6 +86,8 @@ public class SceneBase : Singleton<SceneBase>
 
     protected virtual void OnBindProtocols()
     {
+        Network.Instance.AddBind( Protocol.FromServer.Connected.PacketType, Connected );
+
         Network.Instance.AddBind( Protocol.Both.SyncTransform.PacketType, SyncTransform );
         Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
         Network.Instance.AddBind( Protocol.Both.SyncCrouch.PacketType, SyncCrouch );
@@ -93,6 +95,11 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
         Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
         Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcInfo );
+    }
+
+    private void Connected( string _data )
+    {
+        Network.Instance.InvokeOnConnect();
     }
 
     private void SyncTransform( string _data )

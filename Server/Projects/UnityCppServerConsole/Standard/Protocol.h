@@ -146,6 +146,16 @@ namespace Protocol
 
 	namespace FromServer
 	{
+		struct Connected : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			template <class Archive>
+			void serialize( Archive& /*ar*/ )
+			{
+			}
+		};
+
 		struct CreatePlayer : public IProtocol
 		{
 			PROTOCOL_HEADER();

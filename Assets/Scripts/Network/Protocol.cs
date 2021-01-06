@@ -120,6 +120,15 @@ namespace Protocol
 
     namespace FromServer
     {
+        public struct Connected : IProtocol
+        {
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
+
         public struct CreatePlayer : IProtocol
         {
             public ServerActor Player;
