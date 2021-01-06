@@ -114,7 +114,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Network\Acceptor.cpp" />
     <ClCompile Include="IO\OStream.cpp" />
     <ClCompile Include="Packet\Packet.cpp" />
-    <ClCompile Include="Logic\Quaternion.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Logic\Stage.cpp" />
     <ClCompile Include="Standard\Log.cpp" />
@@ -127,7 +127,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClCompile Include="Synchronize\CriticalSection.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Time\Timer.cpp" />
-    <ClCompile Include="Logic\Vector.cpp" />
+    <ClCompile Include="Math\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DB\Database.h" />
@@ -138,7 +138,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="IO\OStream.h" />
     <ClInclude Include="Packet\Packet.h" />
-    <ClInclude Include="Logic\Quaternion.h" />
+    <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Logic\Stage.h" />
     <ClInclude Include="Standard\Log.h" />
@@ -152,7 +152,7 @@ if not exist "$(OutDir)libmysql.dll" copy "..\\..\\ExternalLibraries\\MySQL\\Lib
     <ClInclude Include="Synchronize\CriticalSection.h" />
     <ClInclude Include="Standard\Header.h" />
     <ClInclude Include="Time\Timer.h" />
-    <ClInclude Include="Logic\Vector.h" />
+    <ClInclude Include="Math\Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

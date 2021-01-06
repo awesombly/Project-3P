@@ -16,11 +16,11 @@
     <ClCompile Include="Packet\PacketManager.cpp" />
     <ClCompile Include="Packet\StreamPacket.cpp" />
     <ClCompile Include="Network\Acceptor.cpp" />
-    <ClCompile Include="Logic\Vector.cpp" />
-    <ClCompile Include="Logic\Quaternion.cpp" />
     <ClCompile Include="Logic\Stage.cpp" />
     <ClCompile Include="Logic\ServerActor.cpp" />
     <ClCompile Include="DB\Database.cpp" />
+    <ClCompile Include="Math\Vector.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
@@ -41,10 +41,10 @@
     <ClInclude Include="Global\GlobalFunc.hpp" />
     <ClInclude Include="Global\GlobalVariable.h" />
     <ClInclude Include="Network\Acceptor.h" />
-    <ClInclude Include="Logic\Vector.h" />
-    <ClInclude Include="Logic\Quaternion.h" />
     <ClInclude Include="Logic\Stage.h" />
     <ClInclude Include="Logic\ServerActor.h" />
     <ClInclude Include="DB\Database.h" />
+    <ClInclude Include="Math\Vector.h" />
+    <ClInclude Include="Math\Quaternion.h" />
   </ItemGroup>
 </Project>

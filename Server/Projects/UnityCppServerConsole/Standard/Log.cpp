@@ -6,10 +6,10 @@ Log::Log() : logStream( std::cout ), curLogPos( 0 )
 	std::thread th( [&] () { Log::LogProcess(); } );
 	th.detach();
 
-	types.insert( std::make_pair( ELogType::Log, std::string( "[Log]" ) ) );
-	types.insert( std::make_pair( ELogType::Warning, std::string( "[Warning]" ) ) );
-	types.insert( std::make_pair( ELogType::Error, std::string( "[Error]" ) ) );
-	types.insert( std::make_pair( ELogType::Exception, std::string( "[Exception]" ) ) );
+	types.insert( std::make_pair( ELogType::Log, std::string( "[Log] " ) ) );
+	types.insert( std::make_pair( ELogType::Warning, std::string( "[Warning] " ) ) );
+	types.insert( std::make_pair( ELogType::Error, std::string( "[Error] " ) ) );
+	types.insert( std::make_pair( ELogType::Exception, std::string( "[Exception] " ) ) );
 	types.insert( std::make_pair( ELogType::EndLine, std::string( "\n" ) ) );
 
 	logData.resize( LogDataMaxSize );

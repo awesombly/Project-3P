@@ -1,8 +1,8 @@
 #pragma once
 #include "Singleton.hpp"
 #include "../IO/OStream.h"
-#include "../Logic/Vector.h"
-#include "../Logic/Quaternion.h"
+#include "../Math/Vector.h"
+#include "../Math/Quaternion.h"
 
 #define LOG			  Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )\n#" << ELogType::Log      
 #define LOG_WARNING   Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )\n#" << ELogType::Warning  

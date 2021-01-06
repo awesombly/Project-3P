@@ -1,7 +1,7 @@
 #pragma once
 #include "../Standard/Header.h"
-#include "Vector.h"
-#include "Quaternion.h"
+#include "../Math/Vector.h"
+#include "../Math/Quaternion.h"
 #include <cereal/cereal.hpp>
 
 using SerialType = u_int;
