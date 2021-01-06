@@ -15,6 +15,7 @@
 #include <string>
 #include <tchar.h>
 #include <fstream>
+#include <sstream>
 
 // Data Structure
 #include <vector>

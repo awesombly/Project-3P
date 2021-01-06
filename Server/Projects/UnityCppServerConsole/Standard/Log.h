@@ -1,6 +1,8 @@
 #pragma once
 #include "Singleton.hpp"
 #include "../IO/OStream.h"
+#include "../Logic/Vector.h"
+#include "../Logic/Quaternion.h"
 
 #define LOG			  Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Log      
 #define LOG_WARNING   Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Warning  
@@ -41,10 +43,16 @@ public:
 	Log& operator << ( const char* _data );
 	Log& operator << ( int _data );
 	Log& operator << ( unsigned __int64 _data );
+	//Log& operator << ( const Vector2& _data );
+	Log& operator << ( const Vector3& _data );
+	//Log& operator << ( const Vector4& _data );
+	Log& operator << ( const Quaternion& _data );
 
 	static const std::string& GetType( ELogType _type );
 
 private:
+	std::string ToString( float _value, int _maxDecimalPoint = 3 );
+
 	void WSAErrorToString( const int _errorCode );
 	void PushLog( ELogType _type, const std::string& _data );
 

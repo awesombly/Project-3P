@@ -94,6 +94,47 @@ Log& Log::operator << ( unsigned __int64 _data )
 	return *this;
 }
 
+std::string Log::ToString( float _value, int _maxDecimalPoint )
+{
+	std::ostringstream out;
+	out << std::setprecision( _maxDecimalPoint ) << _value;
+
+	return out.str();
+}
+
+Log& Log::operator << ( const Vector3& _data )
+{
+	std::string data;
+	data.reserve( 128 );
+	data.append( "( " );
+	data.append( ToString( _data.x ) ).append( ", " );
+	data.append( ToString( _data.y ) ).append( ", " );
+	data.append( ToString( _data.z ) ).append( " )" );
+
+	size_t paramSize = data.size();
+	std::copy( &data[ 0 ], &data[ paramSize ], &logData[ curLogPos ] );
+	curLogPos += paramSize;
+
+	return *this;
+}
+
+Log& Log::operator << ( const Quaternion& _data )
+{
+	std::string data;
+	data.reserve( 128 );
+	data.append( "( " );
+	data.append( ToString( _data.x ) ).append( ", " );
+	data.append( ToString( _data.y ) ).append( ", " );
+	data.append( ToString( _data.z ) ).append( ", " );
+	data.append( ToString( _data.w ) ).append( " )" );
+
+	size_t paramSize = data.size();
+	std::copy( &data[ 0 ], &data[ paramSize ], &logData[ curLogPos ] );
+	curLogPos += paramSize;
+
+	return *this;
+}
+
 const std::string& Log::GetType( ELogType _type )
 {
 	return Log::Instance().types[_type];

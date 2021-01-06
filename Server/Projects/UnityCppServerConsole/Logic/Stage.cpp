@@ -89,7 +89,7 @@ ServerNpc* Stage::FindNpc( const std::string& _name ) const
 	auto iter = npcs.find( _name );
 	if ( iter == std::cend( npcs ) )
 	{
-		LOG_ERROR << "Actor not found." << ELogType::EndLine;
+		LOG << "NpcName : " << _name << " Not Found." << ELogType::EndLine;
 		return nullptr;
 	}
 

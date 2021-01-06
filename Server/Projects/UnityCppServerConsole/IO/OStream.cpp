@@ -51,13 +51,13 @@ void OStream::Write( const std::string& _data )
 		// 자르기 작업
 	}
 
-	std::copy( std::begin( date ), std::end( date ), &writeData[ writePos ] );
-	writePos += date.size() - 1;
+	std::copy( std::cbegin( date ), std::cend( date ), &writeData[ writePos ] );
+	writePos += date.size();
 
-	std::copy( std::begin( _data ), std::end( _data ), &writeData[ writePos ] );
-	writePos += _data.size() - 1;
+	std::copy( std::cbegin( _data ), std::cend( _data ), &writeData[ writePos ] );
+	writePos += _data.size();
 
-	outStream << writeData.data();
+	outStream << writeData.substr( 0, writePos );
 	writePos = 0;
 }
 
