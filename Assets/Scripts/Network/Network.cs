@@ -22,6 +22,9 @@ public class Network : Singleton<Network>
     public delegate void DelConnect();
     public event DelConnect OnConnect;
 
+    public delegate void DelLateConnect();
+    public event DelLateConnect OnLateConnect;
+
     public delegate void DelBindProtocols();
     public event DelBindProtocols OnBindProtocols;
 
@@ -53,6 +56,7 @@ public class Network : Singleton<Network>
     {
         Debug.Log( "Connected. Ip = " + ipAddress );
         OnConnect?.Invoke();
+        OnLateConnect?.Invoke();
     }
 
     private void Run()

@@ -13,7 +13,6 @@ public class SceneBase : Singleton<SceneBase>
 
     [SerializeField]
     private Transform spawnTransform;
-    private Vector3 spawnPosition;
 
     private Player localPlayer;
     public Player LocalPlayer
@@ -50,8 +49,6 @@ public class SceneBase : Singleton<SceneBase>
 
     protected virtual void Awake()
     {
-        // position 접근이 메인 쓰레드에서만 돼서 임시조치
-        spawnPosition = spawnTransform.position;
         stageId = gameObject.name;
 
         Network.Instance.OnConnect += OnConnect;
@@ -80,7 +77,7 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.ToServer.EnterStage protocol;
         protocol.StageId = stageId;
-        protocol.SpawnPosition = spawnPosition;
+        protocol.SpawnPosition = spawnTransform.position;
         Network.Instance.Send( protocol );
     }
 

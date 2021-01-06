@@ -9,13 +9,11 @@ public class WalkerCitizen : AIBase
     [SerializeField]
     private Transform currentSpot;
     
-    bool isConnected = false;
-
     protected override void Awake()
     {
         base.Awake();
 
-        Network.Instance.OnConnect += OnConnect;
+        Network.Instance.OnLateConnect += OnLateConnect;
 
         spots = GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>();
         currentSpot = spots[ Random.Range( 1, spots.Length ) ];
@@ -62,25 +60,15 @@ public class WalkerCitizen : AIBase
         }
     }
 
-    protected void OnConnect()
+    protected void OnLateConnect()
     {
-        isConnected = true;
-    }
+        Protocol.ToServer.RequestNpcInfo protocol;
+        protocol.NpcId = gameObject.name;
 
-    private void Update()
-    {
-        if ( isConnected )
-        {
-            Protocol.ToServer.RequestNpcInfo protocol;
-            protocol.NpcId = gameObject.name;
+        protocol.Actor.Serial = 0;
+        protocol.Actor.Position = transform.position;
+        protocol.Actor.Rotation = transform.rotation;
 
-            protocol.Actor.Serial = 0;
-            protocol.Actor.Position = transform.position;
-            protocol.Actor.Rotation = transform.rotation;
-
-            Network.Instance.Send( protocol );
-            isConnected = false;
-        }
-        isLocal = false;
+        Network.Instance.Send( protocol );
     }
 }

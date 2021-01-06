@@ -27,6 +27,7 @@ public abstract class AIBase : Character
     {
         base.Awake();
 
+        isLocal = false;
         nav = GetComponent<NavMeshAgent>();
     }
 
