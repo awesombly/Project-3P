@@ -52,12 +52,12 @@ void OStream::Write( const std::string& _data )
 	}
 
 	std::copy( std::begin( date ), std::end( date ), &writeData[ writePos ] );
-	writePos += date.size();
+	writePos += date.size() - 1;
 
 	std::copy( std::begin( _data ), std::end( _data ), &writeData[ writePos ] );
-	writePos += _data.size();
+	writePos += _data.size() - 1;
 
-	outStream << writeData;
+	outStream << writeData.data();
 	writePos = 0;
 }
 
