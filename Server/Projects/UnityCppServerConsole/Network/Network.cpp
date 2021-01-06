@@ -39,7 +39,6 @@ bool Network::Initialize( const int _port, const char* _ip )
 	}
 
 	socket = ::socket( AF_INET, SOCK_STREAM, 0 );
-	LOG << "Socket Generation Success" << ELogType::EndLine;
 
 	ZeroMemory( &address, sizeof( address ) );
 	address.sin_family = AF_INET;

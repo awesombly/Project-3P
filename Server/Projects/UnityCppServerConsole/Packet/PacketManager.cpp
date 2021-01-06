@@ -168,8 +168,6 @@ void PacketManager::SyncInterpolation( const PACKET& _packet )
 void PacketManager::EnterStage( const PACKET& _packet )
 {
 	Protocol::ToServer::EnterStage protocol = _packet.packet.GetParsedData<Protocol::ToServer::EnterStage>();
-	//LOG << protocol.PacketName << " : " << _packet.packet.ToString() << ELogType::EndLine;
-
 	LOG << "Stage ID : " << protocol.StageId << " SpawnPosition" << protocol.SpawnPosition << LOG_END;
 
 	Session* session = SessionManager::Instance().Find( _packet.socket );
@@ -231,7 +229,6 @@ void PacketManager::EnterStage( const PACKET& _packet )
 void PacketManager::RequestNpcInfo( const PACKET& _packet )
 {
 	Protocol::ToServer::RequestNpcInfo protocol = _packet.packet.GetParsedData<Protocol::ToServer::RequestNpcInfo>();
-	//LOG << protocol.PacketName << " : " << _packet.packet.ToString() << ELogType::EndLine;
 
 	Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
@@ -250,7 +247,7 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 	ServerNpc* npc = curStage->FindNpc( protocol.NpcId );
 	if ( npc == nullptr )
 	{
-		LOG << "NpcName : " << protocol.NpcId << " New Creation." << ELogType::EndLine;
+		LOG << "Npc : " << protocol.NpcId << " New Creation. " << "Socket : " << _packet.socket << ELogType::EndLine;
 		protocol.Actor.Serial = Protocol::GetNewSerial();
 		npc = new ServerNpc( protocol.Actor, protocol.NpcId );
 		curStage->Push( npc );

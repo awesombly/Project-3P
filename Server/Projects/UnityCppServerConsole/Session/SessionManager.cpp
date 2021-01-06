@@ -31,7 +31,7 @@ SessionContainer SessionManager::GetSessions() const
 
 void SessionManager::Push( Session* _session )
 {
-	LOG << "Enter Session IP( Port ) : " << _session->GetAddressString() << "( " << _session->GetPortString() << " )" << ELogType::EndLine;
+	LOG << "Enter Session " << _session->GetAddressString() << "( " << _session->GetPortString() << " )" << ELogType::EndLine;
 	
 	cs.Lock();
 	sessions[_session->GetSocket()] = _session;
@@ -40,7 +40,7 @@ void SessionManager::Push( Session* _session )
 
 void SessionManager::Erase( Session* _session )
 {
-	LOG << "Leave Session IP( Port ) : " << _session->GetAddressString() << "( " << _session->GetPortString() << " )" << ELogType::EndLine;
+	LOG << "Leave Session " << _session->GetAddressString() << "( " << _session->GetPortString() << " )" << ELogType::EndLine;
 
 	SOCKET key = _session->GetSocket();
 	cs.Lock();

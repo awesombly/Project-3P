@@ -58,7 +58,6 @@ bool Acceptor::SetSocketOption() const
 		LOG_WSAERROR;
 		return false;
 	}
-	LOG << "Socket Option : TCP NoDelay" << ELogType::EndLine;
 
 	linger optLinger;
 	int size = sizeof( int );
@@ -85,8 +84,6 @@ bool Acceptor::SetSocketOption() const
 		LOG_WSAERROR;
 		return false;
 	}
-	LOG << "Socket Option RecvSize : " << recvSize << ELogType::EndLine;
-	LOG << "Socket Option SendSize : " << sendSize << ELogType::EndLine;
 	
 	return true;
 }

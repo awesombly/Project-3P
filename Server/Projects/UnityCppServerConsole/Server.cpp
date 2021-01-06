@@ -37,6 +37,7 @@ void Server::Initialize( const int _port, const char* _address )
 		LOG_WARNING << "PacketManager Initialize Fail" << ELogType::EndLine;
 	}
 
+	LOG << "Server Start." << ELogType::EndLine;
 	if ( ::WaitForSingleObject( killEvent, INFINITE ) == WAIT_FAILED )
 	{
 		LOG_WARNING << "KillEvent Wait Failed" << ELogType::EndLine;
