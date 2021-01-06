@@ -92,6 +92,7 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.Both.SyncGrounded.PacketType, SyncGrounded );
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
         Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
+        Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcInfo );
     }
 
     private void SyncTransform( string _data )
@@ -202,5 +203,20 @@ public class SceneBase : Singleton<SceneBase>
         actors.Remove( protocol.Serial );
 
         Destroy( actor.gameObject );
+    }
+
+    private void ResponseNpcInfo( string _data )
+    {
+        Protocol.FromServer.ResponseNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.ResponseNpcInfo>( _data );
+
+        // Rin 찾기
+        Actor obj = GameObject.Find( protocol.Npc.NpcId ).GetComponent<Actor>();
+
+        // 위치 세팅
+        obj.serial = protocol.Npc.Serial;
+        obj.transform.position = protocol.Npc.Position;
+        obj.transform.rotation = protocol.Npc.Rotation;
+
+        Debug.Log( "ResponseNpcInfo : " + obj.serial );
     }
 }

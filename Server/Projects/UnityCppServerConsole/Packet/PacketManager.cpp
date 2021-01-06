@@ -50,6 +50,7 @@ void PacketManager::BindProtocols()
 	protocols[ Protocol::Both::SyncGrounded::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::EnterStage;
+	protocols[ Protocol::ToServer::RequestNpcInfo::PacketType ] = &PacketManager::RequestNpcInfo;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -223,4 +224,36 @@ void PacketManager::EnterStage( const PACKET& _packet )
 	createPlayer.IsLocal = false;
 	response.SetData( createPlayer );
 	session->logicData.CurrentStage->BroadCastExceptSelf( response, session );
+}
+
+void PacketManager::RequestNpcInfo( const PACKET& _packet )
+{
+	Protocol::ToServer::RequestNpcInfo protocol = _packet.packet.GetParsedData<Protocol::ToServer::RequestNpcInfo>();
+	LOG << protocol.PacketName << " : " << _packet.packet.ToString() << ELogType::EndLine;
+
+	Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		LOG_ERROR << "Session is null." << ELogType::EndLine;
+		return;
+	}
+	
+	Stage* curStage = session->logicData.CurrentStage;
+	if ( curStage == nullptr )
+	{
+		LOG_ERROR << "CurrentStage is null. socket : " << session->GetSocket() << ELogType::EndLine;
+		return;
+	}
+
+	ServerNpc* npc = curStage->FindNpc( protocol.NpcId );
+	if ( npc == nullptr )
+	{
+		protocol.Actor.Serial = Protocol::GetNewSerial();
+		npc = new ServerNpc( protocol.Actor, protocol.NpcId );
+		curStage->Push( npc );
+	}
+
+	Protocol::FromServer::ResponseNpcInfo responseNpc;
+	responseNpc.Npc = *npc;
+	session->Send( responseNpc );
 }

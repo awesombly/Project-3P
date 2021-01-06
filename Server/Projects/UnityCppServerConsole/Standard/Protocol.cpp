@@ -27,6 +27,8 @@ namespace Protocol
 	PROTOCOL_BODY( Both, SyncCrouch );
 	PROTOCOL_BODY( Both, SyncGrounded );
 	PROTOCOL_BODY( ToServer, EnterStage );
+	PROTOCOL_BODY( ToServer, RequestNpcInfo );
 	PROTOCOL_BODY( FromServer, CreatePlayer );
 	PROTOCOL_BODY( FromServer, DestroyActor );
+	PROTOCOL_BODY( FromServer, ResponseNpcInfo );
 }

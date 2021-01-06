@@ -27,3 +27,23 @@ public:
 		ar( CEREAL_NVP( Rotation ) );
 	}
 };
+
+struct ServerNpc : public ServerActor
+{
+public:
+	std::string NpcId;
+
+public:
+	ServerNpc() = default;
+	ServerNpc( const ServerActor& _actor, const std::string& _npcId );
+
+public:
+	template <class Archive>
+	void serialize( Archive& ar )
+	{
+		ar( CEREAL_NVP( Serial ) );
+		ar( CEREAL_NVP( Position ) );
+		ar( CEREAL_NVP( Rotation ) );
+		ar( CEREAL_NVP( NpcId ) );
+	}
+};

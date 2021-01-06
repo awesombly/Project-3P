@@ -8,26 +8,30 @@ public class WalkerCitizen : AIBase
     private Transform[] spots;
     [SerializeField]
     private Transform currentSpot;
+    
+    bool isConnected = false;
 
     protected override void Awake()
     {
         base.Awake();
 
+        Network.Instance.OnConnect += OnConnect;
+
         spots = GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>();
-        currentSpot = spots[4];//Random.Range( 1, spots.Length ) ];
+        currentSpot = spots[ Random.Range( 1, spots.Length ) ];
 
         if ( ReferenceEquals( spots, null ) )
         {
             Debug.Log( "spots not found" );
         }
 
-        nav.speed = 1.0f;
+        nav.speed = Random.Range( 1.0f, 2.0f );
     }
 
     protected override IEnumerator Idle()
     {
         Debug.Log( "Current State : Idle" );
-        yield return new WaitForSeconds( 2.5f );
+        yield return new WaitForSeconds( Random.Range( 1.0f, 2.5f ) );
         while ( true )
         {
             yield return null;
@@ -56,5 +60,27 @@ public class WalkerCitizen : AIBase
                 nav.isStopped = true;
             }
         }
+    }
+
+    protected void OnConnect()
+    {
+        isConnected = true;
+    }
+
+    private void Update()
+    {
+        if ( isConnected )
+        {
+            Protocol.ToServer.RequestNpcInfo protocol;
+            protocol.NpcId = gameObject.name;
+
+            protocol.Actor.Serial = 0;
+            protocol.Actor.Position = transform.position;
+            protocol.Actor.Rotation = transform.rotation;
+
+            Network.Instance.Send( protocol );
+            isConnected = false;
+        }
+        isLocal = false;
     }
 }

@@ -39,6 +39,18 @@ void Stage::Push( ServerActor* _actor )
 	actors[ _actor->Serial ] = _actor;
 }
 
+void Stage::Push( ServerNpc* _npc )
+{
+	if ( _npc == nullptr )
+	{
+		LOG_ERROR << "Actor is null." << ELogType::EndLine;
+		return;
+	}
+
+	actors[ _npc->Serial ] = _npc;
+	npcs[ _npc->NpcId ] = _npc;
+}
+
 void Stage::Erase( const ServerActor* _actor )
 {
 	if ( _actor == nullptr )
@@ -70,6 +82,18 @@ ServerActor* Stage::Find( SerialType serial ) const
 	}
 
 	return findItr->second;
+}
+
+ServerNpc* Stage::FindNpc( const std::string& _name ) const
+{
+	auto iter = npcs.find( _name );
+	if ( iter == std::cend( npcs ) )
+	{
+		LOG_ERROR << "Actor not found." << ELogType::EndLine;
+		return nullptr;
+	}
+
+	return iter->second;
 }
 
 const std::string& Stage::GetId() const

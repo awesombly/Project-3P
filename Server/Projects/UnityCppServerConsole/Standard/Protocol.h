@@ -127,6 +127,21 @@ namespace Protocol
 				ar( CEREAL_NVP( SpawnPosition ) );
 			}
 		};
+
+		struct RequestNpcInfo : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			std::string NpcId;
+			ServerActor Actor;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( NpcId ) );
+				ar( CEREAL_NVP( Actor ) );
+			}
+		};
 	}
 
 	namespace FromServer
@@ -143,6 +158,19 @@ namespace Protocol
 			{
 				ar( CEREAL_NVP( Player ) );
 				ar( CEREAL_NVP( IsLocal ) );
+			}
+		};
+
+		struct ResponseNpcInfo : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			ServerNpc Npc;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Npc ) );
 			}
 		};
 

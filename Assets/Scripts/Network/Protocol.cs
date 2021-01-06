@@ -11,6 +11,15 @@ public struct ServerActor
     public Quaternion Rotation;
 }
 
+[Serializable]
+public struct ServerNpc
+{
+    public uint Serial;
+    public Vector3 Position;
+    public Quaternion Rotation;
+    public string NpcId;
+}
+
 namespace Protocol
 {
     public interface IProtocol
@@ -95,6 +104,18 @@ namespace Protocol
                 return PacketType;
             }
         }
+        
+        public struct RequestNpcInfo : IProtocol
+        {
+            public string NpcId;
+            public ServerActor Actor;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
 
     namespace FromServer
@@ -111,7 +132,18 @@ namespace Protocol
             }
         }
 
-        public struct DestroyActor : IProtocol
+        public struct ResponseNpcInfo : IProtocol
+        {
+            public ServerNpc Npc;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
+    
+         public struct DestroyActor : IProtocol
         {
             public uint Serial;
 
