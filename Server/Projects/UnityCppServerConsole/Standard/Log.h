@@ -4,12 +4,12 @@
 #include "../Logic/Vector.h"
 #include "../Logic/Quaternion.h"
 
-#define LOG			  Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Log      
-#define LOG_WARNING   Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Warning  
-#define LOG_ERROR     Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Error    
-#define LOG_EXCEPTION Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )#" << ELogType::Exception
+#define LOG			  Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )\n#" << ELogType::Log      
+#define LOG_WARNING   Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )\n#" << ELogType::Warning  
+#define LOG_ERROR     Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )\n#" << ELogType::Error    
+#define LOG_EXCEPTION Log::Instance() << "#" << __FUNCTION__ << "( " << std::to_string( __LINE__ ) << " )\n#" << ELogType::Exception
 #define LOG_WSAERROR  Log::Instance().WSAError()
-#define LOG_END       ELogType::EndLine
+#define LOG_END       ELogType::EndLine;
 
 // 로그 단계
 // Log : 대부분의 로그

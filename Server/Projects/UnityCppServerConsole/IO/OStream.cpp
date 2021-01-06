@@ -46,7 +46,7 @@ void OStream::Write( const std::string& _data )
 	}
 
 	std::string date = Timer::Instance().GetCurrentDateString();
-	if ( LogDataMaxSize - writePos < date.size() + _data.size() )
+	if ( LogDataMaxSize - writePos < date.size() + _data.size() + 1 )
 	{
 		// 자르기 작업
 	}
@@ -56,6 +56,9 @@ void OStream::Write( const std::string& _data )
 
 	std::copy( std::cbegin( _data ), std::cend( _data ), &writeData[ writePos ] );
 	writePos += _data.size();
+
+	writeData[ writePos ] = '\n';
+	writePos += 1;
 
 	outStream << writeData.substr( 0, writePos );
 	writePos = 0;
