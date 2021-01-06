@@ -28,22 +28,25 @@ public:
 	}
 };
 
-struct ServerNpc : public ServerActor
+struct ServerNpc
 {
 public:
 	std::string NpcId;
+	int State;
+	Vector3 Target;
+	Vector3 CurPosition;
 
 public:
 	ServerNpc() = default;
-	ServerNpc( const ServerActor& _actor, const std::string& _npcId );
+	ServerNpc( const std::string& _npcId, int _state, const Vector3& _target, const Vector3& _curPosition );
 
 public:
 	template <class Archive>
 	void serialize( Archive& ar )
 	{
-		ar( CEREAL_NVP( Serial ) );
-		ar( CEREAL_NVP( Position ) );
-		ar( CEREAL_NVP( Rotation ) );
 		ar( CEREAL_NVP( NpcId ) );
+		ar( CEREAL_NVP( State ) );
+		ar( CEREAL_NVP( Target ) );
+		ar( CEREAL_NVP( CurPosition ) );
 	}
 };

@@ -10,7 +10,7 @@ ServerActor::ServerActor( SerialType _serial, Vector3 _position, Quaternion _rot
 {
 }
 
-ServerNpc::ServerNpc( const ServerActor& _actor, const std::string& _npcId )
-	: ServerActor( _actor ), NpcId( _npcId )
+ServerNpc::ServerNpc( const std::string& _npcId, int _state, const Vector3& _target, const Vector3& _curPosition )
+	: NpcId( _npcId ), State( _state ), Target( _target ), CurPosition( _curPosition )
 {
 }

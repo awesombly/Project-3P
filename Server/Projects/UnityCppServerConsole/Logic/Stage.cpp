@@ -43,11 +43,10 @@ void Stage::Push( ServerNpc* _npc )
 {
 	if ( _npc == nullptr )
 	{
-		LOG_ERROR << "Actor is null." << ELogType::EndLine;
+		LOG_ERROR << "Npc is null." << ELogType::EndLine;
 		return;
 	}
 
-	actors[ _npc->Serial ] = _npc;
 	npcs[ _npc->NpcId ] = _npc;
 }
 
@@ -94,6 +93,23 @@ ServerNpc* Stage::FindNpc( const std::string& _name ) const
 	}
 
 	return iter->second;
+}
+
+SOCKET Stage::GetNpcCriterion()
+{
+	return npcCriterion;
+}
+
+void Stage::SetNpcCriterion( SOCKET _socket )
+{
+	npcCriterion = _socket;
+}
+
+void Stage::UpdateNpc( const ServerNpc& _data )
+{
+	npcs[ _data.NpcId ]->State = _data.State;
+	npcs[ _data.NpcId ]->Target = _data.Target;
+	npcs[ _data.NpcId ]->CurPosition = _data.CurPosition;
 }
 
 const std::string& Stage::GetId() const

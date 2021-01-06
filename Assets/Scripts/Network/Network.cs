@@ -28,6 +28,19 @@ public class Network : Singleton<Network>
     public delegate void DelBindProtocols();
     public event DelBindProtocols OnBindProtocols;
 
+    public bool isConnected
+    {
+        get
+        {
+            if ( ReferenceEquals( socket, null) )
+            {
+                return false;
+            }
+
+            return socket.Connected;
+        }
+    }
+
     public void Send( Protocol.IProtocol _protocol )
     {
         if ( ReferenceEquals( socket, null ) || !socket.Connected )
@@ -171,6 +184,5 @@ public class Network : Singleton<Network>
         Protocol.Both.ChatMessage protocol = JsonUtility.FromJson<Protocol.Both.ChatMessage>( _data );
 
         ChatSystem.Instance.PushMessage( protocol.Message );
-        // ChatMain.texts.Add( protocol.Message );
     }
 }

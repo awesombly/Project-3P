@@ -109,6 +109,19 @@ namespace Protocol
 				ar( CEREAL_NVP( IsGrounded ) );
 			}
 		};
+
+		struct SyncNpcState : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			ServerNpc NpcInfo;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( NpcInfo ) );
+			}
+		};
 	}
 
 	namespace ToServer
@@ -132,14 +145,12 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			std::string NpcId;
-			ServerActor Actor;
+			ServerNpc NpcInfo;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
-				ar( CEREAL_NVP( NpcId ) );
-				ar( CEREAL_NVP( Actor ) );
+				ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
 	}
@@ -175,12 +186,12 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			ServerNpc Npc;
+			ServerNpc NpcInfo;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
-				ar( CEREAL_NVP( Npc ) );
+				ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
 

@@ -6,8 +6,6 @@ public class WalkerCitizen : AIBase
 {
     [SerializeField]
     private Transform[] spots;
-    [SerializeField]
-    private Transform currentSpot;
     
     protected override void Awake()
     {
@@ -16,28 +14,29 @@ public class WalkerCitizen : AIBase
         Network.Instance.OnLateConnect += OnLateConnect;
 
         spots = GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>();
-        currentSpot = spots[ Random.Range( 1, spots.Length ) ];
+        target = spots[ Random.Range( 1, spots.Length ) ].position;
 
         if ( ReferenceEquals( spots, null ) )
         {
             Debug.Log( "spots not found" );
         }
 
-        nav.speed = Random.Range( 1.0f, 2.0f );
+        nav.speed = 3.0f;
     }
 
     protected override IEnumerator Idle()
     {
         Debug.Log( "Current State : Idle" );
-        yield return new WaitForSeconds( Random.Range( 1.0f, 2.5f ) );
         while ( true )
         {
             yield return null;
 
             int index = Random.Range( 1, spots.Length );
-            if ( !ReferenceEquals( currentSpot, spots[index] ) )
+            if ( !ReferenceEquals( target, spots[index] ) )
             {
-                currentSpot = spots[index];
+                target = spots[index].position;
+                
+                yield return new WaitForSeconds( 1.0f );
                 ChangeState( AIState.Move );
             }
         }
@@ -45,13 +44,13 @@ public class WalkerCitizen : AIBase
 
     protected virtual IEnumerator Move()
     {
-        Debug.Log( "Current State : Move -> " + currentSpot.name );
+        Debug.Log( "Current State : Move : " + target );
         nav.isStopped = false;
 
         while ( true )
         {
             yield return null;
-            nav.SetDestination( currentSpot.position );
+            nav.SetDestination( target );
             if ( !nav.pathPending && nav.remainingDistance <= 2.0f ) 
             {
                 ChangeState( AIState.Idle );
@@ -63,12 +62,17 @@ public class WalkerCitizen : AIBase
     protected void OnLateConnect()
     {
         Protocol.ToServer.RequestNpcInfo protocol;
-        protocol.NpcId = gameObject.name;
-
-        protocol.Actor.Serial = 0;
-        protocol.Actor.Position = transform.position;
-        protocol.Actor.Rotation = transform.rotation;
-
+        protocol.NpcInfo.NpcId = gameObject.name;
+        protocol.NpcInfo.State = ( int )state;
+        protocol.NpcInfo.Target = target;
+        protocol.NpcInfo.CurPosition = transform.position;
         Network.Instance.Send( protocol );
+
+        Protocol.Both.SyncNpcState syncNpcState;
+        syncNpcState.NpcInfo.NpcId = gameObject.name;
+        syncNpcState.NpcInfo.State = ( int )state;
+        syncNpcState.NpcInfo.Target = target;
+        syncNpcState.NpcInfo.CurPosition = transform.position;
+        Network.Instance.Send( syncNpcState );
     }
 }

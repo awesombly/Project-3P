@@ -16,8 +16,6 @@ public:
 	void Recieve();
 	void Send( const UPACKET& _packet ) const;
 
-	void Release();
-
 public:
 	const SOCKET& GetSocket() const;
 	std::string GetAddressString() const;

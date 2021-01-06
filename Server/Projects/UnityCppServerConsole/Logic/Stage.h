@@ -22,6 +22,9 @@ public:
 	ServerActor* Find( SerialType serial ) const;
 	
 	ServerNpc* FindNpc( const std::string& _name ) const;
+	SOCKET GetNpcCriterion();
+	void SetNpcCriterion( SOCKET _socket );
+	void UpdateNpc( const ServerNpc& _data );
 
 	const std::string& GetId() const;
 	SessionContainer GetSessions() const;
@@ -30,5 +33,6 @@ private:
 	std::string id;
 	SessionContainer sessions;
 	std::unordered_map<SerialType, ServerActor*> actors;
+	SOCKET npcCriterion;
 	std::unordered_map<std::string /* npc name */, ServerNpc*> npcs;
 };

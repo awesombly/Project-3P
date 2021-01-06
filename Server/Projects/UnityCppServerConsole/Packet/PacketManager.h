@@ -30,6 +30,7 @@ private:
 	/* To Server */
 	static void EnterStage( const PACKET& _packet );
 	static void RequestNpcInfo( const PACKET& _packet );
+	static void SyncNpcState( const PACKET& _packet );
 
 private:
 	std::queue<PACKET> packets;

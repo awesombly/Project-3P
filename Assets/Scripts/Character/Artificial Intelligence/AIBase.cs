@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public abstract class AIBase : Character
 {
-    protected enum AIState : byte
+    public enum AIState : byte
     {
         /* 기본 상태 */
         Idle = 0,
@@ -18,10 +18,19 @@ public abstract class AIBase : Character
         Dead,
     };
 
-    protected NavMeshAgent nav { get; private set; }
-    // protected AIState state { get; private set; }
+    internal bool IsSpawn = false;
 
+    protected NavMeshAgent nav { get; private set; }
+    protected Vector3 target;
+    protected AIState state;
+    
     private Coroutine currentCoroutine = null;
+
+    public void SyncState( AIState _state, Vector3 _target, Vector3 _curPosition )
+    {
+        target = _target;
+        transform.position = _curPosition;
+    }
 
     protected override void Awake()
     {
@@ -38,12 +47,25 @@ public abstract class AIBase : Character
 
     protected void ChangeState( AIState _state )
     {
+        state = _state;
+
         if ( !ReferenceEquals( currentCoroutine, null ) )
         {
             StopCoroutine( currentCoroutine );
         }
-        // state = _state;
         animator.SetInteger( AnimatorParameters.AIState, ( int )_state );
+
+        if ( Network.Instance.isConnected )
+        {
+            Protocol.Both.SyncNpcState protocol;
+            protocol.NpcInfo.NpcId = gameObject.name;
+            protocol.NpcInfo.State = ( int )state;
+            protocol.NpcInfo.Target = target;
+            protocol.NpcInfo.CurPosition = transform.position;
+
+            Network.Instance.Send( protocol );
+        }
+
         currentCoroutine = StartCoroutine( _state.ToString() );
     }
 

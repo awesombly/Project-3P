@@ -43,13 +43,18 @@ void PacketManager::Push( const PACKET& _packet )
 
 void PacketManager::BindProtocols()
 {
+	/* Chat, Shop ... */
 	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::BroadcastToStage;
+
+	/* Player Character */
 	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::SyncTransform;
 	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::SyncInterpolation;
 	protocols[ Protocol::Both::SyncCrouch::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 	protocols[ Protocol::Both::SyncGrounded::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
-
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::EnterStage;
+	
+	/* NPC */
+	protocols[ Protocol::Both::SyncNpcState::PacketType ] = &PacketManager::SyncNpcState;
 	protocols[ Protocol::ToServer::RequestNpcInfo::PacketType ] = &PacketManager::RequestNpcInfo;
 }
 
@@ -244,16 +249,56 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 		return;
 	}
 
-	ServerNpc* npc = curStage->FindNpc( protocol.NpcId );
+	ServerNpc* npc = curStage->FindNpc( protocol.NpcInfo.NpcId );
 	if ( npc == nullptr )
 	{
-		LOG << "Npc : " << protocol.NpcId << " New Creation. " << "Socket : " << _packet.socket << ELogType::EndLine;
-		protocol.Actor.Serial = Protocol::GetNewSerial();
-		npc = new ServerNpc( protocol.Actor, protocol.NpcId );
+		LOG << "Npc : " << protocol.NpcInfo.NpcId << " New Creation. " << "Socket : " << _packet.socket << ELogType::EndLine;
+		curStage->SetNpcCriterion( _packet.socket );
+		npc = new ServerNpc( protocol.NpcInfo.NpcId, protocol.NpcInfo.State, protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
 		curStage->Push( npc );
 	}
 
 	Protocol::FromServer::ResponseNpcInfo responseNpc;
-	responseNpc.Npc = *npc;
+	responseNpc.NpcInfo = *npc;
 	session->Send( responseNpc );
+}
+
+void PacketManager::SyncNpcState( const PACKET& _packet )
+{
+	Protocol::Both::SyncNpcState protocol = _packet.packet.GetParsedData<Protocol::Both::SyncNpcState>();
+
+	Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		LOG_ERROR << "Session is null." << ELogType::EndLine;
+		return;
+	}
+
+	Stage* curStage = session->logicData.CurrentStage;
+	if ( curStage == nullptr )
+	{
+		LOG_ERROR << "CurrentStage is null. socket : " << session->GetSocket() << ELogType::EndLine;
+		return;
+	}
+
+	ServerNpc* npc = curStage->FindNpc( protocol.NpcInfo.NpcId );
+	if ( npc == nullptr )
+	{
+		LOG_ERROR << "npc is null. socket : " << session->GetSocket() << ELogType::EndLine;
+		return;
+	}
+
+	if ( curStage->GetNpcCriterion() == NULL )
+	{
+		curStage->SetNpcCriterion( _packet.socket );
+	}
+
+	if ( curStage->GetNpcCriterion() == _packet.socket )
+	{
+		curStage->UpdateNpc( protocol.NpcInfo );
+	}
+
+	Protocol::Both::SyncNpcState syncNpcState;
+	syncNpcState.NpcInfo = *npc;
+	session->Send( syncNpcState );
 }
