@@ -15472,6 +15472,10 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: -7462177490036606016, guid: 78c50477ad071bb4d8ac2313e4ed7f3f, type: 3}
+      propertyPath: m_AngularSpeed
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 4462468656906519964, guid: 78c50477ad071bb4d8ac2313e4ed7f3f, type: 3}
       propertyPath: m_Name
       value: Rin

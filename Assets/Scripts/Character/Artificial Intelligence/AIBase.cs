@@ -19,12 +19,14 @@ public abstract class AIBase : Character
     };
 
     internal bool IsSpawn = false;
+    
+    protected Vector3 target;
+    private Coroutine currentCoroutine = null;
 
     protected NavMeshAgent nav { get; private set; }
-    protected Vector3 target;
-    protected AIState state;
-    
-    private Coroutine currentCoroutine = null;
+    private float moveSpeed = 1.5f;
+    private float angularSpeed = 1000.0f;
+    private float acceleration = 20.0f;
 
     public void SyncState( Vector3 _target, Vector3 _curPosition )
     {
@@ -37,7 +39,11 @@ public abstract class AIBase : Character
         base.Awake();
 
         isLocal = false;
+
         nav = GetComponent<NavMeshAgent>();
+        nav.speed = moveSpeed;
+        nav.angularSpeed = angularSpeed;
+        nav.acceleration = acceleration;
     }
 
     protected virtual void Start()
@@ -47,8 +53,6 @@ public abstract class AIBase : Character
 
     protected void ChangeState( AIState _state )
     {
-        state = _state;
-
         if ( !ReferenceEquals( currentCoroutine, null ) )
         {
             StopCoroutine( currentCoroutine );

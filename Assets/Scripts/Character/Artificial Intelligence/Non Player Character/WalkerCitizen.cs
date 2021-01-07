@@ -20,8 +20,6 @@ public class WalkerCitizen : AIBase
         {
             Debug.Log( "spots not found" );
         }
-
-        nav.speed = 3.0f;
     }
 
     protected override IEnumerator Idle()
