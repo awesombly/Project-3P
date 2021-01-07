@@ -218,7 +218,7 @@ public class Player : Character
         /// 필요할때만 코루틴으로 처리하는게 좋을듯
         if ( IsCrouching )
         {
-            capsule.height = Mathf.MoveTowards( capsule.height, originCapsuleHeight * 0.65f, Time.deltaTime * 5.0f );
+            capsule.height = Mathf.MoveTowards( capsule.height, originCapsuleHeight * 0.6f, Time.deltaTime * 5.0f );
         }
         else
         {

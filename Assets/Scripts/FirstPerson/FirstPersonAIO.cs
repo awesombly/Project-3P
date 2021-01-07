@@ -592,20 +592,29 @@ public class FirstPersonAIO : MonoBehaviour
                 zTilt = bobSwayFactor * ( headbobSwayAngle / 10 ) * headbobFade;
             }
         }
+
         //apply headbob position
         if ( useHeadbob == true )
         {
-            if ( rigidBody.velocity.magnitude > 0.1f )
+            Vector3 targetPosition = originalLocalPosition + new Vector3( xPos, yPos, 0.0f );
+            if ( snapHeadjointToCapsul )
             {
-                head.localPosition = Vector3.MoveTowards( head.localPosition, snapHeadjointToCapsul ? ( new Vector3( originalLocalPosition.x, ( capsule.height / 2 ) * head.localScale.y, originalLocalPosition.z ) + new Vector3( xPos, yPos, 0 ) ) : originalLocalPosition + new Vector3( xPos, yPos, 0 ), 0.5f );
+                targetPosition.y = ( capsule.height * 0.5f ) * head.localScale.y + yPos;
             }
             else
             {
-                head.localPosition = Vector3.SmoothDamp( head.localPosition, snapHeadjointToCapsul ? ( new Vector3( originalLocalPosition.x, ( capsule.height / 2 ) * head.localScale.y, originalLocalPosition.z ) + new Vector3( xPos, yPos, 0 ) ) : originalLocalPosition + new Vector3( xPos, yPos, 0 ), ref miscRefVel, 0.15f );
+                targetPosition.y = originalLocalPosition.y * ( capsule.height / _crouchModifiers.colliderHeight ) + yPos;
+            }
+
+            if ( rigidBody.velocity.magnitude > 0.1f )
+            {
+                head.localPosition = Vector3.MoveTowards( head.localPosition, targetPosition, 0.5f );
+            }
+            else
+            {
+                head.localPosition = Vector3.SmoothDamp( head.localPosition, targetPosition, ref miscRefVel, 0.15f );
             }
             head.localRotation = Quaternion.Euler( xTilt, 0, zTilt );
-
-
         }
         #endregion
 
