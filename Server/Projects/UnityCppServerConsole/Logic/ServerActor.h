@@ -31,6 +31,8 @@ public:
 struct ServerNpc
 {
 public:
+	bool IsLocal;
+	int State;
 	std::string NpcId;
 	Vector3 Target;
 	Vector3 CurPosition;
@@ -43,6 +45,8 @@ public:
 	template <class Archive>
 	void serialize( Archive& ar )
 	{
+		ar( CEREAL_NVP( IsLocal ) );
+		ar( CEREAL_NVP( State ) );
 		ar( CEREAL_NVP( NpcId ) );
 		ar( CEREAL_NVP( Target ) );
 		ar( CEREAL_NVP( CurPosition ) );

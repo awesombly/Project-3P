@@ -125,6 +125,19 @@ namespace Protocol
 				ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
+
+		struct ResponseNpcInfo : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			ServerNpc NpcInfo;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( NpcInfo ) );
+			}
+		};
 	}
 
 	namespace FromServer
@@ -154,19 +167,6 @@ namespace Protocol
 			}
 		};
 
-		struct ResponseNpcInfo : public IProtocol
-		{
-			PROTOCOL_HEADER();
-
-			ServerNpc NpcInfo;
-
-			template <class Archive>
-			void serialize( Archive& ar )
-			{
-				ar( CEREAL_NVP( NpcInfo ) );
-			}
-		};
-
 		struct DestroyActor : public IProtocol
 		{
 			PROTOCOL_HEADER();
@@ -177,6 +177,29 @@ namespace Protocol
 			void serialize( Archive& ar )
 			{
 				ar( CEREAL_NVP( Serial ) );
+			}
+		};
+
+		struct RequestNpcInfo : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			template <class Archive>
+			void serialize( Archive& /*ar*/ )
+			{
+			}
+		};
+
+		struct ResponseNpcInfo : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			bool IsLocal;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( IsLocal ) );
 			}
 		};
 	}

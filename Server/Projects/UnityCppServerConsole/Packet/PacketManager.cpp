@@ -54,8 +54,9 @@ void PacketManager::BindProtocols()
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::EnterStage;
 	
 	/* NPC */
-	protocols[ Protocol::Both::SyncNpcState::PacketType ] = &PacketManager::SyncNpcState;
+	//protocols[ Protocol::Both::SyncNpcState::PacketType ] = &PacketManager::SyncNpcState;
 	protocols[ Protocol::ToServer::RequestNpcInfo::PacketType ] = &PacketManager::RequestNpcInfo;
+	protocols[ Protocol::ToServer::ResponseNpcInfo::PacketType ] = &PacketManager::ResponseNpcInfo;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -250,22 +251,38 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 	}
 
 	ServerNpc* npc = curStage->FindNpc( protocol.NpcInfo.NpcId );
+	Protocol::FromServer::ResponseNpcInfo responseNpcInfo;
 	if ( npc == nullptr )
 	{
 		LOG << "Npc : " << protocol.NpcInfo.NpcId << " New Creation. " << "Socket : " << _packet.socket << ELogType::EndLine;
-		curStage->SetNpcCriterion( _packet.socket );
 		npc = new ServerNpc( protocol.NpcInfo.NpcId, protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
+		curStage->SetNpcCriterion( _packet.socket );
+
 		curStage->Push( npc );
+		responseNpcInfo.IsLocal = true;
+	}
+	else
+	{
+		Session* criterion = SessionManager::Instance().Find( curStage->GetNpcCriterion() );
+		if ( criterion == nullptr )
+		{
+			LOG_ERROR << "Npc Criterion Session is null. session exit or socket null." << LOG_END;
+			return;
+		}
+		else
+		{
+			Protocol::FromServer::RequestNpcInfo requestNpcState;
+			criterion->Send( requestNpcState );
+			responseNpcInfo.IsLocal = false;
+		}
 	}
 
-	Protocol::FromServer::ResponseNpcInfo responseNpc;
-	responseNpc.NpcInfo = *npc;
-	session->Send( responseNpc );
+	session->Send( responseNpcInfo );
 }
 
-void PacketManager::SyncNpcState( const PACKET& _packet )
+void PacketManager::ResponseNpcInfo( const PACKET& _packet )
 {
-	Protocol::Both::SyncNpcState protocol = _packet.packet.GetParsedData<Protocol::Both::SyncNpcState>();
+	Protocol::ToServer::ResponseNpcInfo protocol = _packet.packet.GetParsedData<Protocol::ToServer::ResponseNpcInfo>();
 
 	Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )
@@ -284,21 +301,11 @@ void PacketManager::SyncNpcState( const PACKET& _packet )
 	ServerNpc* npc = curStage->FindNpc( protocol.NpcInfo.NpcId );
 	if ( npc == nullptr )
 	{
-		LOG_ERROR << "npc is null. socket : " << session->GetSocket() << ELogType::EndLine;
+		LOG_ERROR << "npc is null." << protocol.NpcInfo.NpcId << ELogType::EndLine;
 		return;
 	}
-
-	if ( curStage->GetNpcCriterion() == NULL )
-	{
-		curStage->SetNpcCriterion( _packet.socket );
-	}
-
-	if ( curStage->GetNpcCriterion() == _packet.socket )
-	{
-		curStage->UpdateNpc( protocol.NpcInfo );
-	}
-
+	
 	Protocol::Both::SyncNpcState syncNpcState;
-	syncNpcState.NpcInfo = *npc;
-	session->Send( syncNpcState );
+	syncNpcState.NpcInfo = protocol.NpcInfo;
+	session->logicData.CurrentStage->BroadCastExceptSelf( syncNpcState, session );
 }

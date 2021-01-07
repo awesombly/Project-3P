@@ -105,11 +105,12 @@ void Stage::SetNpcCriterion( SOCKET _socket )
 	npcCriterion = _socket;
 }
 
-void Stage::UpdateNpc( const ServerNpc& _data )
-{
-	npcs[ _data.NpcId ]->Target = _data.Target;
-	npcs[ _data.NpcId ]->CurPosition = _data.CurPosition;
-}
+//void Stage::UpdateNpc( const ServerNpc& _data )
+//{
+//	npcs[ _data.NpcId ]->State = _data.State;
+//	npcs[ _data.NpcId ]->Target = _data.Target;
+//	npcs[ _data.NpcId ]->CurPosition = _data.CurPosition;
+//}
 
 const std::string& Stage::GetId() const
 {

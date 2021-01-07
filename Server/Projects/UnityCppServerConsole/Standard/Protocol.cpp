@@ -24,11 +24,14 @@ namespace Protocol
 
 	PROTOCOL_BODY( Both, SyncTransform );
 	PROTOCOL_BODY( Both, SyncInterpolation );
-	PROTOCOL_BODY( Both, SyncNpcState );
 	PROTOCOL_BODY( ToServer, EnterStage );
-	PROTOCOL_BODY( ToServer, RequestNpcInfo );
 	PROTOCOL_BODY( FromServer, Connected );
 	PROTOCOL_BODY( FromServer, CreatePlayer );
 	PROTOCOL_BODY( FromServer, DestroyActor );
+
+	PROTOCOL_BODY( Both, SyncNpcState );
+	PROTOCOL_BODY( ToServer, RequestNpcInfo );
+	PROTOCOL_BODY( ToServer, ResponseNpcInfo );
+	PROTOCOL_BODY( FromServer, RequestNpcInfo );
 	PROTOCOL_BODY( FromServer, ResponseNpcInfo );
 }

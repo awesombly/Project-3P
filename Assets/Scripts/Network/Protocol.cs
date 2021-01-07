@@ -14,6 +14,8 @@ public struct ServerActor
 [Serializable]
 public struct ServerNpc
 {
+    public bool IsLocal;
+    public int State;
     public string NpcId;
     public Vector3 Target;
     public Vector3 CurPosition;
@@ -125,6 +127,17 @@ namespace Protocol
                 return PacketType;
             }
         }
+
+        public struct ResponseNpcInfo : IProtocol
+        {
+            public ServerNpc NpcInfo;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
 
     namespace FromServer
@@ -150,9 +163,9 @@ namespace Protocol
             }
         }
 
-        public struct ResponseNpcInfo : IProtocol
+        public struct DestroyActor : IProtocol
         {
-            public ServerNpc NpcInfo;
+            public uint Serial;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
@@ -160,11 +173,20 @@ namespace Protocol
                 return PacketType;
             }
         }
-    
-        public struct DestroyActor : IProtocol
-        {
-            public uint Serial;
 
+        public struct ResponseNpcInfo : IProtocol
+        {
+            public bool IsLocal;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
+
+        public struct RequestNpcInfo : IProtocol
+        {
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
             {
