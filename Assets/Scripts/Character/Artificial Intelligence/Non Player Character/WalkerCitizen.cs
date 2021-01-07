@@ -24,16 +24,16 @@ public class WalkerCitizen : AIBase
     protected override IEnumerator Idle()
     {
         Debug.Log( "Current State : Idle" );
+        Random.InitState( ( int )Time.time );
         while ( true )
         {
             yield return null;
-
-            int index = Random.Range( 1, spots.Length );
-            if ( isLocal && !ReferenceEquals( target, spots[index] ) )
+            int value = Random.Range( 1, spots.Length );
+            if ( isLocal && !target.Equals( spots[value].position ) )
             {
-                target = spots[index].position;
+                //yield return waitForSecondsCached;
 
-                yield return waitForSecondsCached;
+                target = spots[value].position;
                 ChangeState( AIState.Move );
             }
         }
@@ -48,10 +48,13 @@ public class WalkerCitizen : AIBase
         {
             yield return null;
             nav.SetDestination( target );
-            if ( isLocal && !nav.pathPending && nav.remainingDistance <= 2.0f ) 
+            if ( !nav.pathPending && nav.remainingDistance <= 2.0f ) 
             {
                 nav.isStopped = true;
-                ChangeState( AIState.Idle );
+                if ( isLocal )
+                {
+                    ChangeState( AIState.Idle );
+                }
             }
         }
     }

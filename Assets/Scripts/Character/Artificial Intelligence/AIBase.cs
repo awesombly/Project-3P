@@ -25,7 +25,7 @@ public abstract class AIBase : Character
     private Coroutine currentCoroutine = null;
 
     protected NavMeshAgent nav { get; private set; }
-    private float moveSpeed = 1.5f;
+    private float moveSpeed = 5.0f;
     private float angularSpeed = 1000.0f;
     private float acceleration = 20.0f;
 
@@ -86,6 +86,7 @@ public abstract class AIBase : Character
             SendResponseNpcInfo();
         }
 
+        Debug.Log( "Current State : " + _state.ToString() );
         currentCoroutine = StartCoroutine( _state.ToString() );
     }
 
@@ -111,7 +112,6 @@ public abstract class AIBase : Character
     private void SyncNpcState( string _data )
     {
         Protocol.Both.SyncNpcState protocol = JsonUtility.FromJson<Protocol.Both.SyncNpcState>( _data );
-        isLocal = protocol.NpcInfo.IsLocal;
         target = protocol.NpcInfo.Target;
         transform.position = protocol.NpcInfo.CurPosition;
         ChangeState( ( AIState )protocol.NpcInfo.State );
