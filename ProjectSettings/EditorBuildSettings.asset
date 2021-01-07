@@ -8,4 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Village.unity
     guid: 5209175e97bb57a43a4a21303b260ff1
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Scenes/Dungeon.unity
+    guid: ba2519022f1fff144b289c6dc165f5c6
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: e25b6cce1f9a1434ea209561f33990fc, type: 2}
