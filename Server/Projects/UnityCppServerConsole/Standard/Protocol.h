@@ -51,6 +51,8 @@ namespace Protocol
 	namespace Both
 	{
 		SIMPLE_PROTOCOL( ChatMessage );
+		SIMPLE_PROTOCOL( SyncCrouch );
+		SIMPLE_PROTOCOL( SyncGrounded );
 
 		struct SyncTransform : public IProtocol
 		{
@@ -77,36 +79,6 @@ namespace Protocol
 			{
 				ar( CEREAL_NVP( Actor ) );
 				ar( CEREAL_NVP( Velocity ) );
-			}
-		};
-
-		struct SyncCrouch : public IProtocol
-		{
-			PROTOCOL_HEADER();
-
-			SerialType Serial;
-			bool IsCrouch;
-
-			template <class Archive>
-			void serialize( Archive& ar )
-			{
-				ar( CEREAL_NVP( Serial ) );
-				ar( CEREAL_NVP( IsCrouch ) );
-			}
-		};
-
-		struct SyncGrounded : public IProtocol
-		{
-			PROTOCOL_HEADER();
-
-			SerialType Serial;
-			bool IsGrounded;
-
-			template <class Archive>
-			void serialize( Archive& ar )
-			{
-				ar( CEREAL_NVP( Serial ) );
-				ar( CEREAL_NVP( IsGrounded ) );
 			}
 		};
 

@@ -24,8 +24,6 @@ namespace Protocol
 
 	PROTOCOL_BODY( Both, SyncTransform );
 	PROTOCOL_BODY( Both, SyncInterpolation );
-	PROTOCOL_BODY( Both, SyncCrouch );
-	PROTOCOL_BODY( Both, SyncGrounded );
 	PROTOCOL_BODY( Both, SyncNpcState );
 	PROTOCOL_BODY( ToServer, EnterStage );
 	PROTOCOL_BODY( ToServer, RequestNpcInfo );

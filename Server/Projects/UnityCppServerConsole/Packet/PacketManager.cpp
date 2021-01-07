@@ -47,10 +47,10 @@ void PacketManager::BindProtocols()
 	protocols[ Protocol::Both::ChatMessage::PacketType ] = &PacketManager::BroadcastToStage;
 
 	/* Player Character */
-	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::SyncTransform;
-	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::SyncInterpolation;
 	protocols[ Protocol::Both::SyncCrouch::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 	protocols[ Protocol::Both::SyncGrounded::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
+	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::SyncTransform;
+	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::SyncInterpolation;
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::EnterStage;
 	
 	/* NPC */
