@@ -254,7 +254,7 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 	{
 		LOG << "Npc : " << protocol.NpcInfo.NpcId << " New Creation. " << "Socket : " << _packet.socket << ELogType::EndLine;
 		curStage->SetNpcCriterion( _packet.socket );
-		npc = new ServerNpc( protocol.NpcInfo.NpcId, protocol.NpcInfo.State, protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
+		npc = new ServerNpc( protocol.NpcInfo.NpcId, protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
 		curStage->Push( npc );
 	}
 

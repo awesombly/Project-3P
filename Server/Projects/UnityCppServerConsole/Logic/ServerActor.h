@@ -32,20 +32,18 @@ struct ServerNpc
 {
 public:
 	std::string NpcId;
-	int State;
 	Vector3 Target;
 	Vector3 CurPosition;
 
 public:
 	ServerNpc() = default;
-	ServerNpc( const std::string& _npcId, int _state, const Vector3& _target, const Vector3& _curPosition );
+	ServerNpc( const std::string& _npcId, const Vector3& _target, const Vector3& _curPosition );
 
 public:
 	template <class Archive>
 	void serialize( Archive& ar )
 	{
 		ar( CEREAL_NVP( NpcId ) );
-		ar( CEREAL_NVP( State ) );
 		ar( CEREAL_NVP( Target ) );
 		ar( CEREAL_NVP( CurPosition ) );
 	}

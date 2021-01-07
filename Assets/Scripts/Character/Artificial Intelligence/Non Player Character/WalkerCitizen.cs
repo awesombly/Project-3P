@@ -61,16 +61,14 @@ public class WalkerCitizen : AIBase
 
     protected void OnLateConnect()
     {
-        Protocol.ToServer.RequestNpcInfo protocol;
-        protocol.NpcInfo.NpcId = gameObject.name;
-        protocol.NpcInfo.State = ( int )state;
-        protocol.NpcInfo.Target = target;
-        protocol.NpcInfo.CurPosition = transform.position;
-        Network.Instance.Send( protocol );
+        Protocol.ToServer.RequestNpcInfo requestNpcInfo;
+        requestNpcInfo.NpcInfo.NpcId = gameObject.name;
+        requestNpcInfo.NpcInfo.Target = target;
+        requestNpcInfo.NpcInfo.CurPosition = transform.position;
+        Network.Instance.Send( requestNpcInfo );
 
         Protocol.Both.SyncNpcState syncNpcState;
         syncNpcState.NpcInfo.NpcId = gameObject.name;
-        syncNpcState.NpcInfo.State = ( int )state;
         syncNpcState.NpcInfo.Target = target;
         syncNpcState.NpcInfo.CurPosition = transform.position;
         Network.Instance.Send( syncNpcState );

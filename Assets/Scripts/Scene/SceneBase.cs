@@ -124,7 +124,7 @@ public class SceneBase : Singleton<SceneBase>
             return;
         }
 
-        npc.SyncState( ( AIBase.AIState )protocol.NpcInfo.State, protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
+        npc.SyncState( protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
     }
 
     private void SyncTransform( string _data )

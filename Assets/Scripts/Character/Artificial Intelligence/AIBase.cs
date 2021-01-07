@@ -26,7 +26,7 @@ public abstract class AIBase : Character
     
     private Coroutine currentCoroutine = null;
 
-    public void SyncState( AIState _state, Vector3 _target, Vector3 _curPosition )
+    public void SyncState( Vector3 _target, Vector3 _curPosition )
     {
         target = _target;
         transform.position = _curPosition;
@@ -59,7 +59,6 @@ public abstract class AIBase : Character
         {
             Protocol.Both.SyncNpcState protocol;
             protocol.NpcInfo.NpcId = gameObject.name;
-            protocol.NpcInfo.State = ( int )state;
             protocol.NpcInfo.Target = target;
             protocol.NpcInfo.CurPosition = transform.position;
 

@@ -107,7 +107,6 @@ void Stage::SetNpcCriterion( SOCKET _socket )
 
 void Stage::UpdateNpc( const ServerNpc& _data )
 {
-	npcs[ _data.NpcId ]->State = _data.State;
 	npcs[ _data.NpcId ]->Target = _data.Target;
 	npcs[ _data.NpcId ]->CurPosition = _data.CurPosition;
 }

@@ -15,7 +15,6 @@ public struct ServerActor
 public struct ServerNpc
 {
     public string NpcId;
-    public int State;
     public Vector3 Target;
     public Vector3 CurPosition;
 }
