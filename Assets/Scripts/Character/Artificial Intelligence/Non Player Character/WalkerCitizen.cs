@@ -6,12 +6,11 @@ public class WalkerCitizen : AIBase
 {
     [SerializeField]
     private Transform[] spots;
-    
+    private readonly WaitForSeconds waitForSecondsCached = new WaitForSeconds( 1.0f );
+
     protected override void Awake()
     {
         base.Awake();
-
-        Network.Instance.OnLateConnect += OnLateConnect;
 
         spots = GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>();
         target = spots[ Random.Range( 1, spots.Length ) ].position;
@@ -30,11 +29,11 @@ public class WalkerCitizen : AIBase
             yield return null;
 
             int index = Random.Range( 1, spots.Length );
-            if ( !ReferenceEquals( target, spots[index] ) )
+            if ( isLocal && !ReferenceEquals( target, spots[index] ) )
             {
                 target = spots[index].position;
-                
-                yield return new WaitForSeconds( 1.0f );
+
+                yield return waitForSecondsCached;
                 ChangeState( AIState.Move );
             }
         }
@@ -49,26 +48,11 @@ public class WalkerCitizen : AIBase
         {
             yield return null;
             nav.SetDestination( target );
-            if ( !nav.pathPending && nav.remainingDistance <= 2.0f ) 
+            if ( isLocal && !nav.pathPending && nav.remainingDistance <= 2.0f ) 
             {
-                ChangeState( AIState.Idle );
                 nav.isStopped = true;
+                ChangeState( AIState.Idle );
             }
         }
-    }
-
-    protected void OnLateConnect()
-    {
-        Protocol.ToServer.RequestNpcInfo requestNpcInfo;
-        requestNpcInfo.NpcInfo.NpcId = gameObject.name;
-        requestNpcInfo.NpcInfo.Target = target;
-        requestNpcInfo.NpcInfo.CurPosition = transform.position;
-        Network.Instance.Send( requestNpcInfo );
-
-        Protocol.Both.SyncNpcState syncNpcState;
-        syncNpcState.NpcInfo.NpcId = gameObject.name;
-        syncNpcState.NpcInfo.Target = target;
-        syncNpcState.NpcInfo.CurPosition = transform.position;
-        Network.Instance.Send( syncNpcState );
     }
 }

@@ -101,30 +101,14 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
         Network.Instance.AddBind( Protocol.Both.SyncCrouch.PacketType, SyncCrouch );
         Network.Instance.AddBind( Protocol.Both.SyncGrounded.PacketType, SyncGrounded );
-        Network.Instance.AddBind( Protocol.Both.SyncNpcState.PacketType, SyncNpcState );
 
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
         Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
-        Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcInfo );
     }
 
     private void Connected( string _data )
     {
         Network.Instance.InvokeOnConnect();
-    }
-
-    private void SyncNpcState( string _data )
-    {
-        Protocol.Both.SyncNpcState protocol = JsonUtility.FromJson<Protocol.Both.SyncNpcState>( _data );
-        
-        AIBase npc = GetNpc( protocol.NpcInfo.NpcId );
-        if ( ReferenceEquals( npc, null ) )
-        {
-            Debug.LogError( "npc is null. name = " + protocol.NpcInfo.NpcId );
-            return;
-        }
-
-        npc.SyncState( protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
     }
 
     private void SyncTransform( string _data )
@@ -235,15 +219,5 @@ public class SceneBase : Singleton<SceneBase>
         actors.Remove( protocol.Serial );
 
         Destroy( actor.gameObject );
-    }
-
-    private void ResponseNpcInfo( string _data )
-    {
-        Protocol.FromServer.ResponseNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.ResponseNpcInfo>( _data );
-
-        GameObject obj = GameObject.Find( protocol.NpcInfo.NpcId );
-        obj.transform.position = protocol.NpcInfo.CurPosition;
-
-        npcs.Add( obj.name, obj.GetComponent<AIBase>() );
     }
 }

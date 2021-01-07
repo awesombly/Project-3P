@@ -21,10 +21,11 @@ public:
 
 	ServerActor* Find( SerialType serial ) const;
 	
+	/* Npc */
 	ServerNpc* FindNpc( const std::string& _name ) const;
 	SOCKET GetNpcCriterion();
 	void SetNpcCriterion( SOCKET _socket );
-	void UpdateNpc( const ServerNpc& _data );
+	//void UpdateNpc( const ServerNpc& _data );
 
 	const std::string& GetId() const;
 	SessionContainer GetSessions() const;
