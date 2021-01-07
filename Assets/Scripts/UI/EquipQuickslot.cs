@@ -31,12 +31,13 @@ public class EquipQuickslot : MonoBehaviour
 
         SceneBase.Instance.OnChangeLocalPlayer += OnChangeLocalPlayer;
         ChatSystem.Instance.ChatEvent += ( bool _isActive ) => { isActivable = !_isActive; };
+
+        UpdatePannelTransform();
+        UpdateSlotTransform();
     }
 
     private void Start()
     {
-        UpdatePannelTransform();
-        UpdateSlotTransform();
     }
 
     private void Update()
