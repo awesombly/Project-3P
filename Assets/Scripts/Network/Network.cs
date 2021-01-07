@@ -8,7 +8,7 @@ using ReceivedPacket = System.Collections.Generic.KeyValuePair<ushort/*packetTyp
 
 public class Network : Singleton<Network>
 {
-    public string ipAddress = "127.0.0.1";
+    public string ipAddress = "59.187.203.41";
 
     private Socket socket;
     private Thread thread;
