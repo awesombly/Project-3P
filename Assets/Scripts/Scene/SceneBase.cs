@@ -22,7 +22,8 @@ public class SceneBase : Singleton<SceneBase>
         {
             if ( localPlayer != null )
             {
-                actors.Remove( localPlayer.serial );
+                ObjectManager.Instance.Remove( localPlayer.serial );
+                // actors.Remove( localPlayer.serial );
                 Destroy( localPlayer.gameObject );
             }
 
@@ -34,30 +35,18 @@ public class SceneBase : Singleton<SceneBase>
     public event DelChangeLocalPlayer OnChangeLocalPlayer;
 
     private List<Player> otherPlayers = new List<Player>();
-    private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
-    private Dictionary<string /* npc name */, AIBase> npcs = new Dictionary<string, AIBase>();
+    // private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
 
-    public Actor GetActor( uint _serial )
-    {
-        if ( !actors.ContainsKey( _serial ) )
-        {
-            Debug.LogWarning( "actor not Found. serial = " + _serial );
-            return null;
-        }
-
-        return actors[ _serial ];
-    }
-
-    public AIBase GetNpc( string _name )
-    {
-        if ( !npcs.ContainsKey( _name ) )
-        {
-            Debug.LogWarning( "npc not Found. name = " + _name );
-            return null;
-        }
-
-        return npcs[_name];
-    }
+    //public Actor GetActor( uint _serial )
+    //{
+    //    if ( !actors.ContainsKey( _serial ) )
+    //    {
+    //        Debug.LogWarning( "actor not Found. serial = " + _serial );
+    //        return null;
+    //    }
+    //
+    //    return actors[ _serial ];
+    //}
 
     protected virtual void Awake()
     {
@@ -102,8 +91,11 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.Both.SyncCrouch.PacketType, SyncCrouch );
         Network.Instance.AddBind( Protocol.Both.SyncGrounded.PacketType, SyncGrounded );
 
+        /* Player */
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
         Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
+
+
     }
 
     private void Connected( string _data )
@@ -115,7 +107,8 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncTransform protocol = JsonUtility.FromJson<Protocol.Both.SyncTransform>( _data );
 
-        Actor actor = GetActor( protocol.Actor.Serial );
+        // Actor actor = GetActor( protocol.Actor.Serial );
+        Actor actor = ObjectManager.Instance.Find( protocol.Actor.Serial );
         if ( ReferenceEquals( actor, null ) )
         {
             Debug.LogError( "actor is null. Serial = " + protocol.Actor.Serial );
@@ -130,7 +123,8 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncInterpolation protocol = JsonUtility.FromJson<Protocol.Both.SyncInterpolation>( _data );
 
-        Actor actor = GetActor( protocol.Actor.Serial );
+        //Actor actor = GetActor( protocol.Actor.Serial );
+        Actor actor = ObjectManager.Instance.Find( protocol.Actor.Serial );
         if ( ReferenceEquals( actor, null ) )
         {
             Debug.LogError( "actor is null. Serial = " + protocol.Actor.Serial );
@@ -146,7 +140,8 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncCrouch protocol = JsonUtility.FromJson<Protocol.Both.SyncCrouch>( _data );
 
-        Player player = GetActor( protocol.Serial ) as Player;
+        //Player player = GetActor( protocol.Serial ) as Player;
+        Player player = ObjectManager.Instance.Find( protocol.Serial ) as Player;
         if ( ReferenceEquals( player, null ) )
         {
             Debug.LogError( "player is null. Serial = " + protocol.Serial );
@@ -160,7 +155,8 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncGrounded protocol = JsonUtility.FromJson<Protocol.Both.SyncGrounded>( _data );
 
-        Player player = GetActor( protocol.Serial ) as Player;
+        //Player player = GetActor( protocol.Serial ) as Player;
+        Player player = ObjectManager.Instance.Find( protocol.Serial ) as Player;
         if ( ReferenceEquals( player, null ) )
         {
             Debug.LogError( "player is null. Serial = " + protocol.Serial );
@@ -199,7 +195,8 @@ public class SceneBase : Singleton<SceneBase>
 
         player.serial = protocol.Player.Serial;
         player.isLocal = protocol.IsLocal;
-        actors.Add( player.serial, player );
+        //actors.Add( player.serial, player );
+        ObjectManager.Instance.Add( player );
         if ( player.isLocal )
         {
             LocalPlayer = player;
@@ -214,9 +211,11 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.FromServer.DestroyActor protocol = JsonUtility.FromJson<Protocol.FromServer.DestroyActor>( _data );
 
-        Actor actor = GetActor( protocol.Serial );
+        //Actor actor = GetActor( protocol.Serial );
+        Actor actor = ObjectManager.Instance.Find( protocol.Serial );
         otherPlayers.Remove( actor as Player );
-        actors.Remove( protocol.Serial );
+        //actors.Remove( protocol.Serial );
+        ObjectManager.Instance.Remove( protocol.Serial );
 
         Destroy( actor.gameObject );
     }

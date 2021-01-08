@@ -25,7 +25,7 @@ public class ChatSystem : Singleton<ChatSystem>
     private StringBuilder text = new StringBuilder( 50 );
 
     private Coroutine fadeOutCoroutine = null;
-    private readonly WaitForSeconds fadeOutWaitSeconds = new WaitForSeconds( 5.0f );
+    private readonly WaitForSeconds fadeOutTimeCached = new WaitForSeconds( 5.0f );
     private float fadeOutDuration = 0.5f;
 
     public void PushMessage( string _msg )
@@ -57,10 +57,6 @@ public class ChatSystem : Singleton<ChatSystem>
         text.Append( "<#9ddaff>" ).Append( _text ).Append( "</color>" );
 
         newMessage.textObject.text = text.ToString();
-            //"<color=white>" + System.DateTime.Now.ToString( "HH:mm " ) + "</color>" +
-            //"<#ffa4a4>" + "Name " + "</color>" +
-            //"<#9ddaff>" + newMessage.text + "</color>";
-
         messages.Add( newMessage );
     }
 
@@ -118,7 +114,7 @@ public class ChatSystem : Singleton<ChatSystem>
 
     private IEnumerator FadeOutContents( float _duration )
     {
-        yield return fadeOutWaitSeconds;
+        yield return fadeOutTimeCached;
 
         foreach ( Message msg in messages )
         {

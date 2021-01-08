@@ -35,4 +35,23 @@ public class Global
 
         return obj;
     }
+
+    public static bool FakeNullCheck( object _obj )
+    {
+        if ( ReferenceEquals( _obj, null ) )
+        {
+            return false;
+        }
+        else
+        {
+            if ( _obj == null )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }

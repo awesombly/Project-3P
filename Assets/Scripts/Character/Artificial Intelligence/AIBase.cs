@@ -66,6 +66,7 @@ public abstract class AIBase : Character
 
     protected virtual void OnBindProtocols()
     {
+        /* Npc */
         Network.Instance.AddBind( Protocol.FromServer.RequestNpcInfo.PacketType, RequestNpcInfo );
         Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
         Network.Instance.AddBind( Protocol.Both.SyncNpcState.PacketType, SyncNpcState );
@@ -83,7 +84,14 @@ public abstract class AIBase : Character
 
         if ( isLocal && Network.Instance.isConnected )
         {
-            SendResponseNpcInfo();
+            Protocol.ToServer.ResponseNpcInfo protocol;
+            protocol.NpcInfo.IsLocal = isLocal;
+            protocol.NpcInfo.State = state;
+            protocol.NpcInfo.NpcId = gameObject.name;
+            protocol.NpcInfo.Target = target;
+            protocol.NpcInfo.CurPosition = transform.position;
+
+            Network.Instance.Send( protocol );
         }
 
         Debug.Log( "Current State : " + _state.ToString() );
@@ -96,19 +104,6 @@ public abstract class AIBase : Character
     {
         StopAllCoroutines();
     }
-
-    private void SendResponseNpcInfo()
-    {
-        Protocol.ToServer.ResponseNpcInfo protocol;
-        protocol.NpcInfo.IsLocal = isLocal;
-        protocol.NpcInfo.State = state;
-        protocol.NpcInfo.NpcId = gameObject.name;
-        protocol.NpcInfo.Target = target;
-        protocol.NpcInfo.CurPosition = transform.position;
-
-        Network.Instance.Send( protocol );
-    }
-
     private void SyncNpcState( string _data )
     {
         Protocol.Both.SyncNpcState protocol = JsonUtility.FromJson<Protocol.Both.SyncNpcState>( _data );
@@ -121,7 +116,14 @@ public abstract class AIBase : Character
     {
         if ( Network.Instance.isConnected )
         {
-            SendResponseNpcInfo();
+            Protocol.ToServer.ResponseNpcInfo protocol;
+            protocol.NpcInfo.IsLocal = isLocal;
+            protocol.NpcInfo.State = state;
+            protocol.NpcInfo.NpcId = gameObject.name;
+            protocol.NpcInfo.Target = target;
+            protocol.NpcInfo.CurPosition = transform.position;
+
+            Network.Instance.Send( protocol );
         }
     }
 
