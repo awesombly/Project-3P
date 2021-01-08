@@ -15,6 +15,7 @@ public struct ServerActor
 public struct ServerNpc
 {
     public bool IsLocal;
+    public uint Serial;
     public int State;
     public string NpcId;
     public Vector3 Target;
@@ -119,7 +120,7 @@ namespace Protocol
         
         public struct RequestNpcInfo : IProtocol
         {
-            public ServerNpc NpcInfo;
+            //public ServerNpc NpcInfo;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
@@ -177,6 +178,7 @@ namespace Protocol
         public struct ResponseNpcInfo : IProtocol
         {
             public bool IsLocal;
+            public uint Serial;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectManager : Singleton<ObjectManager>
 {
-    private Dictionary<uint /* serial */, Actor> actors;
+    private readonly Dictionary<uint /* serial */, Actor> actors = new Dictionary<uint, Actor>();
 
     public void Add( Actor _actor )
     {
@@ -15,7 +15,7 @@ public class ObjectManager : Singleton<ObjectManager>
             return;
         }
 
-        actors[_actor.serial] = _actor;
+        actors.Add( _actor.serial, _actor );
     }
 
     public void Remove( Actor _actor )

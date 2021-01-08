@@ -56,11 +56,12 @@ public abstract class AIBase : Character
     protected virtual void OnLateConnect()
     {
         Protocol.ToServer.RequestNpcInfo requestNpcInfo;
-        requestNpcInfo.NpcInfo.IsLocal = isLocal;
-        requestNpcInfo.NpcInfo.State = state;
-        requestNpcInfo.NpcInfo.NpcId = gameObject.name;
-        requestNpcInfo.NpcInfo.Target = target;
-        requestNpcInfo.NpcInfo.CurPosition = transform.position;
+        //requestNpcInfo.NpcInfo.IsLocal = isLocal;
+        //requestNpcInfo.NpcInfo.Serial = serial;
+        //requestNpcInfo.NpcInfo.State = state;
+        //requestNpcInfo.NpcInfo.NpcId = gameObject.name;
+        //requestNpcInfo.NpcInfo.Target = target;
+        //requestNpcInfo.NpcInfo.CurPosition = transform.position;
         Network.Instance.Send( requestNpcInfo );
     }
 
@@ -86,6 +87,7 @@ public abstract class AIBase : Character
         {
             Protocol.ToServer.ResponseNpcInfo protocol;
             protocol.NpcInfo.IsLocal = isLocal;
+            protocol.NpcInfo.Serial = serial;
             protocol.NpcInfo.State = state;
             protocol.NpcInfo.NpcId = gameObject.name;
             protocol.NpcInfo.Target = target;
@@ -118,6 +120,7 @@ public abstract class AIBase : Character
         {
             Protocol.ToServer.ResponseNpcInfo protocol;
             protocol.NpcInfo.IsLocal = isLocal;
+            protocol.NpcInfo.Serial = serial;
             protocol.NpcInfo.State = state;
             protocol.NpcInfo.NpcId = gameObject.name;
             protocol.NpcInfo.Target = target;
@@ -131,5 +134,11 @@ public abstract class AIBase : Character
     {
         Protocol.FromServer.ResponseNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.ResponseNpcInfo>( _data );
         isLocal = protocol.IsLocal;
+        serial = protocol.Serial;
+
+        if ( isLocal )
+        {
+            ObjectManager.Instance.Add( this );
+        }
     }
 }

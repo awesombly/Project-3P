@@ -32,6 +32,7 @@ struct ServerNpc
 {
 public:
 	bool IsLocal;
+	u_int Serial;
 	int State;
 	std::string NpcId;
 	Vector3 Target;
@@ -46,6 +47,7 @@ public:
 	void serialize( Archive& ar )
 	{
 		ar( CEREAL_NVP( IsLocal ) );
+		ar( CEREAL_NVP( Serial ) );
 		ar( CEREAL_NVP( State ) );
 		ar( CEREAL_NVP( NpcId ) );
 		ar( CEREAL_NVP( Target ) );

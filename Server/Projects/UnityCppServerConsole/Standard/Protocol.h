@@ -117,12 +117,12 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
-			ServerNpc NpcInfo;
+			//ServerNpc NpcInfo;
 
 			template <class Archive>
-			void serialize( Archive& ar )
+			void serialize( Archive&  )
 			{
-				ar( CEREAL_NVP( NpcInfo ) );
+				//ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
 
@@ -195,11 +195,13 @@ namespace Protocol
 			PROTOCOL_HEADER();
 
 			bool IsLocal;
+			u_int Serial;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
 				ar( CEREAL_NVP( IsLocal ) );
+				ar( CEREAL_NVP( Serial ) );
 			}
 		};
 	}
