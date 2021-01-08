@@ -78,7 +78,7 @@ public abstract class AIBase : Character
 
         if ( isLocal && Network.Instance.isConnected )
         {
-            Protocol.ToServer.ResponseNpcInfo protocol;
+            Protocol.ToServer.ResponseCriterionNpcInfo protocol;
             protocol.NpcInfo.IsLocal = isLocal;
             protocol.NpcInfo.Serial = serial;
             protocol.NpcInfo.State = state;
@@ -89,7 +89,6 @@ public abstract class AIBase : Character
             Network.Instance.Send( protocol );
         }
 
-        Debug.Log( "Current State : " + _state.ToString() );
         currentCoroutine = StartCoroutine( _state.ToString() );
     }
 

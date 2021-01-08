@@ -30,8 +30,9 @@ namespace Protocol
 	PROTOCOL_BODY( FromServer, DestroyActor );
 
 	PROTOCOL_BODY( ToServer, RequestNpcInfo );
-	PROTOCOL_BODY( ToServer, ResponseNpcInfo );
-	PROTOCOL_BODY( FromServer, RequestNpcInfo );
 	PROTOCOL_BODY( FromServer, ResponseNpcInfo );
+	PROTOCOL_BODY( ToServer, ResponseCriterionNpcInfo );
+	PROTOCOL_BODY( FromServer, RequestCriterionNpcInfo );
 	PROTOCOL_BODY( FromServer, SyncNpcInfo );
+	PROTOCOL_BODY( ToServer, RequestNpcSync );
 }

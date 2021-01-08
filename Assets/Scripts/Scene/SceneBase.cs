@@ -84,9 +84,9 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
 
         /* Npc */
-        Network.Instance.AddBind( Protocol.FromServer.RequestNpcInfo.PacketType, RequestNpcInfo );
+        Network.Instance.AddBind( Protocol.FromServer.RequestCriterionNpcInfo.PacketType, RequestCriterionNpcInfo );
         Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
-        Network.Instance.AddBind( Protocol.FromServer.SyncNpcInfo.PacketType, SyncNpcState );
+        Network.Instance.AddBind( Protocol.FromServer.SyncNpcInfo.PacketType, SyncNpcInfo );
     }
 
     private void Connected( string _data )
@@ -204,7 +204,7 @@ public class SceneBase : Singleton<SceneBase>
         Destroy( actor.gameObject );
     }
 
-    private void SyncNpcState( string _data )
+    private void SyncNpcInfo( string _data )
     {
         Protocol.FromServer.SyncNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.SyncNpcInfo>( _data );
 
@@ -218,9 +218,9 @@ public class SceneBase : Singleton<SceneBase>
         npc.Sync( protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition, protocol.NpcInfo.State );
     }
 
-    private void RequestNpcInfo( string _data )
+    private void RequestCriterionNpcInfo( string _data )
     {
-        Protocol.FromServer.RequestNpcInfo requestNpcInfo = JsonUtility.FromJson<Protocol.FromServer.RequestNpcInfo>( _data );
+        Protocol.FromServer.RequestCriterionNpcInfo requestNpcInfo = JsonUtility.FromJson<Protocol.FromServer.RequestCriterionNpcInfo>( _data );
 
         AIBase npc = ObjectManager.Instance.Find( requestNpcInfo.Serial ) as AIBase;
         if ( ReferenceEquals( npc, null ) )
@@ -229,15 +229,15 @@ public class SceneBase : Singleton<SceneBase>
             return;
         }
 
-        Protocol.ToServer.ResponseNpcInfo responseNpcInfo;
-        responseNpcInfo.NpcInfo.IsLocal = npc.isLocal;
-        responseNpcInfo.NpcInfo.Serial = npc.serial;
-        responseNpcInfo.NpcInfo.State = npc.state;
-        responseNpcInfo.NpcInfo.NpcId = gameObject.name;
-        responseNpcInfo.NpcInfo.Target = npc.target;
-        responseNpcInfo.NpcInfo.CurPosition = npc.transform.position;
-        
-        Network.Instance.Send( responseNpcInfo );
+        Protocol.ToServer.ResponseCriterionNpcInfo protocol;
+        protocol.NpcInfo.IsLocal = npc.isLocal;
+        protocol.NpcInfo.Serial = npc.serial;
+        protocol.NpcInfo.State = npc.state;
+        protocol.NpcInfo.NpcId = npc.gameObject.name;
+        protocol.NpcInfo.Target = npc.target;
+        protocol.NpcInfo.CurPosition = npc.transform.position;
+
+        Network.Instance.Send( protocol );
     }
 
     private void ResponseNpcinfo( string _data )
@@ -256,6 +256,14 @@ public class SceneBase : Singleton<SceneBase>
             newNpc.isLocal = protocol.IsLocal;
             newNpc.serial = protocol.Serial;
             ObjectManager.Instance.Add( newNpc );
+        }
+
+        if ( !protocol.IsLocal )
+        {
+            Protocol.ToServer.RequestNpcSync requestNpcSync;
+            requestNpcSync.Serial = protocol.Serial;
+
+            Network.Instance.Send( requestNpcSync );
         }
     }
 }

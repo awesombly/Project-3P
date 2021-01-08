@@ -118,7 +118,18 @@ namespace Protocol
             }
         }
 
-        public struct ResponseNpcInfo : IProtocol
+        public struct RequestNpcSync : IProtocol
+        {
+            public uint Serial;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
+
+        public struct ResponseCriterionNpcInfo : IProtocol
         {
             public ServerNpc NpcInfo;
 
@@ -177,7 +188,7 @@ namespace Protocol
             }
         }
 
-        public struct RequestNpcInfo : IProtocol
+        public struct RequestCriterionNpcInfo : IProtocol
         {
             public uint Serial;
 

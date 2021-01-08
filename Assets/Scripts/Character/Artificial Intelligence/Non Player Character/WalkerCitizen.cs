@@ -13,6 +13,7 @@ public class WalkerCitizen : AIBase
         base.Awake();
 
         spots = GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>();
+        Random.InitState( ( int )Time.time );
         target = spots[ Random.Range( 1, spots.Length ) ].position;
 
         if ( ReferenceEquals( spots, null ) )
@@ -23,16 +24,15 @@ public class WalkerCitizen : AIBase
 
     protected override IEnumerator Idle()
     {
-        Debug.Log( "Current State : Idle" );
-        Random.InitState( ( int )Time.time );
+        Debug.Log( gameObject.name + " Current State : Idle" );
         while ( true )
         {
             yield return null;
+            
+            Random.InitState( ( int )Time.time );
             int value = Random.Range( 1, spots.Length );
             if ( isLocal && !target.Equals( spots[value].position ) )
             {
-                yield return waitForSecondsCached;
-
                 target = spots[value].position;
                 ChangeState( AIState.Move );
             }
@@ -41,7 +41,7 @@ public class WalkerCitizen : AIBase
 
     protected virtual IEnumerator Move()
     {
-        Debug.Log( "Current State : Move : " + target );
+        Debug.Log( gameObject.name + " Current State : Move : " + target );
         nav.isStopped = false;
 
         while ( true )

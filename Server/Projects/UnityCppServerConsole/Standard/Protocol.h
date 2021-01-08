@@ -105,17 +105,15 @@ namespace Protocol
 			PROTOCOL_HEADER();
 
 			std::string NpcId;
-			//ServerNpc NpcInfo;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
 				ar( CEREAL_NVP( NpcId ) );
-				//ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
 
-		struct ResponseNpcInfo : public IProtocol
+		struct ResponseCriterionNpcInfo : public IProtocol
 		{
 			PROTOCOL_HEADER();
 
@@ -125,6 +123,19 @@ namespace Protocol
 			void serialize( Archive& ar )
 			{
 				ar( CEREAL_NVP( NpcInfo ) );
+			}
+		};
+
+		struct RequestNpcSync : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			SerialType Serial;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Serial ) );
 			}
 		};
 	}
@@ -169,7 +180,7 @@ namespace Protocol
 			}
 		};
 
-		struct RequestNpcInfo : public IProtocol
+		struct RequestCriterionNpcInfo : public IProtocol
 		{
 			PROTOCOL_HEADER();
 
