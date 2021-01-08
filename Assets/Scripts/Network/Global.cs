@@ -24,7 +24,6 @@ public class Global
         return data;
     }
 
-    // 역직렬화
     public static Type Deserialize<Type>( byte[] _value, int startIndex )
     {
         int size = Marshal.SizeOf( typeof( Type ) );

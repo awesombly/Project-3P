@@ -24,12 +24,11 @@ public class WalkerCitizen : AIBase
 
     protected override IEnumerator Idle()
     {
-        Debug.Log( gameObject.name + " Current State : Idle" );
+        Random.InitState( ( int )Time.time );
         while ( true )
         {
             yield return null;
             
-            Random.InitState( ( int )Time.time );
             int value = Random.Range( 1, spots.Length );
             if ( isLocal && !target.Equals( spots[value].position ) )
             {
@@ -41,7 +40,6 @@ public class WalkerCitizen : AIBase
 
     protected virtual IEnumerator Move()
     {
-        Debug.Log( gameObject.name + " Current State : Move : " + target );
         nav.isStopped = false;
 
         while ( true )

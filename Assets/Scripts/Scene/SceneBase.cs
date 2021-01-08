@@ -23,7 +23,6 @@ public class SceneBase : Singleton<SceneBase>
             if ( localPlayer != null )
             {
                 ObjectManager.Instance.Remove( localPlayer.serial );
-                // actors.Remove( localPlayer.serial );
                 Destroy( localPlayer.gameObject );
             }
 
@@ -74,14 +73,15 @@ public class SceneBase : Singleton<SceneBase>
     {
         Network.Instance.AddBind( Protocol.FromServer.Connected.PacketType, Connected );
 
+        /* Scene */
+        Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
+        Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
+
+        /* Player */
         Network.Instance.AddBind( Protocol.Both.SyncTransform.PacketType, SyncTransform );
         Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
         Network.Instance.AddBind( Protocol.Both.SyncCrouch.PacketType, SyncCrouch );
         Network.Instance.AddBind( Protocol.Both.SyncGrounded.PacketType, SyncGrounded );
-
-        /* Player */
-        Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
-        Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
 
         /* Npc */
         Network.Instance.AddBind( Protocol.FromServer.RequestCriterionNpcInfo.PacketType, RequestCriterionNpcInfo );
@@ -270,7 +270,7 @@ public class SceneBase : Singleton<SceneBase>
 
     private void ChangedCriterion( string _data )
     {
-        foreach( AIBase npc in ObjectManager.Instance.GetNpcs() )
+        foreach( AIBase npc in ObjectManager.Instance.Npcs )
         {
             npc.isLocal = true;
         }

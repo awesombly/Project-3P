@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class ObjectManager : Singleton<ObjectManager>
 {
-    private readonly Dictionary<uint /* serial */, Actor> actors = new Dictionary<uint, Actor>();
+    public Dictionary<uint, Actor>.ValueCollection Npcs
+    {
+        get
+        {
+            return npcs.Values;
+        }
+    }
     private readonly Dictionary<uint /* serial */, Actor> npcs = new Dictionary<uint, Actor>();
+    private readonly Dictionary<uint /* serial */, Actor> actors = new Dictionary<uint, Actor>();
 
     public void Add( Actor _actor )
     {
@@ -66,10 +73,5 @@ public class ObjectManager : Singleton<ObjectManager>
     public bool Search( uint _serial )
     {
         return actors.ContainsKey( _serial );
-    }
-
-    public Dictionary<uint, Actor>.ValueCollection GetNpcs()
-    {
-        return npcs.Values;
     }
 }
