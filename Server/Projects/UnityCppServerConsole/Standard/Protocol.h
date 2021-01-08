@@ -221,5 +221,15 @@ namespace Protocol
 				ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
+
+		struct ChangedCriterion : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			template <class Archive>
+			void serialize( Archive& )
+			{
+			}
+		};
 	}
 }

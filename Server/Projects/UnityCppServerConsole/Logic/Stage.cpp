@@ -25,7 +25,24 @@ void Stage::Erase( const Session* _session )
 		return;
 	}
 
-	sessions.erase( _session->GetSocket() );
+	SOCKET sessionSocket = _session->GetSocket();
+	sessions.erase( sessionSocket );
+
+	if ( sessionSocket == criterion )
+	{
+		if ( sessions.empty() )
+		{
+			criterion = NULL;
+		}
+		else
+		{
+			Session* session = sessions.begin()->second;
+			criterion = session->GetSocket();
+
+			Protocol::FromServer::ChangedCriterion protocol;
+			session->Send( protocol );
+		}
+	}
 }
 
 void Stage::Push( ServerActor* _actor )

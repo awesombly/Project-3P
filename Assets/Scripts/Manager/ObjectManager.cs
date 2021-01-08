@@ -5,6 +5,7 @@ using UnityEngine;
 public class ObjectManager : Singleton<ObjectManager>
 {
     private readonly Dictionary<uint /* serial */, Actor> actors = new Dictionary<uint, Actor>();
+    private readonly Dictionary<uint /* serial */, Actor> npcs = new Dictionary<uint, Actor>();
 
     public void Add( Actor _actor )
     {
@@ -16,6 +17,11 @@ public class ObjectManager : Singleton<ObjectManager>
         }
 
         actors.Add( _actor.serial, _actor );
+
+        if ( _actor.CompareTag( "Npc" ) )
+        {
+            npcs.Add( _actor.serial, _actor );
+        }
     }
 
     public void Remove( Actor _actor )
@@ -28,6 +34,11 @@ public class ObjectManager : Singleton<ObjectManager>
         }
 
         actors.Remove( _actor.serial );
+
+        if ( _actor.CompareTag( "Npc" ) )
+        {
+            npcs.Remove( _actor.serial );
+        }
     }
 
     public void Remove( uint _serial )
@@ -55,5 +66,10 @@ public class ObjectManager : Singleton<ObjectManager>
     public bool Search( uint _serial )
     {
         return actors.ContainsKey( _serial );
+    }
+
+    public Dictionary<uint, Actor>.ValueCollection GetNpcs()
+    {
+        return npcs.Values;
     }
 }

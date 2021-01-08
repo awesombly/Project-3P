@@ -87,6 +87,7 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.FromServer.RequestCriterionNpcInfo.PacketType, RequestCriterionNpcInfo );
         Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
         Network.Instance.AddBind( Protocol.FromServer.SyncNpcInfo.PacketType, SyncNpcInfo );
+        Network.Instance.AddBind( Protocol.FromServer.ChangedCriterion.PacketType, ChangedCriterion );
     }
 
     private void Connected( string _data )
@@ -264,6 +265,14 @@ public class SceneBase : Singleton<SceneBase>
             requestNpcSync.Serial = protocol.Serial;
 
             Network.Instance.Send( requestNpcSync );
+        }
+    }
+
+    private void ChangedCriterion( string _data )
+    {
+        foreach( AIBase npc in ObjectManager.Instance.GetNpcs() )
+        {
+            npc.isLocal = true;
         }
     }
 }

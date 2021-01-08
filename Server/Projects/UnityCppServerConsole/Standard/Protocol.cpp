@@ -35,4 +35,5 @@ namespace Protocol
 	PROTOCOL_BODY( FromServer, RequestCriterionNpcInfo );
 	PROTOCOL_BODY( FromServer, SyncNpcInfo );
 	PROTOCOL_BODY( ToServer, RequestNpcSync );
+	PROTOCOL_BODY( FromServer, ChangedCriterion );
 }
