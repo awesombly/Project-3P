@@ -81,19 +81,6 @@ namespace Protocol
 				ar( CEREAL_NVP( Velocity ) );
 			}
 		};
-
-		struct SyncNpcState : public IProtocol
-		{
-			PROTOCOL_HEADER();
-
-			ServerNpc NpcInfo;
-
-			template <class Archive>
-			void serialize( Archive& ar )
-			{
-				ar( CEREAL_NVP( NpcInfo ) );
-			}
-		};
 	}
 
 	namespace ToServer
@@ -117,11 +104,13 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
+			std::string NpcId;
 			//ServerNpc NpcInfo;
 
 			template <class Archive>
-			void serialize( Archive&  )
+			void serialize( Archive& ar )
 			{
+				ar( CEREAL_NVP( NpcId ) );
 				//ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
@@ -184,6 +173,8 @@ namespace Protocol
 		{
 			PROTOCOL_HEADER();
 
+			SerialType Serial;
+
 			template <class Archive>
 			void serialize( Archive& /*ar*/ )
 			{
@@ -195,13 +186,28 @@ namespace Protocol
 			PROTOCOL_HEADER();
 
 			bool IsLocal;
-			u_int Serial;
+			SerialType Serial;
+			std::string NpcId;
 
 			template <class Archive>
 			void serialize( Archive& ar )
 			{
 				ar( CEREAL_NVP( IsLocal ) );
 				ar( CEREAL_NVP( Serial ) );
+				ar( CEREAL_NVP( NpcId ) );
+			}
+		};
+
+		struct SyncNpcInfo : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			ServerNpc NpcInfo;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( NpcInfo ) );
 			}
 		};
 	}

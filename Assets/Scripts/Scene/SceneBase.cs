@@ -35,18 +35,6 @@ public class SceneBase : Singleton<SceneBase>
     public event DelChangeLocalPlayer OnChangeLocalPlayer;
 
     private List<Player> otherPlayers = new List<Player>();
-    // private Dictionary<uint/*serial*/, Actor> actors = new Dictionary<uint/*serial*/, Actor>();
-
-    //public Actor GetActor( uint _serial )
-    //{
-    //    if ( !actors.ContainsKey( _serial ) )
-    //    {
-    //        Debug.LogWarning( "actor not Found. serial = " + _serial );
-    //        return null;
-    //    }
-    //
-    //    return actors[ _serial ];
-    //}
 
     protected virtual void Awake()
     {
@@ -95,7 +83,10 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.FromServer.CreatePlayer.PacketType, CreatePlayer );
         Network.Instance.AddBind( Protocol.FromServer.DestroyActor.PacketType, DestroyActor );
 
-
+        /* Npc */
+        Network.Instance.AddBind( Protocol.FromServer.RequestNpcInfo.PacketType, RequestNpcInfo );
+        Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
+        Network.Instance.AddBind( Protocol.FromServer.SyncNpcInfo.PacketType, SyncNpcState );
     }
 
     private void Connected( string _data )
@@ -107,7 +98,6 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncTransform protocol = JsonUtility.FromJson<Protocol.Both.SyncTransform>( _data );
 
-        // Actor actor = GetActor( protocol.Actor.Serial );
         Actor actor = ObjectManager.Instance.Find( protocol.Actor.Serial );
         if ( ReferenceEquals( actor, null ) )
         {
@@ -123,7 +113,6 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncInterpolation protocol = JsonUtility.FromJson<Protocol.Both.SyncInterpolation>( _data );
 
-        //Actor actor = GetActor( protocol.Actor.Serial );
         Actor actor = ObjectManager.Instance.Find( protocol.Actor.Serial );
         if ( ReferenceEquals( actor, null ) )
         {
@@ -140,7 +129,6 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncCrouch protocol = JsonUtility.FromJson<Protocol.Both.SyncCrouch>( _data );
 
-        //Player player = GetActor( protocol.Serial ) as Player;
         Player player = ObjectManager.Instance.Find( protocol.Serial ) as Player;
         if ( ReferenceEquals( player, null ) )
         {
@@ -155,7 +143,6 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.Both.SyncGrounded protocol = JsonUtility.FromJson<Protocol.Both.SyncGrounded>( _data );
 
-        //Player player = GetActor( protocol.Serial ) as Player;
         Player player = ObjectManager.Instance.Find( protocol.Serial ) as Player;
         if ( ReferenceEquals( player, null ) )
         {
@@ -195,7 +182,6 @@ public class SceneBase : Singleton<SceneBase>
 
         player.serial = protocol.Player.Serial;
         player.isLocal = protocol.IsLocal;
-        //actors.Add( player.serial, player );
         ObjectManager.Instance.Add( player );
         if ( player.isLocal )
         {
@@ -211,12 +197,65 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.FromServer.DestroyActor protocol = JsonUtility.FromJson<Protocol.FromServer.DestroyActor>( _data );
 
-        //Actor actor = GetActor( protocol.Serial );
         Actor actor = ObjectManager.Instance.Find( protocol.Serial );
         otherPlayers.Remove( actor as Player );
-        //actors.Remove( protocol.Serial );
         ObjectManager.Instance.Remove( protocol.Serial );
 
         Destroy( actor.gameObject );
+    }
+
+    private void SyncNpcState( string _data )
+    {
+        Protocol.FromServer.SyncNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.SyncNpcInfo>( _data );
+
+        AIBase npc = ObjectManager.Instance.Find( protocol.NpcInfo.Serial ) as AIBase;
+        if ( ReferenceEquals( npc, null ) )
+        {
+            Debug.Log( "Npc not found. Name : " + protocol.NpcInfo.NpcId );
+            return;
+        }
+
+        npc.Sync( protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition, protocol.NpcInfo.State );
+    }
+
+    private void RequestNpcInfo( string _data )
+    {
+        Protocol.FromServer.RequestNpcInfo requestNpcInfo = JsonUtility.FromJson<Protocol.FromServer.RequestNpcInfo>( _data );
+
+        AIBase npc = ObjectManager.Instance.Find( requestNpcInfo.Serial ) as AIBase;
+        if ( ReferenceEquals( npc, null ) )
+        {
+            Debug.Log( "Npc not found. Serial : " + requestNpcInfo.Serial );
+            return;
+        }
+
+        Protocol.ToServer.ResponseNpcInfo responseNpcInfo;
+        responseNpcInfo.NpcInfo.IsLocal = npc.isLocal;
+        responseNpcInfo.NpcInfo.Serial = npc.serial;
+        responseNpcInfo.NpcInfo.State = npc.state;
+        responseNpcInfo.NpcInfo.NpcId = gameObject.name;
+        responseNpcInfo.NpcInfo.Target = npc.target;
+        responseNpcInfo.NpcInfo.CurPosition = npc.transform.position;
+        
+        Network.Instance.Send( responseNpcInfo );
+    }
+
+    private void ResponseNpcinfo( string _data )
+    {
+        Protocol.FromServer.ResponseNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.ResponseNpcInfo>( _data );
+
+        if ( !ObjectManager.Instance.Search( protocol.Serial ) )
+        {
+            AIBase newNpc = GameObject.Find( protocol.NpcId ).GetComponent<AIBase>();
+            if ( ReferenceEquals( newNpc, null ) )
+            {
+                Debug.Log( "Unity hierarchy not found. name : " + protocol.NpcId );
+                return;
+            }
+
+            newNpc.isLocal = protocol.IsLocal;
+            newNpc.serial = protocol.Serial;
+            ObjectManager.Instance.Add( newNpc );
+        }
     }
 }

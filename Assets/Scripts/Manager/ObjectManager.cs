@@ -51,4 +51,9 @@ public class ObjectManager : Singleton<ObjectManager>
 
         return actors[_serial];
     }
+
+    public bool Search( uint _serial )
+    {
+        return actors.ContainsKey( _serial );
+    }
 }

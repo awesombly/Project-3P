@@ -91,17 +91,6 @@ namespace Protocol
                 return PacketType;
             }
         }
-
-        public struct SyncNpcState : IProtocol
-        {
-            public ServerNpc NpcInfo;
-
-            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
-            public ushort GetPacketType()
-            {
-                return PacketType;
-            }
-        }
     }
     
     namespace ToServer
@@ -120,7 +109,7 @@ namespace Protocol
         
         public struct RequestNpcInfo : IProtocol
         {
-            //public ServerNpc NpcInfo;
+            public string NpcId;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
@@ -179,6 +168,7 @@ namespace Protocol
         {
             public bool IsLocal;
             public uint Serial;
+            public string NpcId;
 
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
@@ -189,6 +179,19 @@ namespace Protocol
 
         public struct RequestNpcInfo : IProtocol
         {
+            public uint Serial;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
+
+        public struct SyncNpcInfo : IProtocol
+        {
+            public ServerNpc NpcInfo;
+
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()
             {

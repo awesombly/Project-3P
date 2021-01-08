@@ -31,7 +31,7 @@ public class WalkerCitizen : AIBase
             int value = Random.Range( 1, spots.Length );
             if ( isLocal && !target.Equals( spots[value].position ) )
             {
-                //yield return waitForSecondsCached;
+                yield return waitForSecondsCached;
 
                 target = spots[value].position;
                 ChangeState( AIState.Move );

@@ -32,7 +32,7 @@ struct ServerNpc
 {
 public:
 	bool IsLocal;
-	u_int Serial;
+	SerialType Serial;
 	int State;
 	std::string NpcId;
 	Vector3 Target;

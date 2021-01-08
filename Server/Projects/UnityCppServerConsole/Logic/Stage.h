@@ -14,7 +14,7 @@ public:
 	void Push( ServerActor* _actor );
 	void Erase( const ServerActor* _actor );
 
-	void Push( ServerNpc* _actor );
+	//void Push( ServerNpc* _actor );
 
 	void BroadCast( const UPACKET& _packet ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
@@ -22,10 +22,12 @@ public:
 	ServerActor* Find( SerialType serial ) const;
 	
 	/* Npc */
-	ServerNpc* FindNpc( const std::string& _name ) const;
 	SOCKET GetNpcCriterion();
 	void SetNpcCriterion( SOCKET _socket );
-	//void UpdateNpc( const ServerNpc& _data );
+
+	ServerNpc* FindNpc( const std::string& _name ) const;
+	ServerNpc* FindNpc( SerialType _serial ) const;
+	void Push( ServerNpc* _npc );
 
 	const std::string& GetId() const;
 	SessionContainer GetSessions() const;
@@ -34,6 +36,7 @@ private:
 	std::string id;
 	SessionContainer sessions;
 	std::unordered_map<SerialType, ServerActor*> actors;
-	SOCKET npcCriterion;
-	std::unordered_map<std::string /* npc name */, ServerNpc*> npcs;
+	
+	SOCKET criterion;
+	std::unordered_map<std::string /* name */, ServerNpc*> npcs;
 };

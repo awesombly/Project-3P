@@ -250,35 +250,40 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 		return;
 	}
 
-	//ServerNpc* npc = curStage->FindNpc( protocol.NpcInfo.NpcId );
 	Protocol::FromServer::ResponseNpcInfo responseNpcInfo;
-	//if ( npc == nullptr )
-	//{
-	//	LOG << "Npc : " << protocol.NpcInfo.NpcId << " New Creation. " << "Socket : " << _packet.socket << ELogType::EndLine;
-	//	npc = new ServerNpc( protocol.NpcInfo.NpcId, protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition );
-	//	curStage->SetNpcCriterion( _packet.socket );
-	//
-	//	curStage->Push( npc );
-	//	responseNpcInfo.IsLocal = true;
-	//}
-	//else
-	//{
-		Session* criterion = SessionManager::Instance().Find( curStage->GetNpcCriterion() );
-		if ( criterion == nullptr )
-		{
-			//LOG_ERROR << "Npc Criterion Session is null. session exit or socket null." << LOG_END;
-			responseNpcInfo.IsLocal = true;
-			responseNpcInfo.Serial = Protocol::GetNewSerial();
-			curStage->SetNpcCriterion( _packet.socket );
-			//return;
-		}
-		else
-		{
-			Protocol::FromServer::RequestNpcInfo requestNpcState;
-			criterion->Send( requestNpcState );
-			responseNpcInfo.IsLocal = false;
-		}
-	//}
+	responseNpcInfo.NpcId = protocol.NpcId;
+
+	ServerNpc* npc = curStage->FindNpc( protocol.NpcId );
+	if ( npc == nullptr )
+	{
+		npc = new ServerNpc();
+		npc->Serial = Protocol::GetNewSerial();
+		npc->NpcId = protocol.NpcId;
+		curStage->Push( npc );
+	}
+	responseNpcInfo.Serial = npc->Serial;
+
+	SOCKET criterionSocket = curStage->GetNpcCriterion();
+	Session* criterion = SessionManager::Instance().Find( criterionSocket );
+	if ( criterion == nullptr )
+	{
+		curStage->SetNpcCriterion( _packet.socket );
+		criterion = session;
+		criterionSocket = _packet.socket;
+	}
+
+	if( criterionSocket == _packet.socket )
+	{
+		responseNpcInfo.IsLocal = true;
+	}
+	else
+	{
+		responseNpcInfo.IsLocal = false;
+
+		Protocol::FromServer::RequestNpcInfo requestNpcInfo;
+		requestNpcInfo.Serial = npc->Serial;
+		criterion->Send( requestNpcInfo );
+	}
 
 	session->Send( responseNpcInfo );
 }
@@ -300,15 +305,8 @@ void PacketManager::ResponseNpcInfo( const PACKET& _packet )
 		LOG_ERROR << "CurrentStage is null. socket : " << session->GetSocket() << ELogType::EndLine;
 		return;
 	}
-
-	//ServerNpc* npc = curStage->FindNpc( protocol.NpcInfo.NpcId );
-	//if ( npc == nullptr )
-	//{
-	//	LOG_ERROR << "npc is null." << protocol.NpcInfo.NpcId << ELogType::EndLine;
-	//	return;
-	//}
 	
-	Protocol::Both::SyncNpcState syncNpcState;
-	syncNpcState.NpcInfo = protocol.NpcInfo;
-	session->logicData.CurrentStage->BroadCastExceptSelf( syncNpcState, session );
+	Protocol::FromServer::SyncNpcInfo syncNpcInfo;
+	syncNpcInfo.NpcInfo = protocol.NpcInfo;
+	session->logicData.CurrentStage->BroadCastExceptSelf( syncNpcInfo, session );
 }

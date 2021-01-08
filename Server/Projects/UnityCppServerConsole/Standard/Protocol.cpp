@@ -29,9 +29,9 @@ namespace Protocol
 	PROTOCOL_BODY( FromServer, CreatePlayer );
 	PROTOCOL_BODY( FromServer, DestroyActor );
 
-	PROTOCOL_BODY( Both, SyncNpcState );
 	PROTOCOL_BODY( ToServer, RequestNpcInfo );
 	PROTOCOL_BODY( ToServer, ResponseNpcInfo );
 	PROTOCOL_BODY( FromServer, RequestNpcInfo );
 	PROTOCOL_BODY( FromServer, ResponseNpcInfo );
+	PROTOCOL_BODY( FromServer, SyncNpcInfo );
 }

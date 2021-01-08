@@ -18,10 +18,9 @@ public abstract class AIBase : Character
         Dead,
     };
 
-    internal bool IsSpawn = false;
-    
-    protected int state { get; private set; }
-    protected Vector3 target;
+    public int state { get; private set; }
+    public Vector3 target { get; protected set; }
+
     private Coroutine currentCoroutine = null;
 
     protected NavMeshAgent nav { get; private set; }
@@ -29,13 +28,19 @@ public abstract class AIBase : Character
     private float angularSpeed = 1000.0f;
     private float acceleration = 20.0f;
 
+    public void Sync( Vector3 _target, Vector3 _position, int _state )
+    {
+        target = _target;
+        transform.position = _position;
+        ChangeState( ( AIState )_state );
+    }
+
     protected override void Awake()
     {
         base.Awake();
 
         isLocal = false;
         Network.Instance.OnLateConnect += OnLateConnect;
-        Network.Instance.OnBindProtocols += OnBindProtocols;
 
         nav = GetComponent<NavMeshAgent>();
         nav.speed = moveSpeed;
@@ -56,21 +61,9 @@ public abstract class AIBase : Character
     protected virtual void OnLateConnect()
     {
         Protocol.ToServer.RequestNpcInfo requestNpcInfo;
-        //requestNpcInfo.NpcInfo.IsLocal = isLocal;
-        //requestNpcInfo.NpcInfo.Serial = serial;
-        //requestNpcInfo.NpcInfo.State = state;
-        //requestNpcInfo.NpcInfo.NpcId = gameObject.name;
-        //requestNpcInfo.NpcInfo.Target = target;
-        //requestNpcInfo.NpcInfo.CurPosition = transform.position;
-        Network.Instance.Send( requestNpcInfo );
-    }
+        requestNpcInfo.NpcId = gameObject.name;
 
-    protected virtual void OnBindProtocols()
-    {
-        /* Npc */
-        Network.Instance.AddBind( Protocol.FromServer.RequestNpcInfo.PacketType, RequestNpcInfo );
-        Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
-        Network.Instance.AddBind( Protocol.Both.SyncNpcState.PacketType, SyncNpcState );
+        Network.Instance.Send( requestNpcInfo );
     }
 
     protected void ChangeState( AIState _state )
@@ -105,40 +98,5 @@ public abstract class AIBase : Character
     protected virtual void OnExit()
     {
         StopAllCoroutines();
-    }
-    private void SyncNpcState( string _data )
-    {
-        Protocol.Both.SyncNpcState protocol = JsonUtility.FromJson<Protocol.Both.SyncNpcState>( _data );
-        target = protocol.NpcInfo.Target;
-        transform.position = protocol.NpcInfo.CurPosition;
-        ChangeState( ( AIState )protocol.NpcInfo.State );
-    }
-
-    private void RequestNpcInfo( string _data )
-    {
-        if ( Network.Instance.isConnected )
-        {
-            Protocol.ToServer.ResponseNpcInfo protocol;
-            protocol.NpcInfo.IsLocal = isLocal;
-            protocol.NpcInfo.Serial = serial;
-            protocol.NpcInfo.State = state;
-            protocol.NpcInfo.NpcId = gameObject.name;
-            protocol.NpcInfo.Target = target;
-            protocol.NpcInfo.CurPosition = transform.position;
-
-            Network.Instance.Send( protocol );
-        }
-    }
-
-    private void ResponseNpcinfo( string _data )
-    {
-        Protocol.FromServer.ResponseNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.ResponseNpcInfo>( _data );
-        isLocal = protocol.IsLocal;
-        serial = protocol.Serial;
-
-        if ( isLocal )
-        {
-            ObjectManager.Instance.Add( this );
-        }
     }
 }
