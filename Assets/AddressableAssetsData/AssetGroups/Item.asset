@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 15d35a765839ba94ab891d9a63f16544
   m_SerializeEntries:
   - m_GUID: 0a81ad419b5dc7549972407746ba3684
-    m_Address: Equip_Test5.asset
+    m_Address: Equip_Test5
     m_ReadOnly: 0
     m_SerializedLabels:
     - Equipment

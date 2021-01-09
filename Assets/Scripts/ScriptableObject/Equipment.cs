@@ -42,23 +42,29 @@ public class Equipment : Item
         itemType = EItemType.Equipment;
     }
 
-    private static Dictionary<string/*key*/, Equipment> loadedEquipments = new Dictionary<string/*key*/, Equipment>();
+    private static Dictionary<string/*Guid*/ , Equipment> loadedEquipments = new Dictionary<string/*Guid*/, Equipment>();
 
-    public static Equipment GetEquipment( string key )
+    public static Equipment GetEquipment( string _guid )
     {
-        if ( !loadedEquipments.ContainsKey( key ) )
+        if ( !loadedEquipments.TryGetValue( _guid, out Equipment equip ) )
         {
-            Debug.LogError( "equipment not found. key = " + key );
+            Debug.LogError( "Equipment not found. Guid = " + _guid );
             return null;
         }
 
-        return loadedEquipments[ key ];
+        return equip;
+    }
+
+    public static Equipment GetEquipment( Reference _reference )
+    {
+        return GetEquipment( _reference.AssetGUID );
     }
 
     #region Addressable
+    [System.Serializable]
     public class Reference : AssetReferenceT<Equipment>
     {
-        public Reference( string guid ) : base( guid ) { }
+        public Reference( string _guid ) : base( _guid ) { }
     }
 
     public static void LoadAddressables()
@@ -82,7 +88,8 @@ public class Equipment : Item
                         return;
                     }
 
-                    loadedEquipments.Add( loc.PrimaryKey, equipHandle.Result );
+                    string guid = ResourceManager.Instance.GetAssetGuid( loc.PrimaryKey );
+                    loadedEquipments.Add( guid, equipHandle.Result );
                 };
             }
         };

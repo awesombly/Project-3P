@@ -37,7 +37,7 @@ public class SceneBase : Singleton<SceneBase>
 
     protected virtual void Awake()
     {
-        Equipment.LoadAddressables();
+        ResourceManager.Instance.Init();
 
         stageId = gameObject.name;
 
