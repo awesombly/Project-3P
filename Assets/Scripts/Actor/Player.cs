@@ -122,21 +122,21 @@ public class Player : Character
     }
 
     #region Equipment
-    public void SetEquipment( Equipment equip )
+    public void SetEquipment( Equipment _equip )
     {
-        if ( equip == null )
+        if ( _equip == null )
         {
             Debug.LogWarning( "equip is null." );
             return;
         }
 
-        ReleaseEquipment( equip.equipType );
+        ReleaseEquipment( _equip.equipType );
 
         EquipInfo equipInfo;
-        equipInfo.Equip = equip;
+        equipInfo.Equip = _equip;
         equipInfo.Models = new List<GameObject>();
 
-        foreach ( Equipment.ModelInfo info in equip.modelInfos )
+        foreach ( Equipment.ModelInfo info in _equip.modelInfos )
         {
             GameObject instance = Instantiate( info.Prefab, boneInfos[ info.AttachBone ].Reference );
 
@@ -152,43 +152,43 @@ public class Player : Character
             equipInfo.Models.Add( instance );
         }
 
-        equipInfos.Add( equip.equipType, equipInfo );
+        equipInfos.Add( _equip.equipType, equipInfo );
     }
 
-    public void ReleaseEquipment( EEquipType equipType )
+    public void ReleaseEquipment( EEquipType _equipType )
     {
-        if ( !equipInfos.ContainsKey( equipType ) )
+        if ( !equipInfos.ContainsKey( _equipType ) )
         {
             return;
         }
 
-        EquipInfo prevEquip = equipInfos[ equipType ];
+        EquipInfo prevEquip = equipInfos[ _equipType ];
         foreach ( GameObject model in prevEquip.Models )
         {
             Destroy( model );
         }
 
-        equipInfos.Remove( equipType );
+        equipInfos.Remove( _equipType );
     }
 
-    public void SetEquipQuickslot( int index, Equipment equip )
+    public void SetEquipQuickslot( int _index, Equipment _equip )
     {
-        if ( !equipQuickslot.ContainsKey( index ) )
+        if ( !equipQuickslot.ContainsKey( _index ) )
         {
-            equipQuickslot.Add( index, null );
+            equipQuickslot.Add( _index, null );
         }
 
-        equipQuickslot[ index ] = equip;
+        equipQuickslot[ _index ] = _equip;
     }
 
-    public void UseEquipQuickslot( int index )
+    public void UseEquipQuickslot( int _index )
     {
-        if ( !equipQuickslot.ContainsKey( index ) )
+        if ( !equipQuickslot.ContainsKey( _index ) )
         {
             return;
         }
 
-        SetEquipment( equipQuickslot[ index ] );
+        SetEquipment( equipQuickslot[ _index ] );
     }
     #endregion
 

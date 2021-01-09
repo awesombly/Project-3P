@@ -36,10 +36,6 @@ public class EquipQuickslot : MonoBehaviour
         UpdateSlotTransform();
     }
 
-    private void Start()
-    {
-    }
-
     private void Update()
     {
         if ( Input.GetKeyDown( activeKey ) )
