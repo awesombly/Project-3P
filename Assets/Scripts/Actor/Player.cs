@@ -90,6 +90,26 @@ public class Player : Character
     public delegate void DelChangeCrouching( bool _isCrouching );
     public event DelChangeCrouching OnChangeCrouching;
 
+    private bool isStrafing = true;
+    internal bool IsStrafing
+    {
+        get { return isStrafing; }
+        set
+        {
+            if ( isStrafing == value )
+            {
+                return;
+            }
+
+            isStrafing = value;
+            animator.SetBool( AnimatorParameters.IsStrafing, isStrafing );
+
+            OnChangeStrafing?.Invoke( isStrafing );
+        }
+    }
+    public delegate void DelChangeStrafing( bool _isStrafing );
+    public event DelChangeStrafing OnChangeStrafing;
+
 
     protected override void Awake()
     {
@@ -97,6 +117,8 @@ public class Player : Character
 
         OnChangeCrouching += SendSyncCrouch;
         OnChangeGrounded += SendSyncGrounded;
+
+        animator.SetBool( AnimatorParameters.IsStrafing, isStrafing );
 
         foreach ( BoneInfo info in boneList )
         {
@@ -203,14 +225,12 @@ public class Player : Character
 
     protected override void UpdateAnimatorParameters()
     {
-        base.UpdateAnimatorParameters();
-
         if ( ReferenceEquals( animator, null ) )
         {
             return;
         }
 
-        animator.SetBool( AnimatorParameters.IsStrafing, true );
+        base.UpdateAnimatorParameters();
     }
 
     private void UpdateCrouchState()

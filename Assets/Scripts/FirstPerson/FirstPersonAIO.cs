@@ -22,6 +22,24 @@ public class FirstPersonAIO : MonoBehaviour
     #endregion
 
     #region Look Settings
+    [System.Serializable]
+    public struct HeadInfo
+    {
+        public Transform Head;
+        public Vector3 OriginalPosition;
+    }
+    public HeadInfo firstPerson;
+    public HeadInfo thirdPerson;
+    public KeyCode toggleViewpointKey;
+
+    private enum EViewpoint
+    {
+        FirstPerson,
+        ThirdPerson,
+        Toggle,
+    }
+    private EViewpoint viewpoint = EViewpoint.ThirdPerson;
+
     public bool enableCameraMovement = true;
     public enum InvertMouseInput
     {
@@ -145,18 +163,22 @@ public class FirstPersonAIO : MonoBehaviour
         set { myPlayer.IsCrouching = value; }
     }
 
+    private bool IsStrafing
+    {
+        get { return myPlayer.IsStrafing; }
+        set { myPlayer.IsStrafing = value; }
+    }
+
     #endregion
 
     #region Headbobbing Settings
     public bool useHeadbob = true;
-    public Transform head = null;
     public bool snapHeadjointToCapsul = true;
     public float headbobFrequency = 1.5f;
     public float headbobSwayAngle = 5f;
     public float headbobHeight = 3f;
     public float headbobSideMovement = 5f;
     public float jumpLandIntensity = 3f;
-    private Vector3 originalLocalPosition;
     private float nextStepTime = 0.5f;
     private float headbobCycle = 0.0f;
     private float headbobFade = 0.0f;
@@ -240,6 +262,7 @@ public class FirstPersonAIO : MonoBehaviour
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
 
+        ChangeViewpoint( viewpoint );
         #endregion 
 
         #region Movement Settings - Awake
@@ -318,7 +341,13 @@ public class FirstPersonAIO : MonoBehaviour
 
         #region Headbobbing Settings - Start
 
-        originalLocalPosition = snapHeadjointToCapsul ? new Vector3( head.localPosition.x, ( capsule.height / 2 ) * head.localScale.y, head.localPosition.z ) : head.localPosition;
+        firstPerson.OriginalPosition = firstPerson.Head.localPosition;
+        thirdPerson.OriginalPosition = firstPerson.Head.localPosition;
+        if ( snapHeadjointToCapsul )
+        {
+            firstPerson.OriginalPosition.y = ( capsule.height / 2 ) * firstPerson.Head.localScale.y;
+        }
+        
         if ( GetComponent<AudioSource>() == null ) { gameObject.AddComponent<AudioSource>(); }
 
         previousPosition = rigidBody.position;
@@ -329,6 +358,11 @@ public class FirstPersonAIO : MonoBehaviour
     private void Update()
     {
         #region Look Settings - Update
+        
+        if ( Input.GetKeyDown( toggleViewpointKey ) )
+        {
+            ChangeViewpoint( EViewpoint.Toggle );
+        }
 
         if ( enableCameraMovement && !controllerPauseState && ( Cursor.lockState == CursorLockMode.Locked ) )
         {
@@ -596,25 +630,29 @@ public class FirstPersonAIO : MonoBehaviour
         //apply headbob position
         if ( useHeadbob == true )
         {
-            Vector3 targetPosition = originalLocalPosition + new Vector3( xPos, yPos, 0.0f );
-            if ( snapHeadjointToCapsul )
+            if ( firstPerson.Head.gameObject.activeSelf )
             {
-                targetPosition.y = ( capsule.height * 0.5f ) * head.localScale.y + yPos;
-            }
-            else
-            {
-                targetPosition.y = originalLocalPosition.y * ( capsule.height / _crouchModifiers.colliderHeight ) + yPos;
-            }
+                Vector3 targetPosition = firstPerson.OriginalPosition + new Vector3( xPos, yPos, 0.0f );
+                if ( snapHeadjointToCapsul )
+                {
+                    targetPosition.y = ( capsule.height * 0.5f ) * firstPerson.Head.localScale.y + yPos;
+                }
+                else
+                {
+                    targetPosition.y = firstPerson.OriginalPosition.y * ( capsule.height / _crouchModifiers.colliderHeight ) + yPos;
+                }
 
-            if ( rigidBody.velocity.magnitude > 0.1f )
-            {
-                head.localPosition = Vector3.MoveTowards( head.localPosition, targetPosition, 0.5f );
+                if ( rigidBody.velocity.magnitude > 0.1f )
+                {
+                    firstPerson.Head.localPosition = Vector3.MoveTowards( firstPerson.Head.localPosition, targetPosition, 0.5f );
+                }
+                else
+                {
+                    firstPerson.Head.localPosition = Vector3.SmoothDamp( firstPerson.Head.localPosition, targetPosition, ref miscRefVel, 0.15f );
+                }
+
+                firstPerson.Head.localRotation = Quaternion.Euler( xTilt, 0, zTilt );
             }
-            else
-            {
-                head.localPosition = Vector3.SmoothDamp( head.localPosition, targetPosition, ref miscRefVel, 0.15f );
-            }
-            head.localRotation = Quaternion.Euler( xTilt, 0, zTilt );
         }
         #endregion
 
@@ -882,6 +920,45 @@ public class FirstPersonAIO : MonoBehaviour
             jumpPowerInternal = jumpPower;
         }
     }
+
+    private void ChangeViewpoint( EViewpoint _viewpoint )
+    {
+        if ( _viewpoint == EViewpoint.Toggle )
+        {
+            if ( viewpoint == EViewpoint.FirstPerson )
+            {
+                viewpoint = EViewpoint.ThirdPerson;
+            }
+            else
+            {
+                viewpoint = EViewpoint.FirstPerson;
+            }
+        }
+        else
+        {
+            viewpoint = _viewpoint;
+        }
+
+        switch ( viewpoint )
+        {
+            case EViewpoint.FirstPerson:
+            {
+                firstPerson.Head.gameObject.SetActive( true );
+                thirdPerson.Head.gameObject.SetActive( false );
+            } break;
+
+            case EViewpoint.ThirdPerson:
+            {
+                firstPerson.Head.gameObject.SetActive( false );
+                thirdPerson.Head.gameObject.SetActive( true );
+            } break;
+
+            default:
+            {
+                Debug.LogError( "Invalid viewpoint. type = " + viewpoint );
+            } break;
+        }
+    }
 }
 
 #if UNITY_EDITOR
@@ -999,6 +1076,21 @@ public class FPAIO_Editor : Editor
         GUILayout.Label( "Camera Setup", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth( true ) );
         EditorGUILayout.Space();
         EditorGUILayout.Space();
+
+        t.firstPerson.Head = ( Transform )EditorGUILayout.ObjectField( new GUIContent( "FirstPerson Head Transform", "A transform representing the head. The camera should be a child to this transform." ), t.firstPerson.Head, typeof( Transform ), true );
+        if ( !t.firstPerson.Head )
+        {
+            EditorGUILayout.HelpBox( "A Head Transform is required.", MessageType.Error );
+        }
+
+        t.thirdPerson.Head = ( Transform )EditorGUILayout.ObjectField( new GUIContent( "ThirdPerson Head Transform" ), t.thirdPerson.Head, typeof( Transform ), true );
+        if ( !t.thirdPerson.Head )
+        {
+            EditorGUILayout.HelpBox( "A Head Transform is required.", MessageType.Error );
+        }
+
+        t.toggleViewpointKey = ( KeyCode )EditorGUILayout.EnumPopup( new GUIContent( "Toggle Viewpoint Key" ), t.toggleViewpointKey );
+
         t.enableCameraMovement = EditorGUILayout.ToggleLeft( new GUIContent( "Enable Camera Movement", "Determines whether the player can move camera or not." ), t.enableCameraMovement );
         EditorGUILayout.Space();
         GUI.enabled = t.enableCameraMovement;
@@ -1091,10 +1183,7 @@ public class FPAIO_Editor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.Space();
         t.useHeadbob = EditorGUILayout.ToggleLeft( new GUIContent( "Enable Headbobbing", "Determines if headbobbing will be used." ), t.useHeadbob );
-        GUI.enabled = t.useHeadbob;
-        t.head = ( Transform )EditorGUILayout.ObjectField( new GUIContent( "Head Transform", "A transform representing the head. The camera should be a child to this transform." ), t.head, typeof( Transform ), true );
-        if ( !t.head ) { EditorGUILayout.HelpBox( "A Head Transform is required for headbobbing.", MessageType.Error ); }
-        GUI.enabled = t.useHeadbob && t.head;
+        GUI.enabled = t.useHeadbob && t.firstPerson.Head;
         t.snapHeadjointToCapsul = EditorGUILayout.ToggleLeft( new GUIContent( "Snap Head to collider", "Recommended. Determines if the head joint will snap to the top on the capsul Collider, It provides better crouch results." ), t.snapHeadjointToCapsul );
         t.headbobFrequency = EditorGUILayout.Slider( new GUIContent( "Headbob Frequency (Hz)", "Determines how fast the headbobbing cycle is." ), t.headbobFrequency, 0.1f, 10 );
         t.headbobSwayAngle = EditorGUILayout.Slider( new GUIContent( "Tilt Angle", "Determines the angle the head will tilt." ), t.headbobSwayAngle, 0, 10 );
