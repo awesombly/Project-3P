@@ -37,6 +37,8 @@ public class SceneBase : Singleton<SceneBase>
 
     protected virtual void Awake()
     {
+        Equipment.LoadAddressables();
+
         stageId = gameObject.name;
 
         Network.Instance.OnConnect += OnConnect;
