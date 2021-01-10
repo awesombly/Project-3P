@@ -187,8 +187,9 @@ namespace Protocol
 			SerialType Serial;
 
 			template <class Archive>
-			void serialize( Archive& /*ar*/ )
+			void serialize( Archive& ar )
 			{
+				ar( CEREAL_NVP( Serial ) );
 			}
 		};
 
