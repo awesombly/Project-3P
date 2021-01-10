@@ -10,9 +10,9 @@ public struct Message
     public TextMeshProUGUI textObject;
 }
 
-public class ChatSystem : Singleton<ChatSystem>
+public class ChatSystem : MonoBehaviour
 {
-    public event ChatReturnEvent ChatEvent;
+    public static event ChatReturnEvent ChatEvent;
     public delegate void ChatReturnEvent( bool _isActive );
 
     private List<Message> messages = new List<Message>();
@@ -62,6 +62,8 @@ public class ChatSystem : Singleton<ChatSystem>
 
     private void Start()
     {
+        Network.Instance.chatSystem = this;
+
         textPrefab = Resources.Load( "UI/Chat/Prefabs/CopyText" ) as GameObject;
         if ( ReferenceEquals( textPrefab, null ) )
         {

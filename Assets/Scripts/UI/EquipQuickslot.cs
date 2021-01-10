@@ -30,10 +30,16 @@ public class EquipQuickslot : MonoBehaviour
         pannelRect.gameObject.SetActive( false );
 
         SceneBase.Instance.OnChangeLocalPlayer += OnChangeLocalPlayer;
-        ChatSystem.Instance.ChatEvent += ( bool _isActive ) => { isActivable = !_isActive; };
+        ChatSystem.ChatEvent += OnChatEvent;
 
         UpdatePannelTransform();
         UpdateSlotTransform();
+    }
+
+    private void OnDestroy()
+    {
+        SceneBase.Instance.OnChangeLocalPlayer -= OnChangeLocalPlayer;
+        ChatSystem.ChatEvent -= OnChatEvent;
     }
 
     private void Update()
@@ -185,5 +191,10 @@ public class EquipQuickslot : MonoBehaviour
     private void OnChangeLocalPlayer( Player _localPlayer )
     {
         UpdateSlotData( _localPlayer );
+    }
+
+    private void OnChatEvent( bool _isActive )
+    {
+        isActivable = !_isActive;
     }
 }

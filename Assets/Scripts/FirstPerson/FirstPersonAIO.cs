@@ -269,7 +269,7 @@ public class FirstPersonAIO : MonoBehaviour
         }
 
         myPlayer.OnChangeCrouching += OnChangeCrouching;
-        ChatSystem.Instance.ChatEvent += ( bool _isActive ) => { playerCanMove = !_isActive; };
+        ChatSystem.ChatEvent += OnChatEvent;
 
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
@@ -291,6 +291,11 @@ public class FirstPersonAIO : MonoBehaviour
         rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         _crouchModifiers.colliderHeight = capsule.height;
         #endregion
+    }
+
+    private void OnDestroy()
+    {
+        ChatSystem.ChatEvent -= OnChatEvent;
     }
 
     private void Start()
@@ -1000,6 +1005,11 @@ public class FirstPersonAIO : MonoBehaviour
             sprintSpeedInternal = sprintSpeed;
             jumpPowerInternal = jumpPower;
         }
+    }
+
+    private void OnChatEvent( bool _isActive )
+    {
+        playerCanMove = !_isActive;
     }
 
     private void ChangeViewpoint( EViewpoint _viewpoint )

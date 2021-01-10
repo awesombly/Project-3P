@@ -9,6 +9,7 @@ using ReceivedPacket = System.Collections.Generic.KeyValuePair<ushort/*packetTyp
 public class Network : Singleton<Network>
 {
     public string ipAddress = "127.0.0.1";
+    internal ChatSystem chatSystem;
 
     private Socket socket;
     private Thread thread;
@@ -184,9 +185,14 @@ public class Network : Singleton<Network>
 
     private void ReceiveChatMessage( string _data )
     {
-        Protocol.Both.ChatMessage protocol = JsonUtility.FromJson<Protocol.Both.ChatMessage>( _data );
+        if ( chatSystem == null )
+        {
+            Debug.LogError( "ChatSystem is null." );
+            return;
+        }
 
-        ChatSystem.Instance.PushMessage( protocol.Message );
+        Protocol.Both.ChatMessage protocol = JsonUtility.FromJson<Protocol.Both.ChatMessage>( _data );
+        chatSystem.PushMessage( protocol.Message );
     }
 
     private void OnChangeScene()

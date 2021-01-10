@@ -24,6 +24,7 @@ public class LoadingScene : SceneBase
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        ResourceManager.Instance.OnChangeLoadedRatio -= OnChangeLoadedRatio;
     }
 
     protected override void OnConnect()

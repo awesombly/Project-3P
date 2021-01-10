@@ -58,6 +58,11 @@ public abstract class AIBase : Character
         
     }
 
+    protected virtual void OnDestroy()
+    {
+        Network.Instance.OnLateConnect -= OnLateConnect;
+    }
+
     protected virtual void OnLateConnect()
     {
         Protocol.ToServer.RequestNpcInfo requestNpcInfo;
