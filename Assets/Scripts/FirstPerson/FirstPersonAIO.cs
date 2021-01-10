@@ -1177,7 +1177,8 @@ public class FPAIO_Editor : Editor
         t.viewInfo.ToggleKey = ( KeyCode )EditorGUILayout.EnumPopup( new GUIContent( "Toggle Viewpoint Key" ), t.viewInfo.ToggleKey );
         string[] options = { LayerMask.LayerToName( 0 ), LayerMask.LayerToName( 1 ), LayerMask.LayerToName( 2 )
             , LayerMask.LayerToName( 3 ), LayerMask.LayerToName( 4 ), LayerMask.LayerToName( 5 )
-            , LayerMask.LayerToName( 6 ), LayerMask.LayerToName( 7 ), LayerMask.LayerToName( 8 ) };
+            , LayerMask.LayerToName( 6 ), LayerMask.LayerToName( 7 ), LayerMask.LayerToName( 8 )
+            , LayerMask.LayerToName( 9 ), LayerMask.LayerToName( 10 ), LayerMask.LayerToName( 11 ) };
         t.viewInfo.CullingMask = EditorGUILayout.MaskField( new GUIContent( "Culling Mask" ), t.viewInfo.CullingMask, options );
 
         t.enableCameraMovement = EditorGUILayout.ToggleLeft( new GUIContent( "Enable Camera Movement", "Determines whether the player can move camera or not." ), t.enableCameraMovement );
