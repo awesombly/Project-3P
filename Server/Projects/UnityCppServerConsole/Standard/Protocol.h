@@ -113,7 +113,7 @@ namespace Protocol
 			}
 		};
 
-		struct ResponseCriterionNpcInfo : public IProtocol
+		struct ResponseHostNpcInfo : public IProtocol
 		{
 			PROTOCOL_HEADER();
 
@@ -180,15 +180,16 @@ namespace Protocol
 			}
 		};
 
-		struct RequestCriterionNpcInfo : public IProtocol
+		struct RequestHostNpcInfo : public IProtocol
 		{
 			PROTOCOL_HEADER();
 
 			SerialType Serial;
 
 			template <class Archive>
-			void serialize( Archive& /*ar*/ )
+			void serialize( Archive& ar )
 			{
+				ar( CEREAL_NVP( Serial ) );
 			}
 		};
 
@@ -222,12 +223,12 @@ namespace Protocol
 			}
 		};
 
-		struct ChangedCriterion : public IProtocol
+		struct ChangedStageHost : public IProtocol
 		{
 			PROTOCOL_HEADER();
 
 			template <class Archive>
-			void serialize( Archive& )
+			void serialize( Archive& /* _ar */)
 			{
 			}
 		};
