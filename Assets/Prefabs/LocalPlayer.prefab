@@ -436,6 +436,9 @@ MonoBehaviour:
     DistanceScrollSpeed: 3
     MaxDistance: 50
     MinDistance: 1
+    CullingMask:
+      serializedVersion: 2
+      m_Bits: 4294967295
   enableCameraMovement: 1
   mouseInputInversion: 0
   cameraInputMethod: 0

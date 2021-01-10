@@ -43,6 +43,7 @@ public class FirstPersonAIO : MonoBehaviour
     {
         public EViewpoint Viewpoint;
         public KeyCode ToggleKey;
+        public LayerMask CullingMask;
         public string DistanceScrollKey;
         public float DistanceScrollSpeed;
         public float MaxDistance;
@@ -859,7 +860,15 @@ public class FirstPersonAIO : MonoBehaviour
                 viewInfo.Distance = Mathf.Clamp( viewInfo.Distance + delta, viewInfo.MinDistance, viewInfo.MaxDistance );
             }
 
-            Vector3 cameraPos = myPlayer.transform.position + ( -playerCamera.transform.forward * viewInfo.Distance );
+            float cameraDistance = viewInfo.Distance;
+            Ray ray = new Ray( myPlayer.transform.position, -playerCamera.transform.forward );
+            RaycastHit hit;
+            if ( Physics.Raycast( ray, out hit, viewInfo.Distance, viewInfo.CullingMask ) )
+            {
+                cameraDistance = hit.distance;
+            }
+
+            Vector3 cameraPos = myPlayer.transform.position - ( playerCamera.transform.forward * cameraDistance );
             playerCamera.transform.position = cameraPos;
         }
     }
@@ -1131,6 +1140,7 @@ public class FPAIO_Editor : Editor
         customPhysMat = SerT.FindProperty( "dynamicFootstep.customPhysMat" );
 
     }
+
     public override void OnInspectorGUI()
     {
         if ( t.transform.localScale != Vector3.one )
@@ -1165,14 +1175,19 @@ public class FPAIO_Editor : Editor
             EditorGUILayout.HelpBox( "A Head Transform is required.", MessageType.Error );
         }
         t.viewInfo.ToggleKey = ( KeyCode )EditorGUILayout.EnumPopup( new GUIContent( "Toggle Viewpoint Key" ), t.viewInfo.ToggleKey );
+        string[] options = { LayerMask.LayerToName( 0 ), LayerMask.LayerToName( 1 ), LayerMask.LayerToName( 2 )
+            , LayerMask.LayerToName( 3 ), LayerMask.LayerToName( 4 ), LayerMask.LayerToName( 5 )
+            , LayerMask.LayerToName( 6 ), LayerMask.LayerToName( 7 ), LayerMask.LayerToName( 8 ) };
+        t.viewInfo.CullingMask = EditorGUILayout.MaskField( new GUIContent( "Culling Mask" ), t.viewInfo.CullingMask, options );
+
+        t.enableCameraMovement = EditorGUILayout.ToggleLeft( new GUIContent( "Enable Camera Movement", "Determines whether the player can move camera or not." ), t.enableCameraMovement );
+        EditorGUILayout.Space();
+        GUI.enabled = t.enableCameraMovement;
         t.viewInfo.DistanceScrollKey = EditorGUILayout.TextField( new GUIContent( "ViewDistance Scroll Key" ), t.viewInfo.DistanceScrollKey );
         t.viewInfo.DistanceScrollSpeed = EditorGUILayout.Slider( new GUIContent( "ViewDistance Scroll Speed" ), t.viewInfo.DistanceScrollSpeed, 0.0f, 10.0f );
         t.viewInfo.MaxDistance = EditorGUILayout.Slider( new GUIContent( "Max ViewDistance" ), t.viewInfo.MaxDistance, 0.0f, 50.0f );
         t.viewInfo.MinDistance = EditorGUILayout.Slider( new GUIContent( "Min ViewDistance" ), t.viewInfo.MinDistance, 0.0f, 50.0f );
 
-        t.enableCameraMovement = EditorGUILayout.ToggleLeft( new GUIContent( "Enable Camera Movement", "Determines whether the player can move camera or not." ), t.enableCameraMovement );
-        EditorGUILayout.Space();
-        GUI.enabled = t.enableCameraMovement;
         t.cameraInputMethod = ( FirstPersonAIO.CameraInputMethod )EditorGUILayout.EnumPopup( new GUIContent( "Input Method", "Determines the method used to rotate camera. \n\nTraditional uses the mouse on all axes. \nTraditional with constraints uses the mouse on the Y axis only. \nRetro uses Keybinds (left and right movement keys) to rotate the camera along the Y axis." ), t.cameraInputMethod );
         if ( t.cameraInputMethod == FirstPersonAIO.CameraInputMethod.Traditional ) { t.verticalRotationRange = EditorGUILayout.Slider( new GUIContent( "Vertical Rotation Range", "Determines how much range does the camera have to move vertically." ), t.verticalRotationRange, 90, 180 ); }
         if ( t.cameraInputMethod == FirstPersonAIO.CameraInputMethod.Traditional || t.cameraInputMethod == FirstPersonAIO.CameraInputMethod.TraditionalWithConstraints )
