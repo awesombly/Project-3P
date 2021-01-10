@@ -72,6 +72,12 @@ public class Network : Singleton<Network>
         OnLateConnect?.Invoke();
     }
 
+    public void RunNetwork()
+    {
+        thread = new Thread( Run );
+        thread.Start();
+    }
+
     private void Run()
     {
         // Connecting
@@ -159,14 +165,12 @@ public class Network : Singleton<Network>
     private void Awake()
     {
         OnBindProtocols += BindProtocols;
+        SceneBase.OnChangeScene += OnChangeScene;
     }
 
     private void Start()
     {
         OnBindProtocols?.Invoke();
-
-        thread = new Thread( Run );
-        thread.Start();
     }
 
     private void OnDestroy()
@@ -184,5 +188,11 @@ public class Network : Singleton<Network>
         Protocol.Both.ChatMessage protocol = JsonUtility.FromJson<Protocol.Both.ChatMessage>( _data );
 
         ChatSystem.Instance.PushMessage( protocol.Message );
+    }
+
+    private void OnChangeScene()
+    {
+        protocols.Clear();
+        OnBindProtocols?.Invoke();
     }
 }

@@ -9,6 +9,13 @@ public class VillageScene : SceneBase
         base.Awake();
     }
 
+    protected override void Start()
+    {
+        base.Start();
+
+        Network.Instance.RunNetwork();
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();

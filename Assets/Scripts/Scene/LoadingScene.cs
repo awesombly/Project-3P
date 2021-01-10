@@ -41,7 +41,7 @@ public class LoadingScene : SceneBase
 
         if ( _loadedRatio >= 1.0f )
         {
-            Addressables.LoadSceneAsync( villageScene );
+            ChangeSceneAsync( villageScene );
         }
     }
 }

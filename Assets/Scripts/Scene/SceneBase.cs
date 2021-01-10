@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class SceneBase : Singleton<SceneBase>
 {
@@ -35,6 +37,9 @@ public class SceneBase : Singleton<SceneBase>
 
     private List<Player> otherPlayers = new List<Player>();
 
+    public delegate void DelChangeScene();
+    public static event DelChangeScene OnChangeScene;
+
     protected virtual void Awake()
     {
         stageId = gameObject.name;
@@ -59,6 +64,20 @@ public class SceneBase : Singleton<SceneBase>
     {
         Network.Instance.OnConnect -= OnConnect;
         Network.Instance.OnBindProtocols -= OnBindProtocols;
+    }
+
+    public virtual void ChangeSceneAsync( AssetReference _scene )
+    {
+        Addressables.LoadSceneAsync( _scene ).Completed += ( _handle ) =>
+        {
+            if ( _handle.Status != AsyncOperationStatus.Succeeded )
+            {
+                Debug.LogError( "Failed LoadScene. scene = " + _scene );
+                return;
+            }
+
+            OnChangeScene?.Invoke();
+        };
     }
 
     protected virtual void OnConnect()
