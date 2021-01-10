@@ -6,7 +6,6 @@ public class WalkerCitizen : AIBase
 {
     [SerializeField]
     private Transform[] spots;
-    private readonly WaitForSeconds waitForSecondsCached = new WaitForSeconds( 1.0f );
 
     protected override void Awake()
     {
@@ -24,17 +23,21 @@ public class WalkerCitizen : AIBase
 
     protected override IEnumerator Idle()
     {
-        Random.InitState( ( int )Time.time );
+        Random.InitState( ( int )( Time.time * Mathf.PI * 10000.0f ) );
         while ( true )
         {
-            yield return null;
+            if ( !isLocal )
+            {
+                yield return null;
+            }
             
             int value = Random.Range( 1, spots.Length );
-            if ( isLocal && !target.Equals( spots[value].position ) )
+            if ( !target.Equals( spots[value].position ) )
             {
                 target = spots[value].position;
                 ChangeState( AIState.Move );
             }
+            yield return null;
         }
     }
 
