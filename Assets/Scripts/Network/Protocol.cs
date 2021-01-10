@@ -129,7 +129,7 @@ namespace Protocol
             }
         }
 
-        public struct ResponseCriterionNpcInfo : IProtocol
+        public struct ResponseHostNpcInfo : IProtocol
         {
             public ServerNpc NpcInfo;
 
@@ -188,7 +188,7 @@ namespace Protocol
             }
         }
 
-        public struct RequestCriterionNpcInfo : IProtocol
+        public struct RequestHostNpcInfo : IProtocol
         {
             public uint Serial;
 
@@ -210,7 +210,7 @@ namespace Protocol
             }
         }
 
-        public struct ChangedCriterion : IProtocol
+        public struct ChangedStageHost : IProtocol
         {
             public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
             public ushort GetPacketType()

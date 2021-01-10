@@ -31,9 +31,9 @@ namespace Protocol
 
 	PROTOCOL_BODY( ToServer, RequestNpcInfo );
 	PROTOCOL_BODY( FromServer, ResponseNpcInfo );
-	PROTOCOL_BODY( ToServer, ResponseCriterionNpcInfo );
-	PROTOCOL_BODY( FromServer, RequestCriterionNpcInfo );
+	PROTOCOL_BODY( ToServer, ResponseHostNpcInfo );
+	PROTOCOL_BODY( FromServer, RequestHostNpcInfo );
 	PROTOCOL_BODY( FromServer, SyncNpcInfo );
 	PROTOCOL_BODY( ToServer, RequestNpcSync );
-	PROTOCOL_BODY( FromServer, ChangedCriterion );
+	PROTOCOL_BODY( FromServer, ChangedStageHost );
 }

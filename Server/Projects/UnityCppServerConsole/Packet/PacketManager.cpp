@@ -56,7 +56,7 @@ void PacketManager::BindProtocols()
 	/* NPC */
 	protocols[ Protocol::ToServer::RequestNpcInfo::PacketType ] = &PacketManager::RequestNpcInfo;
 	protocols[ Protocol::ToServer::RequestNpcSync::PacketType ] = &PacketManager::RequestNpcSync;
-	protocols[ Protocol::ToServer::ResponseCriterionNpcInfo::PacketType ] = &PacketManager::ResponseCriterionNpcInfo;
+	protocols[ Protocol::ToServer::ResponseHostNpcInfo::PacketType ] = &PacketManager::ResponseHostNpcInfo;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -263,11 +263,11 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 	}
 	responseNpcInfo.Serial = npc->Serial;
 
-	SOCKET criterionSocket = curStage->GetNpcCriterion();
+	SOCKET criterionSocket = curStage->GetHostSocket();
 	Session* criterion = SessionManager::Instance().Find( criterionSocket );
 	if ( criterion == nullptr )
 	{
-		curStage->SetNpcCriterion( _packet.socket );
+		curStage->SetHostSocket( _packet.socket );
 		criterion = session;
 		criterionSocket = _packet.socket;
 	}
@@ -302,7 +302,7 @@ void PacketManager::RequestNpcSync( const PACKET& _packet )
 		return;
 	}
 
-	SOCKET criterionSocket = curStage->GetNpcCriterion();
+	SOCKET criterionSocket = curStage->GetHostSocket();
 	Session* criterion = SessionManager::Instance().Find( criterionSocket );
 	if ( criterion == nullptr )
 	{
@@ -317,14 +317,14 @@ void PacketManager::RequestNpcSync( const PACKET& _packet )
 		return;
 	}
 
-	Protocol::FromServer::RequestCriterionNpcInfo requestCriterionNpcInfo;
-	requestCriterionNpcInfo.Serial = npc->Serial;
-	criterion->Send( requestCriterionNpcInfo );
+	Protocol::FromServer::RequestHostNpcInfo requestHostNpcInfo;
+	requestHostNpcInfo.Serial = npc->Serial;
+	criterion->Send( requestHostNpcInfo );
 }
 
-void PacketManager::ResponseCriterionNpcInfo( const PACKET& _packet )
+void PacketManager::ResponseHostNpcInfo( const PACKET& _packet )
 {
-	Protocol::ToServer::ResponseCriterionNpcInfo protocol = _packet.packet.GetParsedData<Protocol::ToServer::ResponseCriterionNpcInfo>();
+	Protocol::ToServer::ResponseHostNpcInfo protocol = _packet.packet.GetParsedData<Protocol::ToServer::ResponseHostNpcInfo>();
 
 	Session* session = SessionManager::Instance().Find( _packet.socket );
 	if ( session == nullptr )

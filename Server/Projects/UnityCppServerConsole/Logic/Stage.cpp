@@ -28,18 +28,18 @@ void Stage::Erase( const Session* _session )
 	SOCKET sessionSocket = _session->GetSocket();
 	sessions.erase( sessionSocket );
 
-	if ( sessionSocket == criterion )
+	if ( sessionSocket == hostSocket )
 	{
 		if ( sessions.empty() )
 		{
-			criterion = NULL;
+			hostSocket = NULL;
 		}
 		else
 		{
 			Session* session = sessions.begin()->second;
-			criterion = session->GetSocket();
+			hostSocket = session->GetSocket();
 
-			Protocol::FromServer::ChangedCriterion protocol;
+			Protocol::FromServer::ChangedStageHost protocol;
 			session->Send( protocol );
 		}
 	}
@@ -89,14 +89,14 @@ ServerActor* Stage::Find( SerialType serial ) const
 	return findItr->second;
 }
 
-SOCKET Stage::GetNpcCriterion()
+SOCKET Stage::GetHostSocket()
 {
-	return criterion;
+	return hostSocket;
 }
 
-void Stage::SetNpcCriterion( SOCKET _socket )
+void Stage::SetHostSocket( SOCKET _socket )
 {
-	criterion = _socket;
+	hostSocket = _socket;
 }
 
 ServerNpc* Stage::FindNpc( const std::string& _name ) const

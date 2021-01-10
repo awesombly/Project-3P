@@ -86,10 +86,10 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.Both.SyncGrounded.PacketType, SyncGrounded );
 
         /* Npc */
-        Network.Instance.AddBind( Protocol.FromServer.RequestCriterionNpcInfo.PacketType, RequestCriterionNpcInfo );
+        Network.Instance.AddBind( Protocol.FromServer.RequestHostNpcInfo.PacketType, RequestHostNpcInfo );
         Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
         Network.Instance.AddBind( Protocol.FromServer.SyncNpcInfo.PacketType, SyncNpcInfo );
-        Network.Instance.AddBind( Protocol.FromServer.ChangedCriterion.PacketType, ChangedCriterion );
+        Network.Instance.AddBind( Protocol.FromServer.ChangedStageHost.PacketType, ChangedStageHost );
     }
 
     private void Connected( string _data )
@@ -221,9 +221,9 @@ public class SceneBase : Singleton<SceneBase>
         npc.Sync( protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition, protocol.NpcInfo.State );
     }
 
-    private void RequestCriterionNpcInfo( string _data )
+    private void RequestHostNpcInfo( string _data )
     {
-        Protocol.FromServer.RequestCriterionNpcInfo requestNpcInfo = JsonUtility.FromJson<Protocol.FromServer.RequestCriterionNpcInfo>( _data );
+        Protocol.FromServer.RequestHostNpcInfo requestNpcInfo = JsonUtility.FromJson<Protocol.FromServer.RequestHostNpcInfo>( _data );
 
         AIBase npc = ObjectManager.Instance.Find( requestNpcInfo.Serial ) as AIBase;
         if ( ReferenceEquals( npc, null ) )
@@ -232,7 +232,7 @@ public class SceneBase : Singleton<SceneBase>
             return;
         }
 
-        Protocol.ToServer.ResponseCriterionNpcInfo protocol;
+        Protocol.ToServer.ResponseHostNpcInfo protocol;
         protocol.NpcInfo.IsLocal = npc.isLocal;
         protocol.NpcInfo.Serial = npc.serial;
         protocol.NpcInfo.State = npc.state;
@@ -270,7 +270,7 @@ public class SceneBase : Singleton<SceneBase>
         }
     }
 
-    private void ChangedCriterion( string _data )
+    private void ChangedStageHost( string _data )
     {
         foreach( AIBase npc in ObjectManager.Instance.Npcs )
         {

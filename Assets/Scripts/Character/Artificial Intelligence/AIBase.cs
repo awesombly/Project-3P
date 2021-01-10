@@ -78,7 +78,7 @@ public abstract class AIBase : Character
 
         if ( isLocal && Network.Instance.isConnected )
         {
-            Protocol.ToServer.ResponseCriterionNpcInfo protocol;
+            Protocol.ToServer.ResponseHostNpcInfo protocol;
             protocol.NpcInfo.IsLocal = isLocal;
             protocol.NpcInfo.Serial = serial;
             protocol.NpcInfo.State = state;

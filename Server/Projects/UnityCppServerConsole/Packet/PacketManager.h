@@ -30,7 +30,7 @@ private:
 	static void EnterStage( const PACKET& _packet );
 	static void RequestNpcInfo( const PACKET& _packet );
 	static void RequestNpcSync( const PACKET& _packet );
-	static void ResponseCriterionNpcInfo( const PACKET& _packet );
+	static void ResponseHostNpcInfo( const PACKET& _packet );
 
 private:
 	std::queue<PACKET> packets;
