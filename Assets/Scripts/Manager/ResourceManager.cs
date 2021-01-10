@@ -7,23 +7,90 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
+    #region Loading Variables
+    public struct LoadingInfo
+    {
+        public float LoadedRatio;
+        public float TotalPercent;
+        private List<AsyncOperationHandle<Object>> AsyncHandles;
+
+        public void AddHandle( AsyncOperationHandle<Object> _handle )
+        {
+            AsyncHandles.Add( _handle );
+            TotalPercent = AsyncHandles.Count;
+        }
+
+        public void Clear()
+        {
+            if ( ReferenceEquals( AsyncHandles, null ) )
+            {
+                AsyncHandles = new List<AsyncOperationHandle<Object>>();
+            }
+
+            AsyncHandles.Clear();
+            TotalPercent = 0.0f;
+            LoadedRatio = 1.0f;
+        }
+
+        public float GetCompletedPercent()
+        {
+            float percent = 0.0f;
+            foreach ( AsyncOperationHandle<Object> handle in AsyncHandles )
+            {
+                percent += handle.PercentComplete;
+            }
+
+            return percent;
+        }
+    }
+    private LoadingInfo loadingInfo;
+
+    private float LoadedRatio
+    {
+        get { return loadingInfo.LoadedRatio; }
+        set 
+        {
+            if ( Mathf.Approximately( loadingInfo.LoadedRatio, value ) )
+            {
+                return;
+            }
+
+            loadingInfo.LoadedRatio = value;
+            OnChangeLoadedRatio?.Invoke( loadingInfo.LoadedRatio );
+
+            if ( loadingInfo.LoadedRatio >= 1.0f )
+            {
+                loadingInfo.Clear();
+            }
+        }
+    }
+    public delegate void DelChangeLoadedRatio( float _loadedRatio );
+    public event DelChangeLoadedRatio OnChangeLoadedRatio;
+    #endregion
+
     private Dictionary<string/*key*/, string/*guid*/> guids = new Dictionary<string/*key*/, string/*guid*/>();
     private Dictionary<string/*guid*/, Object/*asset*/> loadedAssets = new Dictionary<string/*guid*/, Object/*asset*/>();
 
+    private void Update()
+    {
+        UpdateLoadingInfo();
+    }
+
     public void Init()
     {
-        Addressables.InitializeAsync().Completed += ( locHandle ) =>
+        loadingInfo.Clear();
+
+        Addressables.InitializeAsync().Completed += ( _handle ) =>
         {
-            if ( locHandle.Status != AsyncOperationStatus.Succeeded )
+            if ( _handle.Status != AsyncOperationStatus.Succeeded )
             {
-                Debug.LogError( "Failed InitializeAsync(). Status = " + locHandle.Status );
+                Debug.LogError( "Failed InitializeAsync(). Status = " + _handle.Status );
                 return;
             }
 
             InitGuidsData();
 
-            /// TODO : Label 스크립터블로 멤버 추가
-            LoadAddressables<Equipment>( "Equipment" );
+            LoadAssetsAsync<Equipment>( "Equipment" );
         };
     }
 
@@ -82,33 +149,45 @@ public class ResourceManager : Singleton<ResourceManager>
         }
     }
 
-    private void LoadAddressables<Type>( string _label ) where Type : Object
+    private void LoadAssetsAsync<Type>( string _label ) where Type : Object
     {
-        Addressables.LoadResourceLocationsAsync( _label ).Completed += ( locHandle ) =>
+        Addressables.LoadResourceLocationsAsync( _label ).Completed += ( _locHandle ) =>
         {
-            if ( locHandle.Status != AsyncOperationStatus.Succeeded )
+            if ( _locHandle.Status != AsyncOperationStatus.Succeeded )
             {
                 Debug.LogError( "Failed LoadResource. label = " + _label );
                 return;
             }
 
-            IList<IResourceLocation> locations = locHandle.Result;
+            IList<IResourceLocation> locations = _locHandle.Result;
             foreach ( IResourceLocation loc in locations )
             {
-                Addressables.LoadAssetAsync<Type>( loc ).Completed += ( assetHandle ) =>
+                AsyncOperationHandle<Object> assetHandle = Addressables.LoadAssetAsync<Object>( loc );
+                loadingInfo.AddHandle( assetHandle );
+
+                assetHandle.Completed += ( _assetHandle ) =>
                 {
-                    if ( assetHandle.Status != AsyncOperationStatus.Succeeded )
+                    if ( _assetHandle.Status != AsyncOperationStatus.Succeeded )
                     {
                         Debug.LogError( "Failed LoadAsset. location = " + loc.ToString() );
                         return;
                     }
 
                     string guid = GetAssetGuid( loc.PrimaryKey );
-                    /// TODO : Type별로 컨테이너 분류
-                    loadedAssets.Add( guid, assetHandle.Result );
+                    loadedAssets.Add( guid, _assetHandle.Result );
                 };
             }
         };
+    }
+
+    private void UpdateLoadingInfo()
+    {
+        if ( loadingInfo.TotalPercent <= 0.0f )
+        {
+            return;
+        }
+
+        LoadedRatio = ( loadingInfo.GetCompletedPercent() / loadingInfo.TotalPercent );
     }
 }
 

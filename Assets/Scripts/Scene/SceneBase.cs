@@ -37,8 +37,6 @@ public class SceneBase : Singleton<SceneBase>
 
     protected virtual void Awake()
     {
-        ResourceManager.Instance.Init();
-
         stageId = gameObject.name;
 
         Network.Instance.OnConnect += OnConnect;
@@ -92,6 +90,7 @@ public class SceneBase : Singleton<SceneBase>
         Network.Instance.AddBind( Protocol.FromServer.ChangedCriterion.PacketType, ChangedCriterion );
     }
 
+    #region Protocols
     private void Connected( string _data )
     {
         Network.Instance.InvokeOnConnect();
@@ -277,4 +276,5 @@ public class SceneBase : Singleton<SceneBase>
             npc.isLocal = true;
         }
     }
+    #endregion
 }
