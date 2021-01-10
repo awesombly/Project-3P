@@ -30,15 +30,26 @@ public class FirstPersonAIO : MonoBehaviour
     }
     public HeadInfo firstPerson;
     public HeadInfo thirdPerson;
-    public KeyCode toggleViewpointKey;
 
-    private enum EViewpoint
+    public enum EViewpoint
     {
         FirstPerson,
         ThirdPerson,
         Toggle,
     }
-    private EViewpoint viewpoint = EViewpoint.ThirdPerson;
+
+    [System.Serializable]
+    public struct ViewInfo
+    {
+        public EViewpoint Viewpoint;
+        public KeyCode ToggleKey;
+        public string DistanceScrollKey;
+        public float DistanceScrollSpeed;
+        public float MaxDistance;
+        public float MinDistance;
+        internal float Distance;
+    }
+    public ViewInfo viewInfo;
 
     public bool enableCameraMovement = true;
     public enum InvertMouseInput
@@ -262,7 +273,7 @@ public class FirstPersonAIO : MonoBehaviour
         #region Look Settings - Awake
         originalRotation = transform.localRotation.eulerAngles;
 
-        ChangeViewpoint( viewpoint );
+        ChangeViewpoint( viewInfo.Viewpoint );
         #endregion 
 
         #region Movement Settings - Awake
@@ -342,12 +353,13 @@ public class FirstPersonAIO : MonoBehaviour
         #region Headbobbing Settings - Start
 
         firstPerson.OriginalPosition = firstPerson.Head.localPosition;
-        thirdPerson.OriginalPosition = firstPerson.Head.localPosition;
+        thirdPerson.OriginalPosition = thirdPerson.Head.localPosition;
+        viewInfo.Distance = Vector3.Distance( thirdPerson.Head.position, myPlayer.transform.position );
         if ( snapHeadjointToCapsul )
         {
             firstPerson.OriginalPosition.y = ( capsule.height / 2 ) * firstPerson.Head.localScale.y;
         }
-        
+
         if ( GetComponent<AudioSource>() == null ) { gameObject.AddComponent<AudioSource>(); }
 
         previousPosition = rigidBody.position;
@@ -357,63 +369,12 @@ public class FirstPersonAIO : MonoBehaviour
 
     private void Update()
     {
-        #region Look Settings - Update
-        
-        if ( Input.GetKeyDown( toggleViewpointKey ) )
-        {
-            ChangeViewpoint( EViewpoint.Toggle );
-        }
+        UpdateInput();
+    }
 
-        if ( enableCameraMovement && !controllerPauseState && ( Cursor.lockState == CursorLockMode.Locked ) )
-        {
-            float mouseYInput = 0;
-            float mouseXInput = 0;
-            float camFOV = playerCamera.fieldOfView;
-            if ( cameraInputMethod == CameraInputMethod.Traditional || cameraInputMethod == CameraInputMethod.TraditionalWithConstraints )
-            {
-                mouseYInput = mouseInputInversion == InvertMouseInput.None || mouseInputInversion == InvertMouseInput.X ? Input.GetAxis( "Mouse Y" ) : -Input.GetAxis( "Mouse Y" );
-                mouseXInput = mouseInputInversion == InvertMouseInput.None || mouseInputInversion == InvertMouseInput.Y ? Input.GetAxis( "Mouse X" ) : -Input.GetAxis( "Mouse X" );
-            }
-            else
-            {
-                mouseXInput = Input.GetAxis( "Horizontal" ) * ( mouseInputInversion == InvertMouseInput.None || mouseInputInversion == InvertMouseInput.Y ? 1 : -1 );
-            }
-            if ( targetAngles.y > 180 ) { targetAngles.y -= 360; followAngles.y -= 360; } else if ( targetAngles.y < -180 ) { targetAngles.y += 360; followAngles.y += 360; }
-            if ( targetAngles.x > 180 ) { targetAngles.x -= 360; followAngles.x -= 360; } else if ( targetAngles.x < -180 ) { targetAngles.x += 360; followAngles.x += 360; }
-            targetAngles.y += mouseXInput * ( mouseSensitivity - ( ( baseCamFOV - camFOV ) * fOVToMouseSensitivity ) / 6f );
-            if ( cameraInputMethod == CameraInputMethod.Traditional ) { targetAngles.x += mouseYInput * ( mouseSensitivity - ( ( baseCamFOV - camFOV ) * fOVToMouseSensitivity ) / 6f ); }
-            else { targetAngles.x = 0f; }
-            targetAngles.x = Mathf.Clamp( targetAngles.x, -0.5f * verticalRotationRange, 0.5f * verticalRotationRange );
-            followAngles = Vector3.SmoothDamp( followAngles, targetAngles, ref followVelocity, ( cameraSmoothing ) / 100 );
-
-            playerCamera.transform.localRotation = Quaternion.Euler( -followAngles.x + originalRotation.x, 0, 0 );
-            transform.localRotation = Quaternion.Euler( 0, followAngles.y + originalRotation.y, 0 );
-        }
-
-        #endregion
-
-        #region Input Settings - Update
-        if ( canHoldJump ? ( canJump && Input.GetButton( "Jump" ) ) : ( Input.GetButtonDown( "Jump" ) && canJump ) )
-        {
-            jumpInput = true;
-        }
-        else if ( Input.GetButtonUp( "Jump" ) ) { jumpInput = false; }
-
-
-        if ( _crouchModifiers.useCrouch )
-        {
-            if ( !_crouchModifiers.toggleCrouch ) 
-            {
-                IsCrouching = _crouchModifiers.crouchOverride || Input.GetKey( _crouchModifiers.crouchKey );
-            }
-            else if ( Input.GetKeyDown( _crouchModifiers.crouchKey ) ) 
-            {
-                IsCrouching = !IsCrouching || _crouchModifiers.crouchOverride;
-            }
-        }
-
-        if ( Input.GetButtonDown( "Cancel" ) ) { ControllerPause(); }
-        #endregion
+    private void LateUpdate()
+    {
+        UpdateCameraInfo();
     }
 
     private void FixedUpdate()
@@ -795,8 +756,6 @@ public class FirstPersonAIO : MonoBehaviour
         #endregion
     }
 
-
-
     public IEnumerator CameraShake( float Duration, float Magnitude )
     {
         float elapsed = 0;
@@ -813,8 +772,96 @@ public class FirstPersonAIO : MonoBehaviour
     public void RotateCamera( Vector2 Rotation, bool Snap )
     {
         enableCameraMovement = !enableCameraMovement;
-        if ( Snap ) { followAngles = Rotation; targetAngles = Rotation; } else { targetAngles = Rotation; }
+        if ( Snap ) 
+        {
+            targetAngles = Rotation;
+            followAngles = Rotation;
+        } 
+        else 
+        {
+            targetAngles = Rotation; 
+        }
         enableCameraMovement = !enableCameraMovement;
+    }
+
+    private void UpdateCameraInfo()
+    {
+        if ( !enableCameraMovement || controllerPauseState || ( Cursor.lockState != CursorLockMode.Locked ) )
+        {
+            return;
+        }
+
+        if ( Input.GetKeyDown( viewInfo.ToggleKey ) )
+        {
+            ChangeViewpoint( EViewpoint.Toggle );
+        }
+
+        float mouseXInput = 0;
+        float mouseYInput = 0;
+        float camFOV = playerCamera.fieldOfView;
+        bool isInvertX = ( mouseInputInversion == InvertMouseInput.X ) || ( mouseInputInversion == InvertMouseInput.Both );
+        bool isInvertY = ( mouseInputInversion == InvertMouseInput.Y ) || ( mouseInputInversion == InvertMouseInput.Both );
+
+        if ( cameraInputMethod == CameraInputMethod.Traditional || cameraInputMethod == CameraInputMethod.TraditionalWithConstraints )
+        {
+            mouseXInput = isInvertX ? -Input.GetAxis( "Mouse X" ) : Input.GetAxis( "Mouse X" );
+            mouseYInput = isInvertY ? -Input.GetAxis( "Mouse Y" ) : Input.GetAxis( "Mouse Y" );
+        }
+        else
+        {
+            mouseXInput = isInvertX ? -Input.GetAxis( "Horizontal" ) : Input.GetAxis( "Horizontal" );
+        }
+
+        if ( targetAngles.y > 180 )
+        {
+            targetAngles.y -= 360;
+            followAngles.y -= 360;
+        }
+        else if ( targetAngles.y < -180 )
+        {
+            targetAngles.y += 360;
+            followAngles.y += 360;
+        }
+
+        if ( targetAngles.x > 180 )
+        {
+            targetAngles.x -= 360;
+            followAngles.x -= 360;
+        }
+        else if ( targetAngles.x < -180 )
+        {
+            targetAngles.x += 360;
+            followAngles.x += 360;
+        }
+        targetAngles.y += mouseXInput * ( mouseSensitivity - ( ( baseCamFOV - camFOV ) * fOVToMouseSensitivity ) / 6f );
+
+        if ( cameraInputMethod == CameraInputMethod.Traditional )
+        {
+            targetAngles.x += mouseYInput * ( mouseSensitivity - ( ( baseCamFOV - camFOV ) * fOVToMouseSensitivity ) / 6f );
+        }
+        else
+        {
+            targetAngles.x = 0f;
+        }
+
+        targetAngles.x = Mathf.Clamp( targetAngles.x, verticalRotationRange * -0.5f, verticalRotationRange * 0.5f );
+        followAngles = Vector3.SmoothDamp( followAngles, targetAngles, ref followVelocity, ( cameraSmoothing ) / 100 );
+
+        playerCamera.transform.localRotation = Quaternion.Euler( -followAngles.x + originalRotation.x, 0, 0 );
+        transform.localRotation = Quaternion.Euler( 0, followAngles.y + originalRotation.y, 0 );
+
+        if ( viewInfo.Viewpoint == EViewpoint.ThirdPerson )
+        {
+            float viewAxis = Input.GetAxis( viewInfo.DistanceScrollKey );
+            if ( viewAxis != 0.0f )
+            {
+                float delta = ( -viewAxis * viewInfo.DistanceScrollSpeed );
+                viewInfo.Distance = Mathf.Clamp( viewInfo.Distance + delta, viewInfo.MinDistance, viewInfo.MaxDistance );
+            }
+
+            Vector3 cameraPos = myPlayer.transform.position + ( -playerCamera.transform.forward * viewInfo.Distance );
+            playerCamera.transform.position = cameraPos;
+        }
     }
 
     public void ControllerPause()
@@ -827,9 +874,7 @@ public class FirstPersonAIO : MonoBehaviour
         }
     }
 
-
-
-    float SlopeCheck()
+    private float SlopeCheck()
     {
 
         advanced.lastKnownSlopeAngle = Mathf.MoveTowards( advanced.lastKnownSlopeAngle, Vector3.Angle( advanced.curntGroundNormal, Vector3.up ), 5f );
@@ -838,7 +883,34 @@ public class FirstPersonAIO : MonoBehaviour
 
     }
 
-    
+    private void UpdateInput()
+    {
+        if ( canHoldJump ? ( canJump && Input.GetButton( "Jump" ) ) : ( Input.GetButtonDown( "Jump" ) && canJump ) )
+        {
+            jumpInput = true;
+        }
+        else if ( Input.GetButtonUp( "Jump" ) ) 
+        {
+            jumpInput = false; 
+        }
+
+        if ( _crouchModifiers.useCrouch )
+        {
+            if ( !_crouchModifiers.toggleCrouch )
+            {
+                IsCrouching = _crouchModifiers.crouchOverride || Input.GetKey( _crouchModifiers.crouchKey );
+            }
+            else if ( Input.GetKeyDown( _crouchModifiers.crouchKey ) )
+            {
+                IsCrouching = !IsCrouching || _crouchModifiers.crouchOverride;
+            }
+        }
+
+        if ( Input.GetButtonDown( "Cancel" ) )
+        {
+            ControllerPause();
+        }
+    }
 
     private void OnCollisionEnter( Collision CollisionData )
     {
@@ -925,37 +997,41 @@ public class FirstPersonAIO : MonoBehaviour
     {
         if ( _viewpoint == EViewpoint.Toggle )
         {
-            if ( viewpoint == EViewpoint.FirstPerson )
+            if ( viewInfo.Viewpoint == EViewpoint.FirstPerson )
             {
-                viewpoint = EViewpoint.ThirdPerson;
+                viewInfo.Viewpoint = EViewpoint.ThirdPerson;
             }
             else
             {
-                viewpoint = EViewpoint.FirstPerson;
+                viewInfo.Viewpoint = EViewpoint.FirstPerson;
             }
         }
         else
         {
-            viewpoint = _viewpoint;
+            viewInfo.Viewpoint = _viewpoint;
         }
 
-        switch ( viewpoint )
+        switch ( viewInfo.Viewpoint )
         {
             case EViewpoint.FirstPerson:
             {
                 firstPerson.Head.gameObject.SetActive( true );
                 thirdPerson.Head.gameObject.SetActive( false );
+                playerCamera.transform.SetParent( firstPerson.Head.gameObject.transform );
+                playerCamera.transform.localPosition = Vector3.zero;
             } break;
 
             case EViewpoint.ThirdPerson:
             {
                 firstPerson.Head.gameObject.SetActive( false );
                 thirdPerson.Head.gameObject.SetActive( true );
+                playerCamera.transform.SetParent( thirdPerson.Head.gameObject.transform );
+                playerCamera.transform.localPosition = Vector3.zero;
             } break;
 
             default:
             {
-                Debug.LogError( "Invalid viewpoint. type = " + viewpoint );
+                Debug.LogError( "Invalid viewpoint. type = " + viewInfo.Viewpoint );
             } break;
         }
     }
@@ -1077,19 +1153,22 @@ public class FPAIO_Editor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
+        t.viewInfo.Viewpoint = ( FirstPersonAIO.EViewpoint )EditorGUILayout.EnumPopup( new GUIContent( "Init Viewpoint" ), t.viewInfo.Viewpoint );
         t.firstPerson.Head = ( Transform )EditorGUILayout.ObjectField( new GUIContent( "FirstPerson Head Transform", "A transform representing the head. The camera should be a child to this transform." ), t.firstPerson.Head, typeof( Transform ), true );
         if ( !t.firstPerson.Head )
         {
             EditorGUILayout.HelpBox( "A Head Transform is required.", MessageType.Error );
         }
-
         t.thirdPerson.Head = ( Transform )EditorGUILayout.ObjectField( new GUIContent( "ThirdPerson Head Transform" ), t.thirdPerson.Head, typeof( Transform ), true );
         if ( !t.thirdPerson.Head )
         {
             EditorGUILayout.HelpBox( "A Head Transform is required.", MessageType.Error );
         }
-
-        t.toggleViewpointKey = ( KeyCode )EditorGUILayout.EnumPopup( new GUIContent( "Toggle Viewpoint Key" ), t.toggleViewpointKey );
+        t.viewInfo.ToggleKey = ( KeyCode )EditorGUILayout.EnumPopup( new GUIContent( "Toggle Viewpoint Key" ), t.viewInfo.ToggleKey );
+        t.viewInfo.DistanceScrollKey = EditorGUILayout.TextField( new GUIContent( "ViewDistance Scroll Key" ), t.viewInfo.DistanceScrollKey );
+        t.viewInfo.DistanceScrollSpeed = EditorGUILayout.Slider( new GUIContent( "ViewDistance Scroll Speed" ), t.viewInfo.DistanceScrollSpeed, 0.0f, 10.0f );
+        t.viewInfo.MaxDistance = EditorGUILayout.Slider( new GUIContent( "Max ViewDistance" ), t.viewInfo.MaxDistance, 0.0f, 50.0f );
+        t.viewInfo.MinDistance = EditorGUILayout.Slider( new GUIContent( "Min ViewDistance" ), t.viewInfo.MinDistance, 0.0f, 50.0f );
 
         t.enableCameraMovement = EditorGUILayout.ToggleLeft( new GUIContent( "Enable Camera Movement", "Determines whether the player can move camera or not." ), t.enableCameraMovement );
         EditorGUILayout.Space();
