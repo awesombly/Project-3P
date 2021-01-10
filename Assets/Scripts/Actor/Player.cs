@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public enum EBoneType
 {
@@ -32,7 +33,7 @@ public class Player : Character
     private Dictionary<EEquipType, EquipInfo> equipInfos = new Dictionary<EEquipType, EquipInfo>();
     internal Dictionary<int/*index*/, Equipment> equipQuickslot = new Dictionary<int/*index*/, Equipment>();
 
-    public List<Equipment> testEquips;
+    public List<AssetReferenceEquipment> testEquips;
 
     private bool isSprinting = true;
     internal bool IsSprinting
@@ -127,13 +128,12 @@ public class Player : Character
 
         Vector3 rootScale = boneInfos[ EBoneType.Root ].Reference.lossyScale;
         BoneInfo.OriginalScale = new Vector3( 1.0f / rootScale.x, 1.0f / rootScale.y, 1.0f / rootScale.z );
-        
+
         for ( int i = 0; i < testEquips.Count; ++i )
         {
-            SetEquipQuickslot( i, testEquips[ i ] );
+            Equipment equip = ResourceManager.Instance.GetAsset<Equipment>( testEquips[ i ] );
+            SetEquipQuickslot( i, equip );
         }
-
-        UseEquipQuickslot( 0 );
     }
 
     protected override void FixedUpdate()
