@@ -1,16 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class VillageScene : SceneBase
 {
+    public AssetReference loadingScene;
+
     protected override void Awake()
     {
+        if ( !ResourceManager.Instance.isInited )
+        {
+            ChangeSceneAsync( loadingScene );
+            return;
+        }
+        
         base.Awake();
     }
 
     protected override void Start()
     {
+        if ( !ResourceManager.Instance.isInited )
+        {
+            return;
+        }
+
         base.Start();
 
         Network.Instance.RunNetwork();

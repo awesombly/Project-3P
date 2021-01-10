@@ -7,6 +7,8 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
+    internal bool isInited = false;
+
     #region Loading Variables
     public struct LoadingInfo
     {
@@ -67,7 +69,7 @@ public class ResourceManager : Singleton<ResourceManager>
     public delegate void DelChangeLoadedRatio( float _loadedRatio );
     public event DelChangeLoadedRatio OnChangeLoadedRatio;
     #endregion
-
+    
     private Dictionary<string/*key*/, string/*guid*/> guids = new Dictionary<string/*key*/, string/*guid*/>();
     private Dictionary<string/*guid*/, Object/*asset*/> loadedAssets = new Dictionary<string/*guid*/, Object/*asset*/>();
 
@@ -78,6 +80,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public void Init()
     {
+        isInited = true;
         loadingInfo.Clear();
 
         Addressables.InitializeAsync().Completed += ( _handle ) =>
@@ -98,7 +101,10 @@ public class ResourceManager : Singleton<ResourceManager>
     {
         if ( !loadedAssets.TryGetValue( _guid, out Object asset ) )
         {
-            Debug.LogError( "Asset not found. Type = " + typeof( Type ).Name + ", Guid = " + _guid );
+            if ( isInited )
+            {
+                Debug.LogError( "Asset not found. Type = " + typeof( Type ).Name + ", Guid = " + _guid );
+            }
             return null;
         }
 

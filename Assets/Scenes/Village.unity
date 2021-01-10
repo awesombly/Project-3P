@@ -10413,6 +10413,9 @@ MonoBehaviour:
   localPlayerPrefab: {fileID: 1743903104223250, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
   otherPlayerPrefab: {fileID: 7405065635949591291, guid: 15a9533a8b8f76a46a32fee587eaa2cd, type: 3}
   spawnTransform: {fileID: 975208719}
+  loadingScene:
+    m_AssetGUID: d360ef91cd52b07429cdf444a7d4dd0b
+    m_SubObjectName: 
 --- !u!1001 &746565151
 PrefabInstance:
   m_ObjectHideFlags: 0

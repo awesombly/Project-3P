@@ -43,9 +43,8 @@ public class Network : Singleton<Network>
 
     public void Send( Protocol.IProtocol _protocol )
     {
-        if ( ReferenceEquals( socket, null ) || !socket.Connected )
+        if ( !isConnected )
         {
-            Debug.LogError( "Not Connected." );
             return;
         }
 
