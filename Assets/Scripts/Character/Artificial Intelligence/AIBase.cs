@@ -28,12 +28,7 @@ public abstract class AIBase : Character
     private float angularSpeed = 1000.0f;
     private float acceleration = 20.0f;
 
-    protected float disSqrInteraction { get; private set; }
     protected bool isInteraction = false;
-    protected Player focusedPlayer;
-    private readonly float disInteraction = 2.0f;
-    private readonly WaitForSeconds DistanceCheckCached = new WaitForSeconds( 0.1f );
-
 
     private Coroutine currentCoroutine = null;
 
@@ -44,45 +39,9 @@ public abstract class AIBase : Character
         ChangeState( ( AIState )_state );
     }
 
-    public void SyncInteration( Player _player )
-    {
-        focusedPlayer = _player;
-        ChangeState( AIState.Interaction );
-        isInteraction = true;
-    }
-
-    private IEnumerator CheckPlayerDistance()
-    {
-        while ( true )
-        {
-            yield return DistanceCheckCached;
-
-            if ( isInteraction )
-            {
-                continue;
-            }
-
-            foreach ( Player player in ObjectManager.Instance.Players )
-            {
-                if ( player.isLocal && ( transform.position - player.transform.position ).sqrMagnitude <= disSqrInteraction )
-                {
-                    Protocol.Both.SyncNpcInteraction protocol;
-                    protocol.NpcSerial = serial;
-                    protocol.PlayerSerial = player.serial;
-                    Network.Instance.Send( protocol );
-
-                    SyncInteration( player );
-                    break;
-                }
-            }
-        }
-    }
-
     protected override void Awake()
     {
         base.Awake();
-
-        disSqrInteraction = Mathf.Pow( disInteraction, 2 );
 
         isLocal = false;
         Network.Instance.OnLateConnect += OnLateConnect;
@@ -91,8 +50,6 @@ public abstract class AIBase : Character
         nav.speed = moveSpeed;
         nav.angularSpeed = angularSpeed;
         nav.acceleration = acceleration;
-
-        StartCoroutine( CheckPlayerDistance() );
     }
 
     protected virtual void Start()
@@ -103,6 +60,52 @@ public abstract class AIBase : Character
     protected override void FixedUpdate()
     {
         
+    }
+
+    protected virtual void OnTriggerEnter( Collider _other )
+    {
+        if ( isLocal && !isInteraction && _other.CompareTag( "Player" ) )
+        {
+            target = _other.transform.position;
+            ChangeState( AIState.Interaction );
+        }
+    }
+
+    protected virtual void OnTriggerStay( Collider _other )
+    {
+        if ( !isLocal )
+        {
+            return;
+        }
+
+        if ( isInteraction && _other.CompareTag( "Player" ) )
+        {
+            float Offset = ( target - _other.transform.position ).sqrMagnitude;
+            if ( Offset >= 0.05f )
+            {
+                Debug.Log( ( target - _other.transform.position ).sqrMagnitude );
+                target = _other.transform.position;
+
+                Protocol.ToServer.ResponseHostNpcInfo protocol;
+                protocol.NpcInfo.Actor.Serial = serial;
+                protocol.NpcInfo.Actor.Position = transform.position;
+                protocol.NpcInfo.Actor.Rotation = transform.rotation;
+                protocol.NpcInfo.IsLocal = isLocal;
+                protocol.NpcInfo.State = state;
+                protocol.NpcInfo.NpcId = gameObject.name;
+                protocol.NpcInfo.Target = target;
+
+                Network.Instance.Send( protocol );
+            }
+        }
+    }
+
+    protected virtual void OnTriggerExit( Collider _other )
+    {
+        if ( isLocal && isInteraction && _other.CompareTag( "Player" ) )
+        {
+            ChangeState( AIState.Idle );
+        }
     }
 
     protected virtual void OnDestroy()
@@ -120,10 +123,14 @@ public abstract class AIBase : Character
 
     protected void ChangeState( AIState _state )
     {
-        if ( !ReferenceEquals( currentCoroutine, null ) )
-        {
-            StopCoroutine( currentCoroutine );
-        }
+        StopAllCoroutines();
+        //if ( !ReferenceEquals( currentCoroutine, null ) )
+        //{
+        //    StopCoroutine( currentCoroutine );
+        //}
+
+        isInteraction = false;
+        nav.isStopped = false;
 
         state = ( int )_state;
         animator.SetInteger( AnimatorParameters.AIState, ( int )_state );
@@ -131,10 +138,10 @@ public abstract class AIBase : Character
         if ( isLocal && Network.Instance.isConnected )
         {
             Protocol.ToServer.ResponseHostNpcInfo protocol;
-            protocol.NpcInfo.IsLocal = isLocal;
             protocol.NpcInfo.Actor.Serial = serial;
             protocol.NpcInfo.Actor.Position = transform.position;
             protocol.NpcInfo.Actor.Rotation= transform.rotation;
+            protocol.NpcInfo.IsLocal = isLocal;
             protocol.NpcInfo.State = state;
             protocol.NpcInfo.NpcId = gameObject.name;
             protocol.NpcInfo.Target = target;
@@ -146,10 +153,6 @@ public abstract class AIBase : Character
     }
 
     protected abstract IEnumerator Idle();
-    protected abstract IEnumerator Interaction();
 
-    protected virtual void OnExit()
-    {
-        StopAllCoroutines();
-    }
+    protected abstract IEnumerator Interaction();
 }

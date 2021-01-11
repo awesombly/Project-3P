@@ -27,21 +27,13 @@ public class WalkerCitizen : AIBase
     protected override IEnumerator Interaction()
     {
         animator.SetInteger( AnimatorParameters.AIState, ( int )AIState.Idle );
+        isInteraction = true;
+        nav.isStopped = true;
+
         while ( true )
         {
             yield return null;
-
-            nav.isStopped = true;
-            if ( focusedPlayer == null || ( transform.position - focusedPlayer.transform.position ).sqrMagnitude >= disSqrInteraction )
-            {
-                yield return DefaultWaitTimeCached;
-                nav.isStopped = false;
-                isInteraction = false;
-                ChangeState( AIState.Idle );
-                break;
-            }
-
-            Vector3 dis =  focusedPlayer.transform.position - transform.position;
+            Vector3 dis =  target - transform.position;
             Vector3 disXZ = new Vector3( dis.x, 0.0f, dis.z );
             transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation( disXZ ), 0.1f );
         }
@@ -58,7 +50,7 @@ public class WalkerCitizen : AIBase
             }
             
             int value = Random.Range( 1, spots.Length );
-            if ( !target.Equals( spots[value].position ) )
+            if ( !target.Equals( spots[ value ].position ) )
             {
                 target = spots[ value ].position;
                 ChangeState( AIState.Move );

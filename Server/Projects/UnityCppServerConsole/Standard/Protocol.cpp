@@ -30,7 +30,6 @@ namespace Protocol
 	PROTOCOL_BODY( FromServer, DestroyActor );
 
 	
-	PROTOCOL_BODY( Both, SyncNpcInteraction );
 	PROTOCOL_BODY( ToServer, RequestNpcInfo );
 	PROTOCOL_BODY( ToServer, ResponseHostNpcInfo );
 	PROTOCOL_BODY( ToServer, RequestNpcSync );

@@ -82,21 +82,6 @@ namespace Protocol
 				ar( CEREAL_NVP( Velocity ) );
 			}
 		};
-
-		struct SyncNpcInteraction : public IProtocol
-		{
-			PROTOCOL_HEADER();
-
-			SerialType NpcSerial;
-			SerialType PlayerSerial;
-
-			template <class Archive>
-			void serialize( Archive& ar )
-			{
-				ar( CEREAL_NVP( NpcSerial ) );
-				ar( CEREAL_NVP( PlayerSerial ) );
-			}
-		};
 	}
 
 	namespace ToServer
