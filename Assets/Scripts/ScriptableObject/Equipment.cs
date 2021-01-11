@@ -11,6 +11,7 @@ public class Item : ScriptableObject
     {
         None,
         Equipment,
+        Emotion,
     }
     internal EItemType itemType;
 

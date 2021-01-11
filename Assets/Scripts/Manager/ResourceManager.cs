@@ -7,7 +7,7 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
-    internal bool isInited = false;
+    internal static bool isInited = false;
 
     #region Loading Variables
     public struct LoadingInfo
@@ -63,6 +63,7 @@ public class ResourceManager : Singleton<ResourceManager>
             if ( loadingInfo.LoadedRatio >= 1.0f )
             {
                 loadingInfo.Clear();
+                isInited = true;
             }
         }
     }
@@ -81,7 +82,6 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public void Init()
     {
-        isInited = true;
         loadingInfo.Clear();
 
         Addressables.InitializeAsync().Completed += ( _handle ) =>
@@ -94,7 +94,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
             InitGuidsData();
 
-            LoadAssetsAsync<Equipment>( "Equipment" );
+            LoadAssetsAsync<Item>( "Item" );
         };
     }
 
@@ -214,6 +214,12 @@ public class ResourceManager : Singleton<ResourceManager>
 
         LoadedRatio = ( loadingInfo.GetCompletedPercent() / loadingInfo.TotalPercent );
     }
+}
+
+[System.Serializable]
+public class AssetReferenceItem : AssetReferenceT<Item>
+{
+    public AssetReferenceItem( string _guid ) : base( _guid ) { }
 }
 
 [System.Serializable]

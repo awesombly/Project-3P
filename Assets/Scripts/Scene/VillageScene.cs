@@ -9,7 +9,7 @@ public class VillageScene : SceneBase
 
     protected override void Awake()
     {
-        if ( !ResourceManager.Instance.isInited )
+        if ( !ResourceManager.isInited )
         {
             ChangeSceneAsync( loadingScene );
             return;
@@ -20,7 +20,7 @@ public class VillageScene : SceneBase
 
     protected override void Start()
     {
-        if ( !ResourceManager.Instance.isInited )
+        if ( !ResourceManager.isInited )
         {
             return;
         }

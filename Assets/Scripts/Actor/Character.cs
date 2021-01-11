@@ -12,7 +12,7 @@ public class Character : Actor
     }
     private SyncMovement syncMovement;
 
-    protected Animator animator;
+    internal Animator animator;
     protected CapsuleCollider capsule;
     protected float originCapsuleHeight;
 

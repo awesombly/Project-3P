@@ -131,6 +131,11 @@ public class QuickslotUI : MonoBehaviour
                 continue;
             }
 
+            if ( ReferenceEquals( pair.Value, null ) )
+            {
+                continue;
+            }
+
             RectTransform slotRect = slotList[ pair.Key ];
 
             Button buttonUI = slotRect.GetComponent<Button>();
