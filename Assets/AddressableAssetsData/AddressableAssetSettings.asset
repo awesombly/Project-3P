@@ -68,6 +68,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - Item
     - Equipment
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
