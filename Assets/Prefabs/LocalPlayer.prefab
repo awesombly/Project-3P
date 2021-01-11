@@ -583,23 +583,6 @@ MonoBehaviour:
     Reference: {fileID: 4496883081163120107}
   - BoneType: 2
     Reference: {fileID: 3577637095626918573}
-  testEquips:
-  - m_AssetGUID: 5fcfc012509a4a24d88f6a7982b13d72
-    m_SubObjectName: 
-  - m_AssetGUID: 4dad1f1a7924a3f41a2835854f681c09
-    m_SubObjectName: 
-  - m_AssetGUID: 44b4727d6f6630a458135bf2225699d8
-    m_SubObjectName: 
-  - m_AssetGUID: d1b2dbc0fd075e14083ffe9722f68c39
-    m_SubObjectName: 
-  - m_AssetGUID: 3205096b0573ad1448a9dc9a31f0bd45
-    m_SubObjectName: 
-  - m_AssetGUID: 0a81ad419b5dc7549972407746ba3684
-    m_SubObjectName: 
-  - m_AssetGUID: 58197b269558d97468db1ba983d34772
-    m_SubObjectName: 
-  - m_AssetGUID: 6627b59cdb7518d4cb5e0b25616fe85c
-    m_SubObjectName: 
 --- !u!1 &277782326091747974
 GameObject:
   m_ObjectHideFlags: 0

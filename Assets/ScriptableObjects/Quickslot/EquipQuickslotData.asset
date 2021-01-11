@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a639def6ba1de9478ef5ceb3975feb9, type: 3}
+  m_Name: EquipQuickslotData
+  m_EditorClassIdentifier: 
+  initialItems:
+  - m_AssetGUID: 4dad1f1a7924a3f41a2835854f681c09
+    m_SubObjectName: 
+  - m_AssetGUID: 44b4727d6f6630a458135bf2225699d8
+    m_SubObjectName: 
+  - m_AssetGUID: d1b2dbc0fd075e14083ffe9722f68c39
+    m_SubObjectName: 
+  - m_AssetGUID: 3205096b0573ad1448a9dc9a31f0bd45
+    m_SubObjectName: 
+  - m_AssetGUID: 0a81ad419b5dc7549972407746ba3684
+    m_SubObjectName: 
+  - m_AssetGUID: 58197b269558d97468db1ba983d34772
+    m_SubObjectName: 
+  - m_AssetGUID: 6627b59cdb7518d4cb5e0b25616fe85c
+    m_SubObjectName: 
+  - m_AssetGUID: 94bed40996449e74d8bf2f19d8ac8358
+    m_SubObjectName: 

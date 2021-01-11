@@ -34,10 +34,6 @@ public class Player : Character
     public delegate void DelChangeEquipment( Equipment _equip );
     public event DelChangeEquipment OnChangeEquipment;
 
-    internal Dictionary<int/*index*/, Equipment> equipQuickslot = new Dictionary<int/*index*/, Equipment>();
-
-    public List<AssetReferenceEquipment> testEquips;
-
     private bool isSprinting = true;
     internal bool IsSprinting
     {
@@ -132,12 +128,6 @@ public class Player : Character
 
         Vector3 rootScale = boneInfos[ EBoneType.Root ].Reference.lossyScale;
         BoneInfo.OriginalScale = new Vector3( 1.0f / rootScale.x, 1.0f / rootScale.y, 1.0f / rootScale.z );
-
-        for ( int i = 0; i < testEquips.Count; ++i )
-        {
-            Equipment equip = ResourceManager.Instance.GetAsset<Equipment>( testEquips[ i ] );
-            SetEquipQuickslot( i, equip );
-        }
     }
 
     protected override void FixedUpdate()
@@ -200,26 +190,6 @@ public class Player : Character
         {
             OnChangeEquipment?.Invoke( null );
         }
-    }
-
-    public void SetEquipQuickslot( int _index, Equipment _equip )
-    {
-        if ( !equipQuickslot.ContainsKey( _index ) )
-        {
-            equipQuickslot.Add( _index, null );
-        }
-
-        equipQuickslot[ _index ] = _equip;
-    }
-
-    public void UseEquipQuickslot( int _index )
-    {
-        if ( !equipQuickslot.ContainsKey( _index ) )
-        {
-            return;
-        }
-
-        SetEquipment( equipQuickslot[ _index ] );
     }
 
     private void SendSyncEquipment( Equipment _equip )

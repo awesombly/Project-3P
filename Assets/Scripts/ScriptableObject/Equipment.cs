@@ -6,13 +6,17 @@ public class Item : ScriptableObject
 {
     public string id;
     public string desc;
-    public int price;
+    public Sprite icon;
     internal enum EItemType
     {
         None,
         Equipment,
     }
     internal EItemType itemType;
+
+    public virtual void OnUseItem( Player _player )
+    {
+    }
 }
 
 public enum EEquipType
@@ -24,7 +28,6 @@ public enum EEquipType
 public class Equipment : Item
 {
     public EEquipType equipType;
-    public Sprite icon;
 
     [System.Serializable]
     public struct ModelInfo
@@ -33,6 +36,11 @@ public class Equipment : Item
         public GameObject Prefab;
     }
     public List<ModelInfo> modelInfos;
+
+    public override void OnUseItem( Player _player )
+    {
+        _player.SetEquipment( this );
+    }
 
     private void OnEnable()
     {

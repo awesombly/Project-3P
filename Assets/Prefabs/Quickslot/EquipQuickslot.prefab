@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 4905013257031854192}
   - component: {fileID: 4905013257031854193}
   - component: {fileID: 4905013257031854190}
-  - component: {fileID: 8107349139960485700}
+  - component: {fileID: -6209705485284493420}
   m_Layer: 5
   m_Name: EquipQuickslot
   m_TagString: Untagged
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8107349139960485700
+--- !u!114 &-6209705485284493420
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,12 +260,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4905013257031854191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54ca67bf4378e1f44a870cbabef736a5, type: 3}
+  m_Script: {fileID: 11500000, guid: b399d28c37410fb4da1c6a530079fc3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activeKey: 113
   pannelRect: {fileID: 4308937584883046446}
   pannelRatioAtScreen: 0.7
   slotInfo:
+    Data: {fileID: 11400000, guid: 7c3df84289753b840982fe32d13c27b1, type: 2}
     Prefab: {fileID: 6863303009658400446, guid: 8810e8aa52c1695438119b7e076fd519, type: 3}
-    TotalCount: 8

@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: "\uC2A4\uD30C\uC774\uC2A4"
   desc: "\uB300\uCDA9 \uC124\uBA85"
-  price: 456
-  equipType: 0
   icon: {fileID: 21300000, guid: fdf81e4514a3ee343842aa1421113184, type: 3}
+  equipType: 0
   modelInfos:
   - AttachBone: 1
     Prefab: {fileID: 151826, guid: fad3894d33d323447a3187fbca3004cc, type: 3}

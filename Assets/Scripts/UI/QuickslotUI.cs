@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EquipQuickslot : MonoBehaviour
+public class QuickslotUI : MonoBehaviour
 {
     [SerializeField]
     private KeyCode activeKey;
@@ -16,8 +16,8 @@ public class EquipQuickslot : MonoBehaviour
     [System.Serializable]
     public struct SlotInfo
     {
+        public QuickslotData Data;
         public GameObject Prefab;
-        public int TotalCount;
     }
     [SerializeField]
     private SlotInfo slotInfo;
@@ -46,7 +46,7 @@ public class EquipQuickslot : MonoBehaviour
     {
         if ( Input.GetKeyDown( activeKey ) )
         {
-            SetActiveQuickslot( true );
+            SetActivePannel( true );
         }
         else if ( Input.GetKeyUp( activeKey ) && pannelRect.gameObject.activeSelf )
         {
@@ -62,7 +62,7 @@ public class EquipQuickslot : MonoBehaviour
                 }
             }
 
-            SetActiveQuickslot( false );
+            SetActivePannel( false );
         }
     }
 
@@ -92,10 +92,10 @@ public class EquipQuickslot : MonoBehaviour
 
     private void UpdateSlotTransform()
     {
-        float slotInterval = ( 1.0f / slotInfo.TotalCount );
+        float slotInterval = ( 1.0f / slotInfo.Data.totalCount );
 
         // 중앙에서부터 원형으로 배치
-        for ( int i = 0; i < slotInfo.TotalCount; ++i )
+        for ( int i = 0; i < slotInfo.Data.totalCount; ++i )
         {
             if ( slotList.Count <= i )
             {
@@ -106,7 +106,7 @@ public class EquipQuickslot : MonoBehaviour
             RectTransform slotRect = slotList[ i ];
 
             // param = ( 0 ~ 2PI )
-            float param = ( ( float )i / slotInfo.TotalCount ) * Mathf.PI * 2.0f;
+            float param = ( ( float )i / slotInfo.Data.totalCount ) * Mathf.PI * 2.0f;
             // ex: ( 0.125 ~ 0.875 ) = ( -1.0 ~ 1.0 ) * ( 1.0 - 0.25 ) + 1.0 * 0.5
             float anchorX = ( Mathf.Sin( param ) * ( 1.0f - slotInterval * 2.0f ) + 1.0f ) * 0.5f;
             float anchorY = ( Mathf.Cos( param ) * ( 1.0f - slotInterval * 2.0f ) + 1.0f ) * 0.5f;
@@ -123,7 +123,7 @@ public class EquipQuickslot : MonoBehaviour
             return;
         }
 
-        foreach ( KeyValuePair<int/*index*/, Equipment> pair in _localPlayer.equipQuickslot )
+        foreach ( KeyValuePair<int/*index*/, Item> pair in slotInfo.Data.slotItems )
         {
             if ( pair.Key >= slotList.Count )
             {
@@ -137,9 +137,8 @@ public class EquipQuickslot : MonoBehaviour
             buttonUI.onClick.RemoveAllListeners();
             buttonUI.onClick.AddListener( () => 
             {
-                _localPlayer.UseEquipQuickslot( pair.Key );
-
-                SetActiveQuickslot( false );
+                pair.Value.OnUseItem( _localPlayer );
+                SetActivePannel( false );
             } );
 
             Image imageUI = slotRect.GetComponent<Image>();
@@ -168,7 +167,7 @@ public class EquipQuickslot : MonoBehaviour
         return nearestSlotIndex;
     }
 
-    private void SetActiveQuickslot( bool _isActive )
+    private void SetActivePannel( bool _isActive )
     {
         if ( _isActive )
         {
