@@ -14,12 +14,11 @@ public struct ServerActor
 [Serializable]
 public struct ServerNpc
 {
+    public ServerActor Actor;
     public bool IsLocal;
-    public uint Serial;
     public int State;
     public string NpcId;
     public Vector3 Target;
-    public Vector3 CurPosition;
 }
 
 namespace Protocol

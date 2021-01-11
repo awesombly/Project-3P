@@ -229,14 +229,14 @@ public class SceneBase : Singleton<SceneBase>
     {
         Protocol.FromServer.SyncNpcInfo protocol = JsonUtility.FromJson<Protocol.FromServer.SyncNpcInfo>( _data );
 
-        AIBase npc = ObjectManager.Instance.Find( protocol.NpcInfo.Serial ) as AIBase;
+        AIBase npc = ObjectManager.Instance.Find( protocol.NpcInfo.Actor.Serial ) as AIBase;
         if ( ReferenceEquals( npc, null ) )
         {
             Debug.Log( "Npc not found. Name : " + protocol.NpcInfo.NpcId );
             return;
         }
 
-        npc.Sync( protocol.NpcInfo.Target, protocol.NpcInfo.CurPosition, protocol.NpcInfo.State );
+        npc.Sync( protocol.NpcInfo.Target, protocol.NpcInfo.Actor.Position, protocol.NpcInfo.State );
     }
 
     private void RequestHostNpcInfo( string _data )
@@ -252,11 +252,12 @@ public class SceneBase : Singleton<SceneBase>
 
         Protocol.ToServer.ResponseHostNpcInfo protocol;
         protocol.NpcInfo.IsLocal = npc.isLocal;
-        protocol.NpcInfo.Serial = npc.serial;
+        protocol.NpcInfo.Actor.Serial = npc.serial;
+        protocol.NpcInfo.Actor.Position = npc.transform.position;
+        protocol.NpcInfo.Actor.Rotation = npc.transform.rotation;
         protocol.NpcInfo.State = npc.state;
         protocol.NpcInfo.NpcId = npc.gameObject.name;
         protocol.NpcInfo.Target = npc.target;
-        protocol.NpcInfo.CurPosition = npc.transform.position;
 
         Network.Instance.Send( protocol );
     }

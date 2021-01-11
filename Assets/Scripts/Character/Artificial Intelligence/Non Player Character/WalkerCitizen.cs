@@ -8,9 +8,8 @@ public class WalkerCitizen : AIBase
     private Transform[] spots;
 
     private readonly WaitForSeconds DistanceCheckCached = new WaitForSeconds( 0.1f );
-    private readonly WaitForSeconds DefaultWaitTimeCached = new WaitForSeconds( 0.1f );
+    private readonly WaitForSeconds DefaultWaitTimeCached = new WaitForSeconds( 1.0f );
 
-    // private Player player;
     private readonly float disInteraction = 2.0f;
     private float disInteractionSqr;
     private bool isInteraction = false;
@@ -94,7 +93,7 @@ public class WalkerCitizen : AIBase
             int value = Random.Range( 1, spots.Length );
             if ( !target.Equals( spots[value].position ) )
             {
-                target = spots[value].position;
+                target = spots[ value ].position;
                 ChangeState( AIState.Move );
             }
             yield return null;

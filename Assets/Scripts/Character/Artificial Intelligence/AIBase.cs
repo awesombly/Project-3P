@@ -86,11 +86,12 @@ public abstract class AIBase : Character
         {
             Protocol.ToServer.ResponseHostNpcInfo protocol;
             protocol.NpcInfo.IsLocal = isLocal;
-            protocol.NpcInfo.Serial = serial;
+            protocol.NpcInfo.Actor.Serial = serial;
+            protocol.NpcInfo.Actor.Position = transform.position;
+            protocol.NpcInfo.Actor.Rotation= transform.rotation;
             protocol.NpcInfo.State = state;
             protocol.NpcInfo.NpcId = gameObject.name;
             protocol.NpcInfo.Target = target;
-            protocol.NpcInfo.CurPosition = transform.position;
 
             Network.Instance.Send( protocol );
         }
