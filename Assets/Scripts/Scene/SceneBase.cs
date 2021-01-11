@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class SceneBase : Singleton<SceneBase>
+public class SceneBase : MonoBehaviour
 {
     internal string stageId;
 
@@ -15,27 +15,6 @@ public class SceneBase : Singleton<SceneBase>
 
     [SerializeField]
     private Transform spawnTransform;
-
-    private Player localPlayer;
-    public Player LocalPlayer
-    {
-        get { return localPlayer; }
-        set
-        {
-            if ( localPlayer != null )
-            {
-                ObjectManager.Instance.Remove( localPlayer.serial );
-                Destroy( localPlayer.gameObject );
-            }
-
-            localPlayer = value;
-            OnChangeLocalPlayer?.Invoke( localPlayer );
-        }
-    }
-    public delegate void DelChangeLocalPlayer( Player _localPlayer );
-    public event DelChangeLocalPlayer OnChangeLocalPlayer;
-
-    private List<Player> otherPlayers = new List<Player>();
 
     public delegate void DelChangeScene();
     public static event DelChangeScene OnChangeScene;
@@ -50,14 +29,6 @@ public class SceneBase : Singleton<SceneBase>
 
     protected virtual void Start()
     {
-        if ( LocalPlayer == null )
-        {
-            Player player = FindObjectOfType<Player>();
-            if ( player != null && player.isLocal )
-            {
-                LocalPlayer = player;
-            }
-        }
     }
 
     protected virtual void OnDestroy()
@@ -204,14 +175,6 @@ public class SceneBase : Singleton<SceneBase>
         player.serial = protocol.Player.Serial;
         player.isLocal = protocol.IsLocal;
         ObjectManager.Instance.Add( player );
-        if ( player.isLocal )
-        {
-            LocalPlayer = player;
-        }
-        else
-        {
-            otherPlayers.Add( player );
-        }
     }
 
     private void DestroyActor( string _data )
@@ -219,7 +182,6 @@ public class SceneBase : Singleton<SceneBase>
         Protocol.FromServer.DestroyActor protocol = JsonUtility.FromJson<Protocol.FromServer.DestroyActor>( _data );
 
         Actor actor = ObjectManager.Instance.Find( protocol.Serial );
-        otherPlayers.Remove( actor as Player );
         ObjectManager.Instance.Remove( protocol.Serial );
 
         Destroy( actor.gameObject );

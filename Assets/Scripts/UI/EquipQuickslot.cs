@@ -29,7 +29,7 @@ public class EquipQuickslot : MonoBehaviour
     {
         pannelRect.gameObject.SetActive( false );
 
-        SceneBase.Instance.OnChangeLocalPlayer += OnChangeLocalPlayer;
+        ObjectManager.Instance.OnChangeLocalPlayer += OnChangeLocalPlayer;
         ChatSystem.ChatEvent += OnChatEvent;
 
         UpdatePannelTransform();
@@ -38,7 +38,7 @@ public class EquipQuickslot : MonoBehaviour
 
     private void OnDestroy()
     {
-        SceneBase.Instance.OnChangeLocalPlayer -= OnChangeLocalPlayer;
+        ObjectManager.Instance.OnChangeLocalPlayer -= OnChangeLocalPlayer;
         ChatSystem.ChatEvent -= OnChatEvent;
     }
 

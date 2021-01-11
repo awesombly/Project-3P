@@ -4,6 +4,25 @@ using UnityEngine;
 
 public class ObjectManager : Singleton<ObjectManager>
 {
+    private Player localPlayer;
+    public Player LocalPlayer
+    {
+        get { return localPlayer; }
+        set
+        {
+            if ( localPlayer != null )
+            {
+                Remove( localPlayer );
+                Destroy( localPlayer.gameObject );
+            }
+
+            localPlayer = value;
+            OnChangeLocalPlayer?.Invoke( localPlayer );
+        }
+    }
+    public delegate void DelChangeLocalPlayer( Player _localPlayer );
+    public event DelChangeLocalPlayer OnChangeLocalPlayer;
+
     private readonly Dictionary<uint /* serial */, Actor> actors = new Dictionary<uint, Actor>();
 
     private readonly Dictionary<uint /* serial */, Actor> players = new Dictionary<uint, Actor>();
@@ -42,6 +61,10 @@ public class ObjectManager : Singleton<ObjectManager>
         else if ( _actor.CompareTag( "Player" ) )
         {
             players.Add( _actor.serial, _actor );
+            if ( _actor.isLocal )
+            {
+                LocalPlayer = _actor as Player;
+            }
         }
     }
 
