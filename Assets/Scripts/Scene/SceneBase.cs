@@ -75,10 +75,11 @@ public class SceneBase : MonoBehaviour
         Network.Instance.AddBind( Protocol.Both.SyncEquipment.PacketType, SyncEquipment );
 
         /* Npc */
-        Network.Instance.AddBind( Protocol.FromServer.RequestHostNpcInfo.PacketType, RequestHostNpcInfo );
-        Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
+        Network.Instance.AddBind( Protocol.Both.SyncNpcInteraction.PacketType, SyncNpcInteraction );
         Network.Instance.AddBind( Protocol.FromServer.SyncNpcInfo.PacketType, SyncNpcInfo );
         Network.Instance.AddBind( Protocol.FromServer.ChangedStageHost.PacketType, ChangedStageHost );
+        Network.Instance.AddBind( Protocol.FromServer.RequestHostNpcInfo.PacketType, RequestHostNpcInfo );
+        Network.Instance.AddBind( Protocol.FromServer.ResponseNpcInfo.PacketType, ResponseNpcinfo );
     }
 
     #region Protocols
@@ -255,7 +256,7 @@ public class SceneBase : MonoBehaviour
             AIBase newNpc = GameObject.Find( protocol.NpcId ).GetComponent<AIBase>();
             if ( ReferenceEquals( newNpc, null ) )
             {
-                Debug.Log( "Unity hierarchy not found. name : " + protocol.NpcId );
+                Debug.Log( "Could not find npc in Unity hierarchy. name : " + protocol.NpcId );
                 return;
             }
 
@@ -279,6 +280,27 @@ public class SceneBase : MonoBehaviour
         {
             npc.isLocal = true;
         }
+    }
+
+    private void SyncNpcInteraction( string _data )
+    {
+        Protocol.Both.SyncNpcInteraction protocol = JsonUtility.FromJson<Protocol.Both.SyncNpcInteraction>( _data );
+        
+        AIBase npc = ObjectManager.Instance.Find( protocol.NpcSerial ) as AIBase;
+        if ( ReferenceEquals( npc, null ) )
+        {
+            Debug.Log( "npc not found. npc is null. serial : " + protocol.NpcSerial );
+            return;
+        }
+
+        Player player = ObjectManager.Instance.Find( protocol.PlayerSerial ) as Player;
+        if ( Global.FakeNullCheck( player ) )
+        {
+            Debug.Log( "Player not found. player is null. serial : " + protocol.PlayerSerial );
+            return;
+        }
+
+        npc.SyncInteration( player );
     }
     #endregion
 }

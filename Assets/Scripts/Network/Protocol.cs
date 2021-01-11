@@ -102,6 +102,18 @@ namespace Protocol
                 return PacketType;
             }
         }
+
+        public struct SyncNpcInteraction : IProtocol
+        {
+            public uint NpcSerial;
+            public uint PlayerSerial;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
     
     namespace ToServer

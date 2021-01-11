@@ -39,7 +39,7 @@ public class Global
     {
         if ( ReferenceEquals( _obj, null ) )
         {
-            return false;
+            return true;
         }
         else
         {

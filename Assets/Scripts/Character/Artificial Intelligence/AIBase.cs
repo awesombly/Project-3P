@@ -20,14 +20,22 @@ public abstract class AIBase : Character
     };
 
     public int state { get; private set; }
+    
     public Vector3 target { get; protected set; }
-
-    private Coroutine currentCoroutine = null;
 
     protected NavMeshAgent nav { get; private set; }
     private float moveSpeed = 5.0f;
     private float angularSpeed = 1000.0f;
     private float acceleration = 20.0f;
+
+    protected float disSqrInteraction { get; private set; }
+    protected bool isInteraction = false;
+    protected Player focusedPlayer;
+    private readonly float disInteraction = 2.0f;
+    private readonly WaitForSeconds DistanceCheckCached = new WaitForSeconds( 0.1f );
+
+
+    private Coroutine currentCoroutine = null;
 
     public void Sync( Vector3 _target, Vector3 _position, int _state )
     {
@@ -36,9 +44,45 @@ public abstract class AIBase : Character
         ChangeState( ( AIState )_state );
     }
 
+    public void SyncInteration( Player _player )
+    {
+        focusedPlayer = _player;
+        ChangeState( AIState.Interaction );
+        isInteraction = true;
+    }
+
+    private IEnumerator CheckPlayerDistance()
+    {
+        while ( true )
+        {
+            yield return DistanceCheckCached;
+
+            if ( isInteraction )
+            {
+                continue;
+            }
+
+            foreach ( Player player in ObjectManager.Instance.Players )
+            {
+                if ( player.isLocal && ( transform.position - player.transform.position ).sqrMagnitude <= disSqrInteraction )
+                {
+                    Protocol.Both.SyncNpcInteraction protocol;
+                    protocol.NpcSerial = serial;
+                    protocol.PlayerSerial = player.serial;
+                    Network.Instance.Send( protocol );
+
+                    SyncInteration( player );
+                    break;
+                }
+            }
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
+
+        disSqrInteraction = Mathf.Pow( disInteraction, 2 );
 
         isLocal = false;
         Network.Instance.OnLateConnect += OnLateConnect;
@@ -47,6 +91,8 @@ public abstract class AIBase : Character
         nav.speed = moveSpeed;
         nav.angularSpeed = angularSpeed;
         nav.acceleration = acceleration;
+
+        StartCoroutine( CheckPlayerDistance() );
     }
 
     protected virtual void Start()
@@ -100,6 +146,7 @@ public abstract class AIBase : Character
     }
 
     protected abstract IEnumerator Idle();
+    protected abstract IEnumerator Interaction();
 
     protected virtual void OnExit()
     {

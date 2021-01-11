@@ -29,11 +29,13 @@ namespace Protocol
 	PROTOCOL_BODY( FromServer, CreatePlayer );
 	PROTOCOL_BODY( FromServer, DestroyActor );
 
+	
+	PROTOCOL_BODY( Both, SyncNpcInteraction );
 	PROTOCOL_BODY( ToServer, RequestNpcInfo );
-	PROTOCOL_BODY( FromServer, ResponseNpcInfo );
 	PROTOCOL_BODY( ToServer, ResponseHostNpcInfo );
+	PROTOCOL_BODY( ToServer, RequestNpcSync );
+	PROTOCOL_BODY( FromServer, ResponseNpcInfo );
 	PROTOCOL_BODY( FromServer, RequestHostNpcInfo );
 	PROTOCOL_BODY( FromServer, SyncNpcInfo );
-	PROTOCOL_BODY( ToServer, RequestNpcSync );
 	PROTOCOL_BODY( FromServer, ChangedStageHost );
 }
