@@ -31,6 +31,9 @@ public class Player : Character
         public List<GameObject> Models;
     }
     private Dictionary<EEquipType, EquipInfo> equipInfos = new Dictionary<EEquipType, EquipInfo>();
+    public delegate void DelChangeEquipment( Equipment _equip );
+    public event DelChangeEquipment OnChangeEquipment;
+
     internal Dictionary<int/*index*/, Equipment> equipQuickslot = new Dictionary<int/*index*/, Equipment>();
 
     public List<AssetReferenceEquipment> testEquips;
@@ -118,6 +121,7 @@ public class Player : Character
 
         OnChangeCrouching += SendSyncCrouch;
         OnChangeGrounded += SendSyncGrounded;
+        OnChangeEquipment += SendSyncEquipment;
 
         animator.SetBool( AnimatorParameters.IsStrafing, isStrafing );
 
@@ -152,7 +156,7 @@ public class Player : Character
             return;
         }
 
-        ReleaseEquipment( _equip.equipType );
+        ReleaseEquipment( _equip.equipType, false );
 
         EquipInfo equipInfo;
         equipInfo.Equip = _equip;
@@ -175,9 +179,10 @@ public class Player : Character
         }
 
         equipInfos.Add( _equip.equipType, equipInfo );
+        OnChangeEquipment?.Invoke( _equip );
     }
 
-    public void ReleaseEquipment( EEquipType _equipType )
+    public void ReleaseEquipment( EEquipType _equipType, bool _invokeEvent )
     {
         if ( !equipInfos.ContainsKey( _equipType ) )
         {
@@ -189,8 +194,12 @@ public class Player : Character
         {
             Destroy( model );
         }
-
         equipInfos.Remove( _equipType );
+
+        if ( _invokeEvent )
+        {
+            OnChangeEquipment?.Invoke( null );
+        }
     }
 
     public void SetEquipQuickslot( int _index, Equipment _equip )
@@ -211,6 +220,15 @@ public class Player : Character
         }
 
         SetEquipment( equipQuickslot[ _index ] );
+    }
+
+    private void SendSyncEquipment( Equipment _equip )
+    {
+        Protocol.Both.SyncEquipment protocol;
+        protocol.Serial = serial;
+        protocol.Guid = ResourceManager.Instance.GetAssetGuid( _equip );
+
+        Network.Instance.Send( protocol );
     }
     #endregion
 
