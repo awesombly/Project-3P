@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Item
+  m_Name: Equipment
   m_EditorClassIdentifier: 
-  m_GroupName: Item
+  m_GroupName: Equipment
   m_Data:
     m_SerializedData: []
   m_GUID: 15d35a765839ba94ab891d9a63f16544
@@ -71,8 +71,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - Equipment
     - Item
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 11400000, guid: 6627b59cdb7518d4cb5e0b25616fe85c, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 6627b59cdb7518d4cb5e0b25616fe85c, type: 2}
   - m_GUID: 94bed40996449e74d8bf2f19d8ac8358
     m_Address: Equip_Test8
     m_ReadOnly: 0
@@ -81,13 +81,6 @@ MonoBehaviour:
     - Item
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
-  - m_GUID: bb1cab1554ac5904b9d88097f5e5e39c
-    m_Address: Emotion
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Item
-    m_MainAsset: {fileID: 11400000, guid: bb1cab1554ac5904b9d88097f5e5e39c, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: bb1cab1554ac5904b9d88097f5e5e39c, type: 2}
   - m_GUID: d1b2dbc0fd075e14083ffe9722f68c39
     m_Address: Equip_Test3
     m_ReadOnly: 0
