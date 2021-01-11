@@ -34,8 +34,8 @@ public abstract class AIBase : Character
 
     public void Sync( Vector3 _target, Vector3 _position, int _state )
     {
-        target = _target;
         transform.position = _position;
+        target = _target;
         ChangeState( ( AIState )_state );
     }
 

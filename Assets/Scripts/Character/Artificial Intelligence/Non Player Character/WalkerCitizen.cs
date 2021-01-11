@@ -28,11 +28,19 @@ public class WalkerCitizen : AIBase
     {
         animator.SetInteger( AnimatorParameters.AIState, ( int )AIState.Idle );
         isInteraction = true;
-        nav.isStopped = true;
 
         while ( true )
         {
             yield return null;
+
+            if ( !isLocal && !nav.pathPending && nav.remainingDistance >= 1.0f )
+            {
+                nav.SetDestination( target );
+
+                continue;
+            }
+
+            nav.isStopped = true;
             Vector3 dis =  target - transform.position;
             Vector3 disXZ = new Vector3( dis.x, 0.0f, dis.z );
             transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation( disXZ ), 0.1f );
