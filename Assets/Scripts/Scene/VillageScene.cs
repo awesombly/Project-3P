@@ -27,7 +27,16 @@ public class VillageScene : SceneBase
 
         base.Start();
 
-        Network.Instance.RunNetwork();
+        if ( ObjectManager.Instance.LocalPlayer == null )
+        {
+            Player player = FindObjectOfType<Player>();
+            if ( player != null && player.isLocal )
+            {
+                ObjectManager.Instance.LocalPlayer = player;
+            }
+        }
+
+        StartCoroutine( Network.Instance.RunNetwork() );
     }
 
     protected override void OnDestroy()

@@ -66,12 +66,13 @@ public class WalkerCitizen : AIBase
             yield return null;
 
             nav.isStopped = true;
-            if ( ( transform.position - focusedPlayer.transform.position ).sqrMagnitude >= disInteractionSqr )
+            if ( focusedPlayer == null || ( transform.position - focusedPlayer.transform.position ).sqrMagnitude >= disInteractionSqr )
             {
                 yield return DefaultWaitTimeCached;
                 nav.isStopped = false;
                 isInteraction = false;
                 ChangeState( AIState.Idle );
+                break;
             }
 
             Vector3 dis =  ( focusedPlayer.transform.position - transform.position );

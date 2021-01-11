@@ -90,6 +90,18 @@ namespace Protocol
                 return PacketType;
             }
         }
+
+        public struct SyncEquipment : IProtocol
+        {
+            public uint Serial;
+            public string Guid;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
     
     namespace ToServer

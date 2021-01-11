@@ -53,6 +53,7 @@ namespace Protocol
 		SIMPLE_PROTOCOL( ChatMessage );
 		SIMPLE_PROTOCOL( SyncCrouch );
 		SIMPLE_PROTOCOL( SyncGrounded );
+		SIMPLE_PROTOCOL( SyncEquipment );
 
 		struct SyncTransform : public IProtocol
 		{

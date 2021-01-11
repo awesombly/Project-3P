@@ -72,6 +72,7 @@ public class ResourceManager : Singleton<ResourceManager>
     
     private Dictionary<string/*key*/, string/*guid*/> guids = new Dictionary<string/*key*/, string/*guid*/>();
     private Dictionary<string/*guid*/, Object/*asset*/> loadedAssets = new Dictionary<string/*guid*/, Object/*asset*/>();
+    private Dictionary<Object/*asset*/, string/*guid*/> assetGuids = new Dictionary<Object/*asset*/, string/*guid*/>();
 
     private void Update()
     {
@@ -114,6 +115,23 @@ public class ResourceManager : Singleton<ResourceManager>
     public Type GetAsset<Type>( AssetReference _reference ) where Type : Object
     {
         return GetAsset<Type>( _reference.AssetGUID );
+    }
+
+    public string GetAssetGuid( Object _asset )
+    {
+        string guid = string.Empty;
+        if ( ReferenceEquals( _asset, null ) )
+        {
+            Debug.LogError( "Asset is null." );
+            return guid;
+        }
+
+        if ( !assetGuids.TryGetValue( _asset, out guid ) )
+        {
+            Debug.LogError( "Guid not found. asset = " + _asset.name );
+        }
+
+        return guid;
     }
 
     private string GetAssetGuid( string _addressableKey )
@@ -181,6 +199,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
                     string guid = GetAssetGuid( loc.PrimaryKey );
                     loadedAssets.Add( guid, _assetHandle.Result );
+                    assetGuids.Add( _assetHandle.Result, guid );
                 };
             }
         };
