@@ -28,9 +28,10 @@ public:
 	}
 };
 
-struct ServerNpc : public ServerActor
+struct ServerNpc
 {
 public:
+	ServerActor Actor;
 	bool IsLocal;
 	int State;
 	std::string NpcId;
@@ -43,6 +44,7 @@ public:
 	template <class Archive>
 	void serialize( Archive& ar )
 	{
+		ar( CEREAL_NVP( Actor ) );
 		ar( CEREAL_NVP( IsLocal ) );
 		ar( CEREAL_NVP( State ) );
 		ar( CEREAL_NVP( NpcId ) );

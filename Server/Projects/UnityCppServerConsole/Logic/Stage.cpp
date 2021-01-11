@@ -115,7 +115,7 @@ ServerNpc* Stage::FindNpc( SerialType _serial ) const
 {
 	for ( auto iter : npcs )
 	{
-		if ( iter.second->Serial == _serial )
+		if ( iter.second->Actor.Serial == _serial )
 		{
 			return iter.second;
 		}

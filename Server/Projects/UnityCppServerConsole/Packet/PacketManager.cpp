@@ -282,11 +282,11 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 	if ( npc == nullptr )
 	{
 		npc = new ServerNpc();
-		npc->Serial = Protocol::GetNewSerial();
+		npc->Actor.Serial = Protocol::GetNewSerial();
 		npc->NpcId = protocol.NpcId;
 		curStage->Push( npc );
 	}
-	responseNpcInfo.Serial = npc->Serial;
+	responseNpcInfo.Serial = npc->Actor.Serial;
 
 	SOCKET criterionSocket = curStage->GetHostSocket();
 	Session* criterion = SessionManager::Instance().Find( criterionSocket );
@@ -343,7 +343,7 @@ void PacketManager::RequestNpcSync( const PACKET& _packet )
 	}
 
 	Protocol::FromServer::RequestHostNpcInfo requestHostNpcInfo;
-	requestHostNpcInfo.Serial = npc->Serial;
+	requestHostNpcInfo.Serial = npc->Actor.Serial;
 	criterion->Send( requestHostNpcInfo );
 }
 
