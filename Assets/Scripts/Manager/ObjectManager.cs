@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class ObjectManager : Singleton<ObjectManager>
 {
+    private readonly Dictionary<uint /* serial */, Actor> actors = new Dictionary<uint, Actor>();
+
+    private readonly Dictionary<uint /* serial */, Actor> players = new Dictionary<uint, Actor>();
+    public Dictionary<uint, Actor>.ValueCollection Players
+    {
+        get
+        {
+            return players.Values;
+        }
+    }
+
+    private readonly Dictionary<uint /* serial */, Actor> npcs = new Dictionary<uint, Actor>();
     public Dictionary<uint, Actor>.ValueCollection Npcs
     {
         get
@@ -11,8 +23,6 @@ public class ObjectManager : Singleton<ObjectManager>
             return npcs.Values;
         }
     }
-    private readonly Dictionary<uint /* serial */, Actor> npcs = new Dictionary<uint, Actor>();
-    private readonly Dictionary<uint /* serial */, Actor> actors = new Dictionary<uint, Actor>();
 
     public void Add( Actor _actor )
     {
@@ -28,6 +38,10 @@ public class ObjectManager : Singleton<ObjectManager>
         if ( _actor.CompareTag( "Npc" ) )
         {
             npcs.Add( _actor.serial, _actor );
+        }
+        else if ( _actor.CompareTag( "Player" ) )
+        {
+            players.Add( _actor.serial, _actor );
         }
     }
 
@@ -45,6 +59,10 @@ public class ObjectManager : Singleton<ObjectManager>
         if ( _actor.CompareTag( "Npc" ) )
         {
             npcs.Remove( _actor.serial );
+        }
+        else if ( _actor.CompareTag( "Player" ) )
+        {
+            players.Remove( _actor.serial );
         }
     }
 
@@ -67,7 +85,7 @@ public class ObjectManager : Singleton<ObjectManager>
             return null;
         }
 
-        return actors[_serial];
+        return actors[ _serial ];
     }
 
     public bool Search( uint _serial )

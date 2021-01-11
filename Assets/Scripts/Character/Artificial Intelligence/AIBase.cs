@@ -16,6 +16,7 @@ public abstract class AIBase : Character
         Move = 3,
         Dash,
         Dead,
+        Interaction,
     };
 
     public int state { get; private set; }
