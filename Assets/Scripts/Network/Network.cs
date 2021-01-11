@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -72,8 +73,11 @@ public class Network : Singleton<Network>
         OnLateConnect?.Invoke();
     }
 
-    public void RunNetwork()
+    public IEnumerator RunNetwork()
     {
+        // 네트워크 접속이 다른 오브젝트 Start()보다 빠를때가 있어 지연시킴
+        yield return null;
+
         thread = new Thread( Run );
         thread.Start();
     }

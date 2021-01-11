@@ -36,7 +36,7 @@ public class VillageScene : SceneBase
             }
         }
 
-        Network.Instance.RunNetwork();
+        StartCoroutine( Network.Instance.RunNetwork() );
     }
 
     protected override void OnDestroy()
