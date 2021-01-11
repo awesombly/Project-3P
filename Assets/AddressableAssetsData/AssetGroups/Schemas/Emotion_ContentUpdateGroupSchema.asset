@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3b090b77e1f45f4a827d0111659703b, type: 3}
-  m_Name: Emotion
+  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
+  m_Name: Emotion_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  id: 123
-  desc: "\uBA38\uB77C\uBA38\uB77C"
-  icon: {fileID: 21300000, guid: da7129ed6a246f048a49d8d97de2d2d4, type: 3}
-  animatorParameter: Emotion_Hi
+  m_Group: {fileID: 11400000, guid: f8ecdf4330b2a0b428a933f305cc064e, type: 2}
+  m_StaticContent: 0

@@ -21,14 +21,14 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/OtherPlayer.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 7405065635949591291, guid: 15a9533a8b8f76a46a32fee587eaa2cd, type: 3}
-    m_TargetAsset: {fileID: 7405065635949591291, guid: 15a9533a8b8f76a46a32fee587eaa2cd, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: ff4c76206db57914b8def2ea45be45c1
     m_Address: Assets/Prefabs/LocalPlayer.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 1743903104223250, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
-    m_TargetAsset: {fileID: 1743903104223250, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 26435b303a6c22e4a9f3fd166ca548ee, type: 2}
   m_SchemaSet:
