@@ -32,6 +32,7 @@ public class WalkerCitizen : AIBase
             if ( !isLocal )
             {
                 yield return null;
+                continue;
             }
             
             int value = Random.Range( 1, spots.Length );
@@ -40,6 +41,7 @@ public class WalkerCitizen : AIBase
                 target = spots[ value ].position;
                 ChangeState( AIState.Move );
             }
+
             yield return null;
         }
     }
@@ -48,7 +50,6 @@ public class WalkerCitizen : AIBase
     {
         while ( true )
         {
-            yield return null;
             nav.SetDestination( target );
             if ( !nav.pathPending && nav.remainingDistance <= 2.0f ) 
             {
@@ -58,6 +59,8 @@ public class WalkerCitizen : AIBase
                     ChangeState( AIState.Idle );
                 }
             }
+
+            yield return null;
         }
     }
 
@@ -70,11 +73,11 @@ public class WalkerCitizen : AIBase
 
         while ( true )
         {
-            yield return null;
-
             Vector3 dis = target - transform.position;
             Vector3 disXZ = new Vector3( dis.x, 0.0f, dis.z );
             transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation( disXZ ), 0.1f );
+
+            yield return null;
         }
     }
 }

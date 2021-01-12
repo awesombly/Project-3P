@@ -64,7 +64,7 @@ public abstract class AIBase : Character
 
     protected override void FixedUpdate()
     {
-        
+
     }
 
     protected virtual void OnTriggerEnter( Collider _other )
