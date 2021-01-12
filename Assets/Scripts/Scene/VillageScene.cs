@@ -5,26 +5,13 @@ using UnityEngine.AddressableAssets;
 
 public class VillageScene : SceneBase
 {
-    public AssetReference loadingScene;
-
     protected override void Awake()
     {
-        if ( !ResourceManager.isInited )
-        {
-            ChangeSceneAsync( loadingScene );
-            return;
-        }
-        
         base.Awake();
     }
 
     protected override void Start()
     {
-        if ( !ResourceManager.isInited )
-        {
-            return;
-        }
-
         base.Start();
 
         if ( ObjectManager.Instance.LocalPlayer == null )

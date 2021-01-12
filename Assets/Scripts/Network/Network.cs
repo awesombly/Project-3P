@@ -169,12 +169,7 @@ public class Network : Singleton<Network>
     private void Awake()
     {
         OnBindProtocols += BindProtocols;
-        SceneBase.OnChangeScene += OnChangeScene;
-    }
-
-    private void Start()
-    {
-        OnBindProtocols?.Invoke();
+        SceneBase.OnSceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
@@ -199,7 +194,7 @@ public class Network : Singleton<Network>
         chatSystem.PushMessage( protocol.Message );
     }
 
-    private void OnChangeScene()
+    private void OnSceneLoaded()
     {
         protocols.Clear();
         OnBindProtocols?.Invoke();

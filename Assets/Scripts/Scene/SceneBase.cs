@@ -1,11 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+public struct SceneName
+{
+    public static string Loading = "Loading";
+    public static string Village = "Village";
+}
+
 public class SceneBase : MonoBehaviour
 {
+    [RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
+    private static void FirstSceneLoad()
+    {
+        if ( SceneManager.GetActiveScene().name != SceneName.Loading )
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene( SceneName.Loading );
+        }
+    }
+
     internal string stageId;
 
     [SerializeField]
@@ -17,7 +33,7 @@ public class SceneBase : MonoBehaviour
     private Transform spawnTransform;
 
     public delegate void DelChangeScene();
-    public static event DelChangeScene OnChangeScene;
+    public static event DelChangeScene OnSceneLoaded;
 
     protected virtual void Awake()
     {
@@ -25,6 +41,8 @@ public class SceneBase : MonoBehaviour
 
         Network.Instance.OnConnect += OnConnect;
         Network.Instance.OnBindProtocols += OnBindProtocols;
+
+        OnSceneLoaded?.Invoke();
     }
 
     protected virtual void Start()
@@ -46,8 +64,6 @@ public class SceneBase : MonoBehaviour
                 Debug.LogError( "Failed LoadScene. scene = " + _scene );
                 return;
             }
-
-            OnChangeScene?.Invoke();
         };
     }
 

@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 
 public class LoadingScene : SceneBase
 {
     public UnityEngine.UI.Slider loadingBar;
-    public AssetReference villageScene;
 
     protected override void Awake()
     {
@@ -42,7 +42,7 @@ public class LoadingScene : SceneBase
 
         if ( _loadedRatio >= 1.0f )
         {
-            ChangeSceneAsync( villageScene );
+            SceneManager.LoadScene( SceneName.Village );
         }
     }
 }

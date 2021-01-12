@@ -16,19 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: fb311381f6237fb40ba09126b38324ca
-  m_SerializeEntries:
-  - m_GUID: 15a9533a8b8f76a46a32fee587eaa2cd
-    m_Address: Assets/Prefabs/OtherPlayer.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: ff4c76206db57914b8def2ea45be45c1
-    m_Address: Assets/Prefabs/LocalPlayer.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 26435b303a6c22e4a9f3fd166ca548ee, type: 2}
   m_SchemaSet:
