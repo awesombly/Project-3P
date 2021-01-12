@@ -41,13 +41,18 @@ public class WalkerCitizen : AIBase
 
     protected virtual void OnTriggerStay( Collider _other )
     {
-        if ( !isLocal )
+        if ( !isLocal || focusedPlayer == null )
         {
             return;
         }
 
         if ( isInteraction && _other.CompareTag( "Player" ) )
         {
+            if ( !focusedPlayer.name.Equals( _other.name ) )
+            {
+                return;
+            }
+
             float Offset = ( target - _other.transform.position ).sqrMagnitude;
             if ( Offset >= 0.05f )
             {
@@ -64,14 +69,14 @@ public class WalkerCitizen : AIBase
 
     protected virtual void OnTriggerExit( Collider _other )
     {
-        if ( !isLocal && focusedPlayer != null )
+        if ( !isLocal || focusedPlayer == null )
         {
             return;
         }
 
         if ( isInteraction && _other.CompareTag( "Player" ) )
         {
-            if ( !focusedPlayer.serial.Equals( _other.GetComponent<Actor>().serial ) )
+            if ( !focusedPlayer.name.Equals( _other.name ) )
             {
                 return;
             }
