@@ -117,7 +117,6 @@ public class Player : Character
 
         OnChangeCrouching += SendSyncCrouch;
         OnChangeGrounded += SendSyncGrounded;
-        OnChangeEquipment += SendSyncEquipment;
 
         animator.SetBool( AnimatorParameters.IsStrafing, isStrafing );
 
@@ -190,15 +189,6 @@ public class Player : Character
         {
             OnChangeEquipment?.Invoke( null );
         }
-    }
-
-    private void SendSyncEquipment( Equipment _equip )
-    {
-        Protocol.Both.SyncEquipment protocol;
-        protocol.Serial = serial;
-        protocol.Guid = ResourceManager.Instance.GetAssetGuid( _equip );
-
-        Network.Instance.Send( protocol );
     }
     #endregion
 

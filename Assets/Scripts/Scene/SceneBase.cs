@@ -72,7 +72,7 @@ public class SceneBase : MonoBehaviour
         Network.Instance.AddBind( Protocol.Both.SyncInterpolation.PacketType, SyncInterpolation );
         Network.Instance.AddBind( Protocol.Both.SyncCrouch.PacketType, SyncCrouch );
         Network.Instance.AddBind( Protocol.Both.SyncGrounded.PacketType, SyncGrounded );
-        Network.Instance.AddBind( Protocol.Both.SyncEquipment.PacketType, SyncEquipment );
+        Network.Instance.AddBind( Protocol.Both.SyncUseItem.PacketType, SyncUseItem );
 
         /* Npc */
         Network.Instance.AddBind( Protocol.Both.SyncNpcTarget.PacketType, SyncNpcTarget );
@@ -147,9 +147,9 @@ public class SceneBase : MonoBehaviour
         player.IsGrounded = protocol.IsGrounded;
     }
 
-    private void SyncEquipment( string _data )
+    private void SyncUseItem( string _data )
     {
-        Protocol.Both.SyncEquipment protocol = JsonUtility.FromJson<Protocol.Both.SyncEquipment>( _data );
+        Protocol.Both.SyncUseItem protocol = JsonUtility.FromJson<Protocol.Both.SyncUseItem>( _data );
 
         Player player = ObjectManager.Instance.Find( protocol.Serial ) as Player;
         if ( ReferenceEquals( player, null ) )
@@ -158,14 +158,14 @@ public class SceneBase : MonoBehaviour
             return;
         }
 
-        Equipment equip = ResourceManager.Instance.GetAsset<Equipment>( protocol.Guid );
-        if ( ReferenceEquals( equip, null ) )
+        Item item = ResourceManager.Instance.GetAsset<Item>( protocol.Guid );
+        if ( ReferenceEquals( item, null ) )
         {
-            Debug.LogError( "Equipment not found. Guid = " + protocol.Guid );
+            Debug.LogError( "Item not found. Guid = " + protocol.Guid );
             return;
         }
 
-        player.SetEquipment( equip );
+        item.OnUseItem( player );
     }
 
     private void CreatePlayer( string _data )

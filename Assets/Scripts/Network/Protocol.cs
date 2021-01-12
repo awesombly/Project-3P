@@ -91,7 +91,7 @@ namespace Protocol
             }
         }
 
-        public struct SyncEquipment : IProtocol
+        public struct SyncUseItem : IProtocol
         {
             public uint Serial;
             public string Guid;

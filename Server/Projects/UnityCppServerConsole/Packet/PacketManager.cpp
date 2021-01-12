@@ -49,7 +49,7 @@ void PacketManager::BindProtocols()
 	/* Player Character */
 	protocols[ Protocol::Both::SyncCrouch::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 	protocols[ Protocol::Both::SyncGrounded::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
-	protocols[ Protocol::Both::SyncEquipment::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
+	protocols[ Protocol::Both::SyncUseItem::PacketType ] = &PacketManager::BroadCastExceptSelfToStage;
 	protocols[ Protocol::Both::SyncTransform::PacketType ] = &PacketManager::SyncTransform;
 	protocols[ Protocol::Both::SyncInterpolation::PacketType ] = &PacketManager::SyncInterpolation;
 	protocols[ Protocol::ToServer::EnterStage::PacketType ] = &PacketManager::EnterStage;

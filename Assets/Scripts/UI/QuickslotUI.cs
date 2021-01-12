@@ -92,7 +92,7 @@ public class QuickslotUI : MonoBehaviour
 
     private void UpdateSlotTransform()
     {
-        float slotInterval = ( 1.0f / slotInfo.Data.totalCount );
+        float slotInterval = ( 1.0f / Mathf.Max( slotInfo.Data.totalCount, 8 ) );
 
         // 중앙에서부터 원형으로 배치
         for ( int i = 0; i < slotInfo.Data.totalCount; ++i )

@@ -11,6 +11,11 @@ public class Emotion : Item
     public override void OnUseItem( Player _player )
     {
         _player.animator.SetTrigger( animatorParameter );
+
+        if ( _player.isLocal )
+        {
+            SendSyncProtocol( _player );
+        }
     }
 
     private void OnEnable()

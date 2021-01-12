@@ -18,6 +18,14 @@ public class Item : ScriptableObject
     public virtual void OnUseItem( Player _player )
     {
     }
+
+    protected virtual void SendSyncProtocol( Player _player)
+    {
+        Protocol.Both.SyncUseItem protocol;
+        protocol.Serial = _player.serial;
+        protocol.Guid = ResourceManager.Instance.GetAssetGuid( this );
+        Network.Instance.Send( protocol );
+    }
 }
 
 public enum EEquipType
@@ -41,6 +49,11 @@ public class Equipment : Item
     public override void OnUseItem( Player _player )
     {
         _player.SetEquipment( this );
+
+        if ( _player.isLocal )
+        {
+            SendSyncProtocol( _player );
+        }
     }
 
     private void OnEnable()
