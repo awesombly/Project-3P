@@ -14,37 +14,14 @@ public class WalkerCitizen : AIBase
         base.Awake();
 
         spots = GameObject.Find( "RinSpots" ).GetComponentsInChildren<Transform>();
-
-        Random.InitState( ( int )( Time.time * Mathf.PI * 10000.0f ) );
-        target = spots[ Random.Range( 1, spots.Length ) ].position;
-
         if ( ReferenceEquals( spots, null ) )
         {
             Debug.Log( "spots not found" );
         }
-    }
 
-    protected override IEnumerator Interaction()
-    {
-        animator.SetInteger( AnimatorParameters.AIState, ( int )AIState.Idle );
-        isInteraction = true;
+        Random.InitState( ( int )( Time.time * Mathf.PI * 10000.0f ) );
+        target = spots[ Random.Range( 1, spots.Length ) ].position;
 
-        while ( true )
-        {
-            yield return null;
-
-            if ( !isLocal && !nav.pathPending && nav.remainingDistance >= 1.0f )
-            {
-                nav.SetDestination( target );
-
-                continue;
-            }
-
-            nav.isStopped = true;
-            Vector3 dis =  target - transform.position;
-            Vector3 disXZ = new Vector3( dis.x, 0.0f, dis.z );
-            transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation( disXZ ), 0.1f );
-        }
     }
 
     protected override IEnumerator Idle()
@@ -69,8 +46,6 @@ public class WalkerCitizen : AIBase
 
     protected virtual IEnumerator Move()
     {
-        nav.isStopped = false;
-
         while ( true )
         {
             yield return null;
@@ -83,6 +58,23 @@ public class WalkerCitizen : AIBase
                     ChangeState( AIState.Idle );
                 }
             }
+        }
+    }
+
+    protected override IEnumerator Interaction()
+    {
+        nav.avoidancePriority = 40;
+        animator.SetInteger( AnimatorParameters.AIState, ( int )AIState.Idle );
+        isInteraction = true;
+        nav.isStopped = true;
+
+        while ( true )
+        {
+            yield return null;
+
+            Vector3 dis = target - transform.position;
+            Vector3 disXZ = new Vector3( dis.x, 0.0f, dis.z );
+            transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation( disXZ ), 0.1f );
         }
     }
 }

@@ -58,6 +58,7 @@ void PacketManager::BindProtocols()
 	protocols[ Protocol::ToServer::RequestNpcInfo::PacketType ] = &PacketManager::RequestNpcInfo;
 	protocols[ Protocol::ToServer::RequestNpcSync::PacketType ] = &PacketManager::RequestNpcSync;
 	protocols[ Protocol::ToServer::ResponseHostNpcInfo::PacketType ] = &PacketManager::ResponseHostNpcInfo;
+	protocols[ Protocol::Both::SyncNpcTarget::PacketType ] = &PacketManager::SyncNpcTarget;
 }
 
 void PacketManager::Broadcast( const PACKET& _packet )
@@ -344,4 +345,33 @@ void PacketManager::ResponseHostNpcInfo( const PACKET& _packet )
 	Protocol::FromServer::SyncNpcInfo syncNpcInfo;
 	syncNpcInfo.NpcInfo = protocol.NpcInfo;
 	session->logicData.CurrentStage->BroadCastExceptSelf( syncNpcInfo, session );
+}
+
+void PacketManager::SyncNpcTarget( const PACKET& _packet )
+{
+	Protocol::Both::SyncNpcTarget protocol = _packet.packet.GetParsedData<Protocol::Both::SyncNpcTarget>();
+
+	Session* session = SessionManager::Instance().Find( _packet.socket );
+	if ( session == nullptr )
+	{
+		LOG_ERROR << "Session is null." << ELogType::EndLine;
+		return;
+	}
+
+	Stage* curStage = session->logicData.CurrentStage;
+	if ( curStage == nullptr )
+	{
+		LOG_ERROR << "CurrentStage is null. socket : " << session->GetSocket() << ELogType::EndLine;
+		return;
+	}
+
+	if ( session->GetSocket() != curStage->GetHostSocket() )
+	{
+		LOG_ERROR << "비정상적인 요청 socket : " << session->GetSocket() << LOG_END;
+		return;
+	}
+
+	Protocol::Both::SyncNpcTarget responseProtocol;
+	responseProtocol = protocol;
+	session->logicData.CurrentStage->BroadCastExceptSelf( responseProtocol, session );
 }

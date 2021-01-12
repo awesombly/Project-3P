@@ -102,6 +102,18 @@ namespace Protocol
                 return PacketType;
             }
         }
+
+        public struct SyncNpcTarget : IProtocol
+        {
+            public uint Serial;
+            public Vector3 Target;
+
+            public static ushort PacketType = UPACKET.GetPacketType( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name );
+            public ushort GetPacketType()
+            {
+                return PacketType;
+            }
+        }
     }
     
     namespace ToServer

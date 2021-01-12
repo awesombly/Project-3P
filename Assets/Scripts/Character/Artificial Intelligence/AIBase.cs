@@ -39,10 +39,15 @@ public abstract class AIBase : Character
         ChangeState( ( AIState )_state );
     }
 
+    public void SyncTarget( Vector3 _target )
+    {
+        target = _target;
+    }
+
     protected override void Awake()
     {
         base.Awake();
-
+        
         isLocal = false;
         Network.Instance.OnLateConnect += OnLateConnect;
 
@@ -64,8 +69,14 @@ public abstract class AIBase : Character
 
     protected virtual void OnTriggerEnter( Collider _other )
     {
-        if ( isLocal && !isInteraction && _other.CompareTag( "Player" ) )
+        if ( !isLocal )
         {
+            return;
+        }
+
+        if ( !isInteraction && _other.CompareTag( "Player" ) )
+        {
+            StopAllCoroutines();
             target = _other.transform.position;
             ChangeState( AIState.Interaction );
         }
@@ -83,17 +94,11 @@ public abstract class AIBase : Character
             float Offset = ( target - _other.transform.position ).sqrMagnitude;
             if ( Offset >= 0.05f )
             {
-                Debug.Log( ( target - _other.transform.position ).sqrMagnitude );
                 target = _other.transform.position;
 
-                Protocol.ToServer.ResponseHostNpcInfo protocol;
-                protocol.NpcInfo.Actor.Serial = serial;
-                protocol.NpcInfo.Actor.Position = transform.position;
-                protocol.NpcInfo.Actor.Rotation = transform.rotation;
-                protocol.NpcInfo.IsLocal = isLocal;
-                protocol.NpcInfo.State = state;
-                protocol.NpcInfo.NpcId = gameObject.name;
-                protocol.NpcInfo.Target = target;
+                Protocol.Both.SyncNpcTarget protocol;
+                protocol.Serial = serial;
+                protocol.Target = target;
 
                 Network.Instance.Send( protocol );
             }
@@ -102,8 +107,14 @@ public abstract class AIBase : Character
 
     protected virtual void OnTriggerExit( Collider _other )
     {
-        if ( isLocal && isInteraction && _other.CompareTag( "Player" ) )
+        if ( !isLocal )
         {
+            return;
+        }
+
+        if ( isInteraction && _other.CompareTag( "Player" ) )
+        {
+            StopAllCoroutines();
             ChangeState( AIState.Idle );
         }
     }
@@ -123,14 +134,15 @@ public abstract class AIBase : Character
 
     protected void ChangeState( AIState _state )
     {
-        StopAllCoroutines();
-        //if ( !ReferenceEquals( currentCoroutine, null ) )
-        //{
-        //    StopCoroutine( currentCoroutine );
-        //}
+        if ( !ReferenceEquals( currentCoroutine, null ) )
+        {
+            StopCoroutine( currentCoroutine );
+        }
 
         isInteraction = false;
         nav.isStopped = false;
+
+        nav.avoidancePriority = 50;
 
         state = ( int )_state;
         animator.SetInteger( AnimatorParameters.AIState, ( int )_state );
@@ -140,7 +152,7 @@ public abstract class AIBase : Character
             Protocol.ToServer.ResponseHostNpcInfo protocol;
             protocol.NpcInfo.Actor.Serial = serial;
             protocol.NpcInfo.Actor.Position = transform.position;
-            protocol.NpcInfo.Actor.Rotation= transform.rotation;
+            protocol.NpcInfo.Actor.Rotation = transform.rotation;
             protocol.NpcInfo.IsLocal = isLocal;
             protocol.NpcInfo.State = state;
             protocol.NpcInfo.NpcId = gameObject.name;

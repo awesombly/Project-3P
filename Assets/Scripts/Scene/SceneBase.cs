@@ -75,6 +75,7 @@ public class SceneBase : MonoBehaviour
         Network.Instance.AddBind( Protocol.Both.SyncEquipment.PacketType, SyncEquipment );
 
         /* Npc */
+        Network.Instance.AddBind( Protocol.Both.SyncNpcTarget.PacketType, SyncNpcTarget );
         Network.Instance.AddBind( Protocol.FromServer.SyncNpcInfo.PacketType, SyncNpcInfo );
         Network.Instance.AddBind( Protocol.FromServer.ChangedStageHost.PacketType, ChangedStageHost );
         Network.Instance.AddBind( Protocol.FromServer.RequestHostNpcInfo.PacketType, RequestHostNpcInfo );
@@ -280,5 +281,20 @@ public class SceneBase : MonoBehaviour
             npc.isLocal = true;
         }
     }
+
+    private void SyncNpcTarget( string _data )
+    {
+        Protocol.Both.SyncNpcTarget protocol = JsonUtility.FromJson<Protocol.Both.SyncNpcTarget>( _data );
+
+        AIBase npc = ObjectManager.Instance.Find( protocol.Serial ) as AIBase;
+        if ( ReferenceEquals( npc, null ) )
+        {
+            Debug.Log( "npc is null. serial : " + protocol.Serial );
+            return;
+        }
+
+        npc.SyncTarget( protocol.Target );
+    }
+
     #endregion
 }

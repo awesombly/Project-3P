@@ -82,6 +82,21 @@ namespace Protocol
 				ar( CEREAL_NVP( Velocity ) );
 			}
 		};
+
+		struct SyncNpcTarget : public IProtocol
+		{
+			PROTOCOL_HEADER();
+
+			SerialType Serial;
+			Vector3 Target;
+
+			template <class Archive>
+			void serialize( Archive& ar )
+			{
+				ar( CEREAL_NVP( Serial ) );
+				ar( CEREAL_NVP( Target ) );
+			}
+		};
 	}
 
 	namespace ToServer
