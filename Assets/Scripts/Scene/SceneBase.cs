@@ -221,7 +221,7 @@ public class SceneBase : MonoBehaviour
             return;
         }
 
-        npc.Sync( protocol.NpcInfo.Target, protocol.NpcInfo.Actor.Position, protocol.NpcInfo.State );
+        npc.SyncState( protocol.NpcInfo.Target, protocol.NpcInfo.Actor.Position, protocol.NpcInfo.State );
     }
 
     private void RequestHostNpcInfo( string _data )

@@ -16,6 +16,7 @@ public abstract class AIBase : Character
         Move = 3,
         Dash,
         Dead,
+        LookAtTarget,
         Interaction,
     };
 
@@ -30,10 +31,11 @@ public abstract class AIBase : Character
 
     protected bool isInteraction = false;
 
-    private Coroutine currentCoroutine = null;
-    private Player focusedPlayer = null;
+    protected Player focusedPlayer = null;
 
-    public void Sync( Vector3 _target, Vector3 _position, int _state )
+    private Coroutine currentCoroutine = null;
+
+    public void SyncState( Vector3 _target, Vector3 _position, int _state )
     {
         transform.position = _position;
         target = _target;
@@ -43,6 +45,14 @@ public abstract class AIBase : Character
     public void SyncTarget( Vector3 _target )
     {
         target = _target;
+    }
+
+    protected virtual void OnLateConnect()
+    {
+        Protocol.ToServer.RequestNpcInfo requestNpcInfo;
+        requestNpcInfo.NpcId = gameObject.name;
+
+        Network.Instance.Send( requestNpcInfo );
     }
 
     protected override void Awake()
@@ -68,85 +78,9 @@ public abstract class AIBase : Character
 
     }
 
-    protected virtual void OnTriggerEnter( Collider _other )
-    {
-        if ( !isLocal )
-        {
-            return;
-        }
-
-        if ( _other.CompareTag( "Player" ) )
-        {
-            if ( isInteraction )
-            {
-                return;
-            }
-
-            if ( focusedPlayer == null )
-            {
-                focusedPlayer = _other.GetComponent<Actor>() as Player;
-                StopAllCoroutines();
-                target = _other.transform.position;
-                ChangeState( AIState.Interaction );
-            }
-        }
-    }
-
-    protected virtual void OnTriggerStay( Collider _other )
-    {
-        if ( !isLocal )
-        {
-            return;
-        }
-
-        if ( isInteraction && _other.CompareTag( "Player" ) )
-        {
-            float Offset = ( target - _other.transform.position ).sqrMagnitude;
-            if ( Offset >= 0.05f )
-            {
-                target = _other.transform.position;
-
-                Protocol.Both.SyncNpcTarget protocol;
-                protocol.Serial = serial;
-                protocol.Target = target;
-
-                Network.Instance.Send( protocol );
-            }
-        }
-    }
-
-    protected virtual void OnTriggerExit( Collider _other )
-    {
-        if ( !isLocal )
-        {
-            return;
-        }
-
-        if ( isInteraction && _other.CompareTag( "Player" ) )
-        {
-            if ( focusedPlayer != null &&
-                !focusedPlayer.serial.Equals( _other.GetComponent<Actor>().serial ) )
-            {
-                return;
-            }
-
-            focusedPlayer = null;
-            StopAllCoroutines();
-            ChangeState( AIState.Idle );
-        }
-    }
-
     protected virtual void OnDestroy()
     {
         Network.Instance.OnLateConnect -= OnLateConnect;
-    }
-
-    protected virtual void OnLateConnect()
-    {
-        Protocol.ToServer.RequestNpcInfo requestNpcInfo;
-        requestNpcInfo.NpcId = gameObject.name;
-
-        Network.Instance.Send( requestNpcInfo );
     }
 
     protected void ChangeState( AIState _state )

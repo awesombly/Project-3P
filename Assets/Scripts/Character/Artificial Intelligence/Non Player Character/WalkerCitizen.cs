@@ -21,7 +21,65 @@ public class WalkerCitizen : AIBase
 
         Random.InitState( ( int )( Time.time * Mathf.PI * 10000.0f ) );
         target = spots[ Random.Range( 1, spots.Length ) ].position;
+    }
 
+    protected virtual void OnTriggerEnter( Collider _other )
+    {
+        if ( !isLocal && isInteraction )
+        {
+            return;
+        }
+
+        if ( focusedPlayer == null && _other.CompareTag( "Player" ) )
+        {
+            focusedPlayer = _other.GetComponent<Actor>() as Player;
+            StopAllCoroutines();
+            target = _other.transform.position;
+            ChangeState( AIState.LookAtTarget );
+        }
+    }
+
+    protected virtual void OnTriggerStay( Collider _other )
+    {
+        if ( !isLocal )
+        {
+            return;
+        }
+
+        if ( isInteraction && _other.CompareTag( "Player" ) )
+        {
+            float Offset = ( target - _other.transform.position ).sqrMagnitude;
+            if ( Offset >= 0.05f )
+            {
+                target = _other.transform.position;
+
+                Protocol.Both.SyncNpcTarget protocol;
+                protocol.Serial = serial;
+                protocol.Target = target;
+
+                Network.Instance.Send( protocol );
+            }
+        }
+    }
+
+    protected virtual void OnTriggerExit( Collider _other )
+    {
+        if ( !isLocal && focusedPlayer != null )
+        {
+            return;
+        }
+
+        if ( isInteraction && _other.CompareTag( "Player" ) )
+        {
+            if ( !focusedPlayer.serial.Equals( _other.GetComponent<Actor>().serial ) )
+            {
+                return;
+            }
+
+            focusedPlayer = null;
+            StopAllCoroutines();
+            ChangeState( AIState.Idle );
+        }
     }
 
     protected override IEnumerator Idle()
@@ -64,7 +122,7 @@ public class WalkerCitizen : AIBase
         }
     }
 
-    protected override IEnumerator Interaction()
+    protected virtual IEnumerator LookAtTarget()
     {
         nav.avoidancePriority = 40;
         animator.SetInteger( AnimatorParameters.AIState, ( int )AIState.Idle );
@@ -79,5 +137,10 @@ public class WalkerCitizen : AIBase
 
             yield return null;
         }
+    }
+
+    protected override IEnumerator Interaction()
+    {
+        yield return null;
     }
 }
