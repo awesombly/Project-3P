@@ -31,6 +31,7 @@ public abstract class AIBase : Character
     protected bool isInteraction = false;
 
     private Coroutine currentCoroutine = null;
+    private Player focusedPlayer = null;
 
     public void Sync( Vector3 _target, Vector3 _position, int _state )
     {
@@ -74,11 +75,20 @@ public abstract class AIBase : Character
             return;
         }
 
-        if ( !isInteraction && _other.CompareTag( "Player" ) )
+        if ( _other.CompareTag( "Player" ) )
         {
-            StopAllCoroutines();
-            target = _other.transform.position;
-            ChangeState( AIState.Interaction );
+            if ( isInteraction )
+            {
+                return;
+            }
+
+            if ( focusedPlayer == null )
+            {
+                focusedPlayer = _other.GetComponent<Actor>() as Player;
+                StopAllCoroutines();
+                target = _other.transform.position;
+                ChangeState( AIState.Interaction );
+            }
         }
     }
 
@@ -114,6 +124,13 @@ public abstract class AIBase : Character
 
         if ( isInteraction && _other.CompareTag( "Player" ) )
         {
+            if ( focusedPlayer != null &&
+                !focusedPlayer.serial.Equals( _other.GetComponent<Actor>().serial ) )
+            {
+                return;
+            }
+
+            focusedPlayer = null;
             StopAllCoroutines();
             ChangeState( AIState.Idle );
         }
