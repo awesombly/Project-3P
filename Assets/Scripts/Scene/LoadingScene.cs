@@ -42,7 +42,7 @@ public class LoadingScene : SceneBase
 
         if ( _loadedRatio >= 1.0f )
         {
-            SceneManager.LoadScene( SceneName.Village );
+            SceneManager.LoadScene( nextScene );
         }
     }
 }

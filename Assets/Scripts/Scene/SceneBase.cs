@@ -5,24 +5,28 @@ using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public struct SceneName
+[System.Serializable]
+public enum SceneType
 {
-    public static string Loading = "Loading";
-    public static string Village = "Village";
+    Loading, 
+    Village, 
+    Dungeon,
 }
 
 public class SceneBase : MonoBehaviour
 {
+    protected static string nextScene = SceneType.Village.ToString();
+
     [RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
     private static void FirstSceneLoad()
     {
-        if ( SceneManager.GetActiveScene().name != SceneName.Loading )
+        string loadingScene = SceneType.Loading.ToString();
+        if ( SceneManager.GetActiveScene().name != loadingScene )
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene( SceneName.Loading );
+            nextScene = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene( loadingScene );
         }
     }
-
-    internal string stageId;
 
     [SerializeField]
     private AudioData audioData;
@@ -40,8 +44,6 @@ public class SceneBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        stageId = gameObject.name;
-
         Network.Instance.OnConnect += OnConnect;
         Network.Instance.OnBindProtocols += OnBindProtocols;
     }
@@ -75,7 +77,7 @@ public class SceneBase : MonoBehaviour
     protected virtual void OnConnect()
     {
         Protocol.ToServer.EnterStage protocol;
-        protocol.StageId = stageId;
+        protocol.StageId = SceneManager.GetActiveScene().name;
         protocol.SpawnPosition = spawnTransform.position;
         Network.Instance.Send( protocol );
     }
