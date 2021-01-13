@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Sound
+  m_EditorClassIdentifier: 
+  m_GroupName: Sound
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 302c68fb1de61b64e96201782e9f9f66
+  m_SerializeEntries:
+  - m_GUID: 0728cdf1012931242a09ebd2cb337c97
+    m_Address: Lullaby
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    m_MainAsset: {fileID: 8300000, guid: 0728cdf1012931242a09ebd2cb337c97, type: 3}
+    m_TargetAsset: {fileID: 8300000, guid: 0728cdf1012931242a09ebd2cb337c97, type: 3}
+  - m_GUID: 3f7d081012f9be14fb0d765c8535845b
+    m_Address: TavernLoopOne
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    m_MainAsset: {fileID: 8300000, guid: 3f7d081012f9be14fb0d765c8535845b, type: 3}
+    m_TargetAsset: {fileID: 8300000, guid: 3f7d081012f9be14fb0d765c8535845b, type: 3}
+  - m_GUID: 483972e9039231b4eb098bc50600efa1
+    m_Address: ForestWalk
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    m_MainAsset: {fileID: 8300000, guid: 483972e9039231b4eb098bc50600efa1, type: 3}
+    m_TargetAsset: {fileID: 8300000, guid: 483972e9039231b4eb098bc50600efa1, type: 3}
+  - m_GUID: b399d53aae8a56d4d94183e0b3527da1
+    m_Address: Marked
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    m_MainAsset: {fileID: 8300000, guid: b399d53aae8a56d4d94183e0b3527da1, type: 3}
+    m_TargetAsset: {fileID: 8300000, guid: b399d53aae8a56d4d94183e0b3527da1, type: 3}
+  - m_GUID: efaa2aedde80c794b9d8a4830ae27e71
+    m_Address: Neverland
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    m_MainAsset: {fileID: 8300000, guid: efaa2aedde80c794b9d8a4830ae27e71, type: 3}
+    m_TargetAsset: {fileID: 8300000, guid: efaa2aedde80c794b9d8a4830ae27e71, type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 26435b303a6c22e4a9f3fd166ca548ee, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: ad7b6beebc3340d4ebd85b1234e66525, type: 2}
+    - {fileID: 11400000, guid: 9d1ad86d67c015c43a14cac78f20e533, type: 2}

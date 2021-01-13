@@ -95,6 +95,7 @@ public class ResourceManager : Singleton<ResourceManager>
             InitGuidsData();
 
             LoadAssetsAsync<Item>( "Item" );
+            LoadAssetsAsync<AudioClip>( "Sound" );
         };
     }
 
@@ -226,4 +227,10 @@ public class AssetReferenceItem : AssetReferenceT<Item>
 public class AssetReferenceEquipment : AssetReferenceT<Equipment>
 {
     public AssetReferenceEquipment( string _guid ) : base( _guid ) { }
+}
+
+[System.Serializable]
+public class AssetReferenceAudioClip : AssetReferenceT<AudioClip>
+{
+    public AssetReferenceAudioClip( string _guid ) : base( _guid ) { }
 }

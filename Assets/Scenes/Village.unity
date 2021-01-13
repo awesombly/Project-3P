@@ -10342,12 +10342,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76dddd7bed1b1544c9af0e0b9a543720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioData: {fileID: 11400000, guid: d97ec1441d2c7b7488dbe0b19ff7b80a, type: 2}
   localPlayerPrefab: {fileID: 1743903104223250, guid: ff4c76206db57914b8def2ea45be45c1, type: 3}
   otherPlayerPrefab: {fileID: 7405065635949591291, guid: 15a9533a8b8f76a46a32fee587eaa2cd, type: 3}
   spawnTransform: {fileID: 975208719}
-  loadingScene:
-    m_AssetGUID: d360ef91cd52b07429cdf444a7d4dd0b
-    m_SubObjectName: 
 --- !u!1001 &746565151
 PrefabInstance:
   m_ObjectHideFlags: 0

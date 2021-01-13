@@ -25,6 +25,9 @@ public class SceneBase : MonoBehaviour
     internal string stageId;
 
     [SerializeField]
+    private AudioData audioData;
+
+    [SerializeField]
     private GameObject localPlayerPrefab;
     [SerializeField]
     private GameObject otherPlayerPrefab;
@@ -41,12 +44,14 @@ public class SceneBase : MonoBehaviour
 
         Network.Instance.OnConnect += OnConnect;
         Network.Instance.OnBindProtocols += OnBindProtocols;
-
-        OnSceneLoaded?.Invoke();
     }
 
     protected virtual void Start()
     {
+        OnSceneLoaded?.Invoke();
+
+        AudioManager.Instance.audioData = audioData;
+        AudioManager.Instance.PlayBgm();
     }
 
     protected virtual void OnDestroy()

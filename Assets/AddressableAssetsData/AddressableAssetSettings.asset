@@ -28,6 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f4f697391072e5044917e04daef3b94c, type: 2}
   - {fileID: 11400000, guid: cf3333ab4f0b03445be67e7d557f63c9, type: 2}
   - {fileID: 11400000, guid: f8ecdf4330b2a0b428a933f305cc064e, type: 2}
+  - {fileID: 11400000, guid: 736045067790ca24f8f8de204bf17c03, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -71,6 +72,7 @@ MonoBehaviour:
     - default
     - Item
     - Equipment
+    - Sound
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: d104b3adfa35d124293cc91458f24ae9, type: 2}
