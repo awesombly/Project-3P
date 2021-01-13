@@ -10,7 +10,7 @@ public enum SceneType
 {
     Loading, 
     Village, 
-    Dungeon,
+    DemoDungeon,
 }
 
 public class SceneBase : MonoBehaviour
