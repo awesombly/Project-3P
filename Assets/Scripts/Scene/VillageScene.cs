@@ -14,15 +14,6 @@ public class VillageScene : SceneBase
     {
         base.Start();
 
-        if ( ObjectManager.Instance.LocalPlayer == null )
-        {
-            Player player = FindObjectOfType<Player>();
-            if ( player != null && player.isLocal )
-            {
-                ObjectManager.Instance.LocalPlayer = player;
-            }
-        }
-
         StartCoroutine( Network.Instance.RunNetwork() );
     }
 

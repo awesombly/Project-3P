@@ -194,6 +194,11 @@ public class QuickslotUI : MonoBehaviour
 
     private void OnChangeLocalPlayer( Player _localPlayer )
     {
+        if ( _localPlayer == null )
+        {
+            return;
+        }
+
         UpdateSlotData( _localPlayer );
     }
 

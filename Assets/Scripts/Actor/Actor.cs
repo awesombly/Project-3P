@@ -5,7 +5,7 @@ using UnityEngine;
 public class Actor : MonoBehaviour
 {
     internal uint serial;
-    internal bool isLocal = true;
+    internal bool isLocal = false;
     internal Vector3 syncVelocity;
     internal Vector3 localVelocity;
 

@@ -216,8 +216,7 @@ void PacketManager::EnterStage( const PACKET& _packet )
 		session->logicData.CurrentStage->Push( session->logicData.Player );
 	}
 
-	std::mt19937 rand( ( UINT )::time( nullptr ) );
-	session->logicData.Player->Position = { protocol.SpawnPosition.x + ( float )( rand() % 8 ), protocol.SpawnPosition.y, protocol.SpawnPosition.z + ( float )( rand() % 8 ) };
+	session->logicData.Player->Position = protocol.SpawnPosition;
 	session->logicData.Player->Rotation = Quaternion::Identity;
 
 	Protocol::FromServer::CreatePlayer createPlayer;

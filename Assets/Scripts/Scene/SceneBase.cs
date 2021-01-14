@@ -24,8 +24,14 @@ public class SceneBase : MonoBehaviour
         if ( SceneManager.GetActiveScene().name != loadingScene )
         {
             nextScene = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene( loadingScene );
+            ChangeScene( loadingScene );
         }
+    }
+
+    public static void ChangeScene( string _sceneName )
+    {
+        OnBeforeSceneLoad?.Invoke();
+        SceneManager.LoadScene( _sceneName );
     }
 
     [SerializeField]
@@ -39,8 +45,11 @@ public class SceneBase : MonoBehaviour
     [SerializeField]
     private Transform spawnTransform;
 
-    public delegate void DelChangeScene();
-    public static event DelChangeScene OnSceneLoaded;
+    public delegate void DelBeforeSceneLoad();
+    public static event DelBeforeSceneLoad OnBeforeSceneLoad;
+
+    public delegate void DelAfterSceneLoad();
+    public static event DelAfterSceneLoad OnAfterSceneLoad;
 
     protected virtual void Awake()
     {
@@ -50,7 +59,8 @@ public class SceneBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        OnSceneLoaded?.Invoke();
+        OnAfterSceneLoad?.Invoke();
+        FindEditorLocalPlayer();
 
         AudioManager.Instance.audioData = audioData;
         AudioManager.Instance.PlayBgm();
@@ -62,20 +72,31 @@ public class SceneBase : MonoBehaviour
         Network.Instance.OnBindProtocols -= OnBindProtocols;
     }
 
-    public virtual void ChangeSceneAsync( AssetReference _scene )
+    protected void FindEditorLocalPlayer()
     {
-        Addressables.LoadSceneAsync( _scene ).Completed += ( _handle ) =>
+        if ( ObjectManager.Instance.LocalPlayer != null )
         {
-            if ( _handle.Status != AsyncOperationStatus.Succeeded )
+            return;
+        }
+
+        Player player = FindObjectOfType<Player>();
+        if ( player != null )
+        {
+            if ( Network.Instance.isConnected )
             {
-                Debug.LogError( "Failed LoadScene. scene = " + _scene );
+                Destroy( player.gameObject );
                 return;
             }
-        };
+
+            player.isLocal = true;
+            ObjectManager.Instance.LocalPlayer = player;
+        }
     }
 
     protected virtual void OnConnect()
     {
+        ObjectManager.Instance.LocalPlayer = null;
+
         Protocol.ToServer.EnterStage protocol;
         protocol.StageId = SceneManager.GetActiveScene().name;
         protocol.SpawnPosition = spawnTransform.position;

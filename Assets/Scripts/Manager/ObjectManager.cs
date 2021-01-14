@@ -43,6 +43,11 @@ public class ObjectManager : Singleton<ObjectManager>
         }
     }
 
+    private void Awake()
+    {
+        SceneBase.OnBeforeSceneLoad += OnBeforeSceneLoad;
+    }
+
     public void Add( Actor _actor )
     {
         if ( actors.ContainsKey( _actor.serial ) ||
@@ -114,5 +119,18 @@ public class ObjectManager : Singleton<ObjectManager>
     public bool Search( uint _serial )
     {
         return actors.ContainsKey( _serial );
+    }
+
+    public void ClearAll()
+    {
+        actors.Clear();
+        players.Clear();
+        npcs.Clear();
+        LocalPlayer = null;
+    }
+
+    private void OnBeforeSceneLoad()
+    {
+        ClearAll();
     }
 }
