@@ -78,7 +78,7 @@ public class Network : Singleton<Network>
         // 네트워크 접속이 다른 오브젝트 Start()보다 빠를때가 있어 지연시킴
         yield return null;
 
-        if ( thread != null )
+        if ( thread == null )
         {
             thread = new Thread( Run );
             thread.Start();
@@ -177,7 +177,10 @@ public class Network : Singleton<Network>
 
     private void OnDestroy()
     {
-        socket.Close();
+        if ( !ReferenceEquals( socket, null ) )
+        {
+            socket.Close();
+        }
     }
 
     private void BindProtocols()
