@@ -93,8 +93,7 @@ void SessionManager::EnterStage( Session* _session, const std::string& _stageId 
 
 	if ( _session->logicData.CurrentStage != nullptr )
 	{
-		_session->logicData.CurrentStage->Erase( _session );
-		_session->logicData.CurrentStage->Erase( _session->logicData.Player );
+		_session->logicData.CurrentStage->LeaveStage( _session, false );
 	}
 
 	Stage* stage = stages[ _stageId ];

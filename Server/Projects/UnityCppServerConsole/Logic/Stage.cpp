@@ -77,6 +77,30 @@ void Stage::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session
 	SessionManager::BroadCastExceptSelf( _packet, _session, sessions );
 }
 
+void Stage::LeaveStage( Session* _session, bool _removePlayer )
+{
+	if ( _session == nullptr )
+	{
+		LOG_ERROR << "Session is null." << ELogType::EndLine;
+		return;
+	}
+	
+	if ( _session->logicData.Player != nullptr )
+	{
+		Protocol::FromServer::DestroyActor protocol;
+		protocol.Serial = _session->logicData.Player->Serial;
+		BroadCastExceptSelf( protocol, _session );
+
+		Erase( _session->logicData.Player );
+		if ( _removePlayer )
+		{
+			SafeDelete( _session->logicData.Player );
+		}
+	}
+
+	Erase( _session );
+}
+
 ServerActor* Stage::Find( SerialType serial ) const
 {
 	auto findItr = actors.find( serial );

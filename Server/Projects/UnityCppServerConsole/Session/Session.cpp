@@ -14,17 +14,7 @@ Session::~Session()
 {
 	if ( logicData.CurrentStage != nullptr )
 	{
-		if ( logicData.Player != nullptr )
-		{
-			Protocol::FromServer::DestroyActor protocol;
-			protocol.Serial = logicData.Player->Serial;
-			logicData.CurrentStage->BroadCastExceptSelf( UPACKET( protocol ), this );
-
-			logicData.CurrentStage->Erase( logicData.Player );
-			SafeDelete( logicData.Player );
-		}
-
-		logicData.CurrentStage->Erase( this );
+		logicData.CurrentStage->LeaveStage( this, true );
 	}
 
 	::shutdown( socket, SD_SEND );

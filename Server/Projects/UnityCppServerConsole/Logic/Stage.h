@@ -19,6 +19,8 @@ public:
 	void BroadCast( const UPACKET& _packet ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
 
+	void LeaveStage( Session* _session, bool _removePlayer );
+
 	ServerActor* Find( SerialType serial ) const;
 	
 	/* Npc */
