@@ -6,7 +6,41 @@ Stage::Stage( const std::string& _stageId )
 {
 }
 
-void Stage::Push( Session* _session )
+void Stage::BroadCast( const UPACKET& _packet ) const
+{
+	SessionManager::BroadCast( _packet, sessions );
+}
+
+void Stage::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
+{
+	SessionManager::BroadCastExceptSelf( _packet, _session, sessions );
+}
+
+void Stage::LeaveStage( Session* _session, bool _removePlayer )
+{
+	if ( _session == nullptr )
+	{
+		LOG_ERROR << "Session is null." << ELogType::EndLine;
+		return;
+	}
+
+	if ( _session->logicData.Player != nullptr )
+	{
+		Protocol::FromServer::DestroyActor protocol;
+		protocol.Serial = _session->logicData.Player->Serial;
+		BroadCastExceptSelf( protocol, _session );
+
+		EraseActor( _session->logicData.Player );
+		if ( _removePlayer )
+		{
+			SafeDelete( _session->logicData.Player );
+		}
+	}
+
+	EraseSession( _session );
+}
+
+void Stage::PushSession( Session* _session )
 {
 	if ( _session == nullptr )
 	{
@@ -17,7 +51,7 @@ void Stage::Push( Session* _session )
 	sessions[ _session->GetSocket() ] = _session;
 }
 
-void Stage::Erase( const Session* _session )
+void Stage::EraseSession( const Session* _session )
 {
 	if ( _session == nullptr )
 	{
@@ -45,7 +79,7 @@ void Stage::Erase( const Session* _session )
 	}
 }
 
-void Stage::Push( ServerActor* _actor )
+void Stage::PushActor( ServerActor* _actor )
 {
 	if ( _actor == nullptr )
 	{
@@ -56,7 +90,7 @@ void Stage::Push( ServerActor* _actor )
 	actors[ _actor->Serial ] = _actor;
 }
 
-void Stage::Erase( const ServerActor* _actor )
+void Stage::EraseActor( const ServerActor* _actor )
 {
 	if ( _actor == nullptr )
 	{
@@ -67,41 +101,7 @@ void Stage::Erase( const ServerActor* _actor )
 	actors.erase( _actor->Serial );
 }
 
-void Stage::BroadCast( const UPACKET& _packet ) const
-{
-	SessionManager::BroadCast( _packet, sessions );
-}
-
-void Stage::BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const
-{
-	SessionManager::BroadCastExceptSelf( _packet, _session, sessions );
-}
-
-void Stage::LeaveStage( Session* _session, bool _removePlayer )
-{
-	if ( _session == nullptr )
-	{
-		LOG_ERROR << "Session is null." << ELogType::EndLine;
-		return;
-	}
-	
-	if ( _session->logicData.Player != nullptr )
-	{
-		Protocol::FromServer::DestroyActor protocol;
-		protocol.Serial = _session->logicData.Player->Serial;
-		BroadCastExceptSelf( protocol, _session );
-
-		Erase( _session->logicData.Player );
-		if ( _removePlayer )
-		{
-			SafeDelete( _session->logicData.Player );
-		}
-	}
-
-	Erase( _session );
-}
-
-ServerActor* Stage::Find( SerialType serial ) const
+ServerActor* Stage::FindActor( SerialType serial ) const
 {
 	auto findItr = actors.find( serial );
 	if ( findItr == actors.cend() )
@@ -148,7 +148,7 @@ ServerNpc* Stage::FindNpc( SerialType _serial ) const
 	return nullptr;
 }
 
-void Stage::Push( ServerNpc* _npc )
+void Stage::PushNpc( ServerNpc* _npc )
 {
 	if ( _npc == nullptr )
 	{

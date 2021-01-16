@@ -133,7 +133,7 @@ void PacketManager::SyncTransform( const PACKET& _packet )
 	}
 
 	Protocol::Both::SyncTransform protocol = _packet.packet.GetParsedData<Protocol::Both::SyncTransform>();
-	ServerActor* actor = session->logicData.CurrentStage->Find( protocol.Actor.Serial );
+	ServerActor* actor = session->logicData.CurrentStage->FindActor( protocol.Actor.Serial );
 	if ( actor == nullptr )
 	{
 		LOG_ERROR << "Actor is null" << ELogType::EndLine;
@@ -161,7 +161,7 @@ void PacketManager::SyncInterpolation( const PACKET& _packet )
 	}
 
 	Protocol::Both::SyncInterpolation protocol = _packet.packet.GetParsedData<Protocol::Both::SyncInterpolation>();
-	ServerActor* actor = session->logicData.CurrentStage->Find( protocol.Actor.Serial );
+	ServerActor* actor = session->logicData.CurrentStage->FindActor( protocol.Actor.Serial );
 	if ( actor == nullptr )
 	{
 		LOG_ERROR << "Actor is null" << ELogType::EndLine;
@@ -213,7 +213,7 @@ void PacketManager::EnterStage( const PACKET& _packet )
 	if ( session->logicData.Player == nullptr )
 	{
 		session->logicData.Player = new ServerActor( Protocol::GetNewSerial() );
-		session->logicData.CurrentStage->Push( session->logicData.Player );
+		session->logicData.CurrentStage->PushActor( session->logicData.Player );
 	}
 
 	session->logicData.Player->Position = protocol.SpawnPosition;
@@ -260,7 +260,7 @@ void PacketManager::RequestNpcInfo( const PACKET& _packet )
 		npc = new ServerNpc();
 		npc->Actor.Serial = Protocol::GetNewSerial();
 		npc->NpcId = protocol.NpcId;
-		curStage->Push( npc );
+		curStage->PushNpc( npc );
 	}
 	responseNpcInfo.Serial = npc->Actor.Serial;
 

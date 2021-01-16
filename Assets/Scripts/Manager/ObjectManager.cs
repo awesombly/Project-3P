@@ -78,7 +78,7 @@ public class ObjectManager : Singleton<ObjectManager>
         if ( !actors.ContainsKey( _actor.serial ) ||
              ReferenceEquals( _actor, null ) )
         {
-            Debug.Log( "ObjectManager::Erase Serial not found or parameter is null." );
+            Debug.Log( "ObjectManager::Erase Serial not found or parameter is null. serial = " + _actor.serial );
             return;
         }
 

@@ -102,10 +102,10 @@ void SessionManager::EnterStage( Session* _session, const std::string& _stageId 
 		stage = stages[ _stageId ] = new Stage( _stageId );
 	}
 
-	stage->Push( _session );
+	stage->PushSession( _session );
 	if ( _session->logicData.Player != nullptr )
 	{
-		stage->Push( _session->logicData.Player );
+		stage->PushActor( _session->logicData.Player );
 	}
 	
 	_session->logicData.CurrentStage = stage;

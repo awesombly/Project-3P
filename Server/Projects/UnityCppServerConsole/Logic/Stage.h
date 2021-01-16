@@ -8,28 +8,25 @@ public:
 	Stage( const std::string& _stageId );
 
 public:
-	void Push( Session* _session );
-	void Erase( const Session* _session );
-
-	void Push( ServerActor* _actor );
-	void Erase( const ServerActor* _actor );
-
-	//void Push( ServerNpc* _actor );
-
 	void BroadCast( const UPACKET& _packet ) const;
 	void BroadCastExceptSelf( const UPACKET& _packet, const Session* _session ) const;
 
 	void LeaveStage( Session* _session, bool _removePlayer );
 
-	ServerActor* Find( SerialType serial ) const;
-	
+	void PushSession( Session* _session );
+	void EraseSession( const Session* _session );
+
+	void PushActor( ServerActor* _actor );
+	void EraseActor( const ServerActor* _actor );
+	ServerActor* FindActor( SerialType serial ) const;
+
 	/* Npc */
 	SOCKET GetHostSocket();
 	void SetHostSocket( SOCKET _socket );
 
 	ServerNpc* FindNpc( const std::string& _name ) const;
 	ServerNpc* FindNpc( SerialType _serial ) const;
-	void Push( ServerNpc* _npc );
+	void PushNpc( ServerNpc* _npc );
 
 	const std::string& GetId() const;
 	SessionContainer GetSessions() const;
