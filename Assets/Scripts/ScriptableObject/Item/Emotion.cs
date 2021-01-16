@@ -8,9 +8,11 @@ public class Emotion : Item
 {
     public string animatorParameter;
 
+    private int parameterHash;
+
     public override void OnUseItem( Player _player )
     {
-        _player.animator.SetTrigger( animatorParameter );
+        _player.animator.SetTrigger( parameterHash );
 
         if ( _player.isLocal )
         {
@@ -21,5 +23,6 @@ public class Emotion : Item
     private void OnEnable()
     {
         itemType = EItemType.Emotion;
+        parameterHash = Animator.StringToHash( animatorParameter );
     }
 }
