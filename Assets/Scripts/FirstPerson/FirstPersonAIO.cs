@@ -10,7 +10,6 @@ using System.Net;
 #endif
 
 [RequireComponent( typeof( CapsuleCollider ) ), RequireComponent( typeof( Rigidbody ) ), AddComponentMenu( "First Person AIO" )]
-
 public class FirstPersonAIO : MonoBehaviour
 {
     private Player myPlayer;
@@ -48,7 +47,9 @@ public class FirstPersonAIO : MonoBehaviour
         public float DistanceScrollSpeed;
         public float MaxDistance;
         public float MinDistance;
-        internal float Distance;
+        public float InterpolSpeed;
+        internal float TargetDistance;
+        internal float CurrentDistance;
     }
     public ViewInfo viewInfo;
 
@@ -360,7 +361,7 @@ public class FirstPersonAIO : MonoBehaviour
 
         firstPerson.OriginalPosition = firstPerson.Head.localPosition;
         thirdPerson.OriginalPosition = thirdPerson.Head.localPosition;
-        viewInfo.Distance = -thirdPerson.Head.localPosition.z;
+        viewInfo.TargetDistance = -thirdPerson.Head.localPosition.z;
         thirdPerson.Head.localPosition = new Vector3( thirdPerson.Head.localPosition.x, thirdPerson.Head.localPosition.y, 0.0f );
         if ( snapHeadjointToCapsul )
         {
@@ -863,14 +864,17 @@ public class FirstPersonAIO : MonoBehaviour
             if ( viewAxis != 0.0f )
             {
                 float delta = ( -viewAxis * viewInfo.DistanceScrollSpeed );
-                viewInfo.Distance = Mathf.Clamp( viewInfo.Distance + delta, viewInfo.MinDistance, viewInfo.MaxDistance );
+                viewInfo.TargetDistance = Mathf.Clamp( viewInfo.TargetDistance + delta, viewInfo.MinDistance, viewInfo.MaxDistance );
             }
 
-            float cameraDistance = viewInfo.Distance;
+            viewInfo.CurrentDistance = Mathf.Lerp( viewInfo.CurrentDistance, viewInfo.TargetDistance, viewInfo.InterpolSpeed * Time.deltaTime );
+
+            float cameraDistance = viewInfo.CurrentDistance;
             Ray ray = new Ray( thirdPerson.Head.transform.position, -playerCamera.transform.forward );
             RaycastHit hit;
-            if ( Physics.Raycast( ray, out hit, viewInfo.Distance, viewInfo.CullingMask ) )
+            if ( Physics.Raycast( ray, out hit, viewInfo.CurrentDistance, viewInfo.CullingMask ) )
             {
+                viewInfo.CurrentDistance = hit.distance;
                 cameraDistance = hit.distance - 0.1f;
             }
 
@@ -1199,6 +1203,7 @@ public class FPAIO_Editor : Editor
         t.viewInfo.DistanceScrollSpeed = EditorGUILayout.Slider( new GUIContent( "ViewDistance Scroll Speed" ), t.viewInfo.DistanceScrollSpeed, 0.0f, 10.0f );
         t.viewInfo.MaxDistance = EditorGUILayout.Slider( new GUIContent( "Max ViewDistance" ), t.viewInfo.MaxDistance, 0.0f, 50.0f );
         t.viewInfo.MinDistance = EditorGUILayout.Slider( new GUIContent( "Min ViewDistance" ), t.viewInfo.MinDistance, 0.0f, 50.0f );
+        t.viewInfo.InterpolSpeed = EditorGUILayout.Slider( new GUIContent( "Camera Interpol Speed" ), t.viewInfo.InterpolSpeed, 0.1f, 100.0f );
 
         t.cameraInputMethod = ( FirstPersonAIO.CameraInputMethod )EditorGUILayout.EnumPopup( new GUIContent( "Input Method", "Determines the method used to rotate camera. \n\nTraditional uses the mouse on all axes. \nTraditional with constraints uses the mouse on the Y axis only. \nRetro uses Keybinds (left and right movement keys) to rotate the camera along the Y axis." ), t.cameraInputMethod );
         if ( t.cameraInputMethod == FirstPersonAIO.CameraInputMethod.Traditional ) { t.verticalRotationRange = EditorGUILayout.Slider( new GUIContent( "Vertical Rotation Range", "Determines how much range does the camera have to move vertically." ), t.verticalRotationRange, 90, 180 ); }

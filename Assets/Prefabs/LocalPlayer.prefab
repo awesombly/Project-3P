@@ -439,6 +439,7 @@ MonoBehaviour:
     DistanceScrollSpeed: 3
     MaxDistance: 50
     MinDistance: 1
+    InterpolSpeed: 1.8
   enableCameraMovement: 1
   mouseInputInversion: 0
   cameraInputMethod: 0
