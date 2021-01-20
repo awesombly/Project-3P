@@ -360,7 +360,8 @@ public class FirstPersonAIO : MonoBehaviour
 
         firstPerson.OriginalPosition = firstPerson.Head.localPosition;
         thirdPerson.OriginalPosition = thirdPerson.Head.localPosition;
-        viewInfo.Distance = Vector3.Distance( thirdPerson.Head.position, myPlayer.transform.position );
+        viewInfo.Distance = -thirdPerson.Head.localPosition.z;
+        thirdPerson.Head.localPosition = new Vector3( thirdPerson.Head.localPosition.x, thirdPerson.Head.localPosition.y, 0.0f );
         if ( snapHeadjointToCapsul )
         {
             firstPerson.OriginalPosition.y = ( capsule.height / 2 ) * firstPerson.Head.localScale.y;
@@ -866,14 +867,14 @@ public class FirstPersonAIO : MonoBehaviour
             }
 
             float cameraDistance = viewInfo.Distance;
-            Ray ray = new Ray( myPlayer.transform.position, -playerCamera.transform.forward );
+            Ray ray = new Ray( thirdPerson.Head.transform.position, -playerCamera.transform.forward );
             RaycastHit hit;
             if ( Physics.Raycast( ray, out hit, viewInfo.Distance, viewInfo.CullingMask ) )
             {
-                cameraDistance = hit.distance;
+                cameraDistance = hit.distance - 0.1f;
             }
 
-            Vector3 cameraPos = myPlayer.transform.position - ( playerCamera.transform.forward * cameraDistance );
+            Vector3 cameraPos = thirdPerson.Head.transform.position - ( playerCamera.transform.forward * cameraDistance );
             playerCamera.transform.position = cameraPos;
         }
     }
