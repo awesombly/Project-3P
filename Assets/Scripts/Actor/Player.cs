@@ -12,6 +12,7 @@ public enum EBoneType
 
 public class Player : Character
 {
+    #region Equipment
     [System.Serializable]
     public struct BoneInfo
     {
@@ -33,7 +34,9 @@ public class Player : Character
     private Dictionary<EEquipType, EquipInfo> equipInfos = new Dictionary<EEquipType, EquipInfo>();
     public delegate void DelChangeEquipment( Equipment _equip );
     public event DelChangeEquipment OnChangeEquipment;
+    #endregion
 
+    #region State
     private bool isSprinting = true;
     internal bool IsSprinting
     {
@@ -109,7 +112,17 @@ public class Player : Character
     }
     public delegate void DelChangeStrafing( bool _isStrafing );
     public event DelChangeStrafing OnChangeStrafing;
+    #endregion
 
+    [System.Serializable]
+    public struct FocusInfo
+    {
+        public LayerMask CullingLayer;
+        public float RayDistance;
+        public KeyCode InteractionKey;
+        internal Actor Target;
+    }
+    public FocusInfo focusInfo;
 
     protected override void Awake()
     {
@@ -134,6 +147,8 @@ public class Player : Character
         base.FixedUpdate();
 
         UpdateCrouchState();
+
+        UpdateInteraction();
     }
 
     #region Equipment
@@ -224,6 +239,38 @@ public class Player : Character
         }
 
         animator.gameObject.transform.localPosition = ( capsule.height * 0.5f * Vector3.down );
+    }
+
+    private void UpdateInteraction()
+    {
+        Ray ray = new Ray( Camera.main.transform.position, Camera.main.transform.forward );
+        RaycastHit hit;
+
+        focusInfo.Target = null;
+        if ( Physics.Raycast( ray, out hit, focusInfo.CullingLayer, focusInfo.CullingLayer ) )
+        {
+            if ( hit.collider == null )
+            {
+                Debug.LogError( "Hit collider is null." );
+                return;
+            }
+
+            focusInfo.Target = hit.collider.GetComponentInParent<Actor>();
+        }
+
+        // 상호작용
+        if ( Input.GetKeyDown( focusInfo.InteractionKey ) && focusInfo.Target != null )
+        {
+            Debug.Log( focusInfo.Target.name );
+
+            IInteractable interactor = focusInfo.Target as IInteractable;
+            if ( !ReferenceEquals( interactor, null ) )
+            {
+                Debug.Log( interactor.FocusMessage );
+
+                interactor.Interaction( this );
+            }
+        }
     }
 
     private void SendSyncCrouch( bool _isCrouching )

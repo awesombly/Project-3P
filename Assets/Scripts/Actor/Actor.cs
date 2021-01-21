@@ -18,6 +18,11 @@ public class Actor : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if ( rigidBody == null )
+        {
+            return;
+        }
+
         if ( !isLocal )
         {
             rigidBody.velocity = syncVelocity;

@@ -584,6 +584,12 @@ MonoBehaviour:
     Reference: {fileID: 4496883081163120107}
   - BoneType: 2
     Reference: {fileID: 3577637095626918573}
+  focusInfo:
+    CullingLayer:
+      serializedVersion: 2
+      m_Bits: 7680
+    RayDistance: 10
+    InteractionKey: 102
 --- !u!1 &277782326091747974
 GameObject:
   m_ObjectHideFlags: 0
