@@ -10,7 +10,7 @@ using System.Net;
 #endif
 
 [RequireComponent( typeof( CapsuleCollider ) ), RequireComponent( typeof( Rigidbody ) ), AddComponentMenu( "First Person AIO" )]
-public class FirstPersonAIO : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private Player myPlayer;
 
@@ -1062,12 +1062,12 @@ public class FirstPersonAIO : MonoBehaviour
 }
 
 #if UNITY_EDITOR
-[CustomEditor( typeof( FirstPersonAIO ) ), InitializeOnLoad]
+[CustomEditor( typeof( PlayerController ) ), InitializeOnLoad]
 public class FPAIO_Editor : Editor
 {
     static FPAIO_Editor() { }
 
-    FirstPersonAIO t;
+    PlayerController t;
     SerializedObject SerT;
     static bool showCrouchMods = false;
     static bool showAdvanced = false;
@@ -1121,7 +1121,7 @@ public class FPAIO_Editor : Editor
     string versionNum = "20.6.13cu";
     void OnEnable()
     {
-        t = ( FirstPersonAIO )target;
+        t = ( PlayerController )target;
         loadedAds = false;
         SerT = new SerializedObject( t );
         staticFS = SerT.FindProperty( "footStepSounds" );
@@ -1178,7 +1178,7 @@ public class FPAIO_Editor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
-        t.viewInfo.Viewpoint = ( FirstPersonAIO.EViewpoint )EditorGUILayout.EnumPopup( new GUIContent( "Init Viewpoint" ), t.viewInfo.Viewpoint );
+        t.viewInfo.Viewpoint = ( PlayerController.EViewpoint )EditorGUILayout.EnumPopup( new GUIContent( "Init Viewpoint" ), t.viewInfo.Viewpoint );
         t.firstPerson.Head = ( Transform )EditorGUILayout.ObjectField( new GUIContent( "FirstPerson Head Transform", "A transform representing the head. The camera should be a child to this transform." ), t.firstPerson.Head, typeof( Transform ), true );
         if ( !t.firstPerson.Head )
         {
@@ -1205,11 +1205,11 @@ public class FPAIO_Editor : Editor
         t.viewInfo.MinDistance = EditorGUILayout.Slider( new GUIContent( "Min ViewDistance" ), t.viewInfo.MinDistance, 0.0f, 50.0f );
         t.viewInfo.InterpolSpeed = EditorGUILayout.Slider( new GUIContent( "Camera Interpol Speed" ), t.viewInfo.InterpolSpeed, 0.1f, 100.0f );
 
-        t.cameraInputMethod = ( FirstPersonAIO.CameraInputMethod )EditorGUILayout.EnumPopup( new GUIContent( "Input Method", "Determines the method used to rotate camera. \n\nTraditional uses the mouse on all axes. \nTraditional with constraints uses the mouse on the Y axis only. \nRetro uses Keybinds (left and right movement keys) to rotate the camera along the Y axis." ), t.cameraInputMethod );
-        if ( t.cameraInputMethod == FirstPersonAIO.CameraInputMethod.Traditional ) { t.verticalRotationRange = EditorGUILayout.Slider( new GUIContent( "Vertical Rotation Range", "Determines how much range does the camera have to move vertically." ), t.verticalRotationRange, 90, 180 ); }
-        if ( t.cameraInputMethod == FirstPersonAIO.CameraInputMethod.Traditional || t.cameraInputMethod == FirstPersonAIO.CameraInputMethod.TraditionalWithConstraints )
+        t.cameraInputMethod = ( PlayerController.CameraInputMethod )EditorGUILayout.EnumPopup( new GUIContent( "Input Method", "Determines the method used to rotate camera. \n\nTraditional uses the mouse on all axes. \nTraditional with constraints uses the mouse on the Y axis only. \nRetro uses Keybinds (left and right movement keys) to rotate the camera along the Y axis." ), t.cameraInputMethod );
+        if ( t.cameraInputMethod == PlayerController.CameraInputMethod.Traditional ) { t.verticalRotationRange = EditorGUILayout.Slider( new GUIContent( "Vertical Rotation Range", "Determines how much range does the camera have to move vertically." ), t.verticalRotationRange, 90, 180 ); }
+        if ( t.cameraInputMethod == PlayerController.CameraInputMethod.Traditional || t.cameraInputMethod == PlayerController.CameraInputMethod.TraditionalWithConstraints )
         {
-            t.mouseInputInversion = ( FirstPersonAIO.InvertMouseInput )EditorGUILayout.EnumPopup( new GUIContent( "Mouse Input Inversion", "Determines if mouse input should be inverted, and along which axes" ), t.mouseInputInversion );
+            t.mouseInputInversion = ( PlayerController.InvertMouseInput )EditorGUILayout.EnumPopup( new GUIContent( "Mouse Input Inversion", "Determines if mouse input should be inverted, and along which axes" ), t.mouseInputInversion );
             t.mouseSensitivity = EditorGUILayout.Slider( new GUIContent( "Mouse Sensitivity", "Determines how sensitive the mouse is." ), t.mouseSensitivity, 1, 15 );
             t.fOVToMouseSensitivity = EditorGUILayout.Slider( new GUIContent( "FOV to Mouse Sensitivity", "Determines how much the camera's Field Of View will effect the mouse sensitivity. \n\n0 = no effect, 1 = full effect on sensitivity." ), t.fOVToMouseSensitivity, 0, 1 );
         }
@@ -1315,11 +1315,11 @@ public class FPAIO_Editor : Editor
         GUI.enabled = t.enableAudioSFX;
         t.Volume = EditorGUILayout.Slider( new GUIContent( "Volume", "Volume to play audio at." ), t.Volume, 0, 10 );
         EditorGUILayout.Space();
-        t.fsmode = ( FirstPersonAIO.FSMode )EditorGUILayout.EnumPopup( new GUIContent( "Footstep Mode", "Determines the method used to trigger footsetps." ), t.fsmode );
+        t.fsmode = ( PlayerController.FSMode )EditorGUILayout.EnumPopup( new GUIContent( "Footstep Mode", "Determines the method used to trigger footsetps." ), t.fsmode );
         EditorGUILayout.Space();
 
         #region FS Static
-        if ( t.fsmode == FirstPersonAIO.FSMode.Static )
+        if ( t.fsmode == PlayerController.FSMode.Static )
         {
             showStaticFS = EditorGUILayout.BeginFoldoutHeaderGroup( showStaticFS, new GUIContent( "Footstep Clips", "Audio clips available as footstep sounds." ) );
             if ( showStaticFS )
@@ -1352,14 +1352,14 @@ public class FPAIO_Editor : Editor
 
         else
         {
-            t.dynamicFootstep.materialMode = ( FirstPersonAIO.DynamicFootStep.matMode )EditorGUILayout.EnumPopup( new GUIContent( "Material Type", "Determines the type of material will trigger footstep audio." ), t.dynamicFootstep.materialMode );
+            t.dynamicFootstep.materialMode = ( PlayerController.DynamicFootStep.matMode )EditorGUILayout.EnumPopup( new GUIContent( "Material Type", "Determines the type of material will trigger footstep audio." ), t.dynamicFootstep.materialMode );
             EditorGUILayout.Space();
             #region Wood Section
             showWoodFS = EditorGUILayout.BeginFoldoutHeaderGroup( showWoodFS, new GUIContent( "Wood Clips", "Audio clips available as footsteps when walking on a collider with the Physic Material assigned to 'Wood Physic Material'" ) );
             if ( showWoodFS )
             {
                 GUILayout.BeginVertical( "box" );
-                if ( t.dynamicFootstep.materialMode == FirstPersonAIO.DynamicFootStep.matMode.physicMaterial )
+                if ( t.dynamicFootstep.materialMode == PlayerController.DynamicFootStep.matMode.physicMaterial )
                 {
                     if ( !t.dynamicFootstep.woodPhysMat.Any() ) { EditorGUILayout.HelpBox( "At least one Physic Material must be assigned first.", MessageType.Warning ); }
                     EditorGUILayout.LabelField( "Wood Physic Materials", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold } );
@@ -1422,7 +1422,7 @@ public class FPAIO_Editor : Editor
             {
                 GUILayout.BeginVertical( "box" );
 
-                if ( t.dynamicFootstep.materialMode == FirstPersonAIO.DynamicFootStep.matMode.physicMaterial )
+                if ( t.dynamicFootstep.materialMode == PlayerController.DynamicFootStep.matMode.physicMaterial )
                 {
                     if ( !t.dynamicFootstep.metalAndGlassPhysMat.Any() ) { EditorGUILayout.HelpBox( "At least one Physic Material must be assigned first.", MessageType.Warning ); }
                     EditorGUILayout.LabelField( "Metal & Glass Physic Materials", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold } );
@@ -1485,7 +1485,7 @@ public class FPAIO_Editor : Editor
             {
                 GUILayout.BeginVertical( "box" );
 
-                if ( t.dynamicFootstep.materialMode == FirstPersonAIO.DynamicFootStep.matMode.physicMaterial )
+                if ( t.dynamicFootstep.materialMode == PlayerController.DynamicFootStep.matMode.physicMaterial )
                 {
                     if ( !t.dynamicFootstep.grassPhysMat.Any() ) { EditorGUILayout.HelpBox( "At least one Physic Material must be assigned first.", MessageType.Warning ); }
                     EditorGUILayout.LabelField( "Grass Physic Materials", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold } );
@@ -1548,7 +1548,7 @@ public class FPAIO_Editor : Editor
             {
                 GUILayout.BeginVertical( "box" );
 
-                if ( t.dynamicFootstep.materialMode == FirstPersonAIO.DynamicFootStep.matMode.physicMaterial )
+                if ( t.dynamicFootstep.materialMode == PlayerController.DynamicFootStep.matMode.physicMaterial )
                 {
                     if ( !t.dynamicFootstep.dirtAndGravelPhysMat.Any() ) { EditorGUILayout.HelpBox( "At least one Physic Material must be assigned first.", MessageType.Warning ); }
                     EditorGUILayout.LabelField( "Dirt & Gravel Physic Materials", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold } );
@@ -1611,7 +1611,7 @@ public class FPAIO_Editor : Editor
             {
                 GUILayout.BeginVertical( "box" );
 
-                if ( t.dynamicFootstep.materialMode == FirstPersonAIO.DynamicFootStep.matMode.physicMaterial )
+                if ( t.dynamicFootstep.materialMode == PlayerController.DynamicFootStep.matMode.physicMaterial )
                 {
                     if ( !t.dynamicFootstep.rockAndConcretePhysMat.Any() ) { EditorGUILayout.HelpBox( "At least one Physic Material must be assigned first.", MessageType.Warning ); }
                     EditorGUILayout.LabelField( "Rock & Concrete Physic Materials", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold } );
@@ -1674,7 +1674,7 @@ public class FPAIO_Editor : Editor
             {
                 GUILayout.BeginVertical( "box" );
 
-                if ( t.dynamicFootstep.materialMode == FirstPersonAIO.DynamicFootStep.matMode.physicMaterial )
+                if ( t.dynamicFootstep.materialMode == PlayerController.DynamicFootStep.matMode.physicMaterial )
                 {
                     if ( !t.dynamicFootstep.mudPhysMat.Any() ) { EditorGUILayout.HelpBox( "At least one Physic Material must be assigned first.", MessageType.Warning ); }
                     EditorGUILayout.LabelField( "Mud Physic Materials", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold } );
@@ -1737,7 +1737,7 @@ public class FPAIO_Editor : Editor
             {
                 GUILayout.BeginVertical( "box" );
 
-                if ( t.dynamicFootstep.materialMode == FirstPersonAIO.DynamicFootStep.matMode.physicMaterial )
+                if ( t.dynamicFootstep.materialMode == PlayerController.DynamicFootStep.matMode.physicMaterial )
                 {
                     if ( !t.dynamicFootstep.customPhysMat.Any() ) { EditorGUILayout.HelpBox( "At least one Physic Material must be assigned first.", MessageType.Warning ); }
                     EditorGUILayout.LabelField( "Custom Physic Materials", new GUIStyle( GUI.skin.label ) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold } );
