@@ -124,6 +124,9 @@ public class Player : Character
     }
     public FocusInfo focusInfo;
 
+    public delegate void DelChangeFocusTarget( Actor _target );
+    public static event DelChangeFocusTarget OnChangeFocusTarget;
+
     protected override void Awake()
     {
         base.Awake();
@@ -243,31 +246,40 @@ public class Player : Character
 
     private void UpdateInteraction()
     {
-        Ray ray = new Ray( Camera.main.transform.position, Camera.main.transform.forward );
-        RaycastHit hit;
-
-        focusInfo.Target = null;
-        if ( Physics.Raycast( ray, out hit, focusInfo.CullingLayer, focusInfo.CullingLayer ) )
+        if ( !isLocal )
         {
-            if ( hit.collider == null )
-            {
-                Debug.LogError( "Hit collider is null." );
-                return;
-            }
-
-            focusInfo.Target = hit.collider.GetComponentInParent<Actor>();
+            return;
         }
 
-        // 상호작용
+        // 타겟팅
+        {
+            Ray ray = new Ray( Camera.main.transform.position, Camera.main.transform.forward );
+            RaycastHit hit;
+
+            Actor target = null;
+            if ( Physics.Raycast( ray, out hit, focusInfo.CullingLayer, focusInfo.CullingLayer ) )
+            {
+                if ( hit.collider == null )
+                {
+                    Debug.LogError( "Hit collider is null." );
+                    return;
+                }
+
+                target = hit.collider.GetComponentInParent<Actor>();
+            }
+
+            if ( focusInfo.Target != target  )
+            {
+                focusInfo.Target = target;
+                OnChangeFocusTarget( focusInfo.Target );
+            }
+        }
+
         if ( Input.GetKeyDown( focusInfo.InteractionKey ) && focusInfo.Target != null )
         {
-            Debug.Log( focusInfo.Target.name );
-
             IInteractable interactor = focusInfo.Target as IInteractable;
             if ( !ReferenceEquals( interactor, null ) )
             {
-                Debug.Log( interactor.FocusMessage );
-
                 interactor.Interaction( this );
             }
         }
