@@ -257,7 +257,7 @@ public class Player : Character
             RaycastHit hit;
 
             Actor target = null;
-            if ( Physics.Raycast( ray, out hit, focusInfo.CullingLayer, focusInfo.CullingLayer ) )
+            if ( Physics.Raycast( ray, out hit, focusInfo.RayDistance, focusInfo.CullingLayer ) )
             {
                 if ( hit.collider == null )
                 {
@@ -281,6 +281,7 @@ public class Player : Character
             if ( !ReferenceEquals( interactor, null ) )
             {
                 interactor.Interaction( this );
+                OnChangeFocusTarget( null ); /// Destroy시 타겟이 남아있어서 재설정
             }
         }
     }

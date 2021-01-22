@@ -588,7 +588,7 @@ MonoBehaviour:
     CullingLayer:
       serializedVersion: 2
       m_Bits: 7680
-    RayDistance: 10
+    RayDistance: 30
     InteractionKey: 102
 --- !u!1 &277782326091747974
 GameObject:

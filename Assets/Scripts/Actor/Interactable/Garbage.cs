@@ -15,7 +15,7 @@ public class Garbage : Actor, IInteractable
     private string focusMessage;
     public string FocusMessage
     {
-        get { return focusMessage; }
+        get { return focusMessage + " (" + ObjectManager.Instance.LocalPlayer.focusInfo.InteractionKey + ")"; }
         set { focusMessage = value; }
     }
 
